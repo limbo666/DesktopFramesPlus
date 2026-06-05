@@ -25,7 +25,7 @@ What this means for you:
 
  - Same Core Engine: Only the branding has changed. The underlying code is exactly the same.
 
-- Zero Configuration Loss (hopefully): Your existing layouts, settings, and internal configuration files will continue to work flawlessly with the new version.
+- Zero Configuration Loss (hopefully- I'm working on it!): Your existing layouts, settings, and internal configuration files will continue to work flawlessly with the new version.
 
 - Still 100% Free: We will not switch to a monthly subscription model 😉.
 
@@ -117,7 +117,7 @@ Desktop Frames + brings a powerful and visually optimized experience for users w
 ##  Release
 Get the latest release here:
 https://github.com/limbo666/DesktopFramesPlus/releases
-
+**UPDATE: Release is suspended until version 2.7 is out**
 
 ---
 
