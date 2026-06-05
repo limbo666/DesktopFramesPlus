@@ -37,26 +37,26 @@ When you first start Desktop Frames +, the application will:
 **What are Frames?**
 Frames are containers on your desktop that group related shortcuts and files together. You can think of them as boxes that keep your desktop organized.
 
-**Fence Types:**
+**frame Types:**
 
 - **Frames (Data Frames)**: Regular containers for shortcuts targeting files or folders and web links
 - **Portal Frames**: Special Frames mirroring the contents of folders
 - **Note Frames**: Frames that display text.
 
-**How to Create a Fence:**
+**How to Create a frame:**
 
 1. The first two Frames are created automatically on first run. Look on the top left corner of your screen.
-2. From there clicking the heart menu you can select New Fence to create a new Fence, New Portal Fence to create a new Portal Fence or New Note Fence to crete a new note fence.
+2. From there clicking the heart menu you can select New frame to create a new frame, New Portal frame to create a new Portal frame or New Note frame to crete a new note frame.
 
-**Rename a fence:**
+**Rename a frame:**
 
-- ~~Double click~~ CTRL: + Click the fence title. Type your preferred name and click out of the edit area to finish. Changed on v2.5.2.125
+- ~~Double click~~ CTRL: + Click the frame title. Type your preferred name and click out of the edit area to finish. Changed on v2.5.2.125
 
 ### 2. Adding Items to Frames
 
 **Adding Shortcuts:**
 
-- Drag and drop existing desktop shortcuts, folders, or files into any fence. This will generate automatically a shortcut for the target.
+- Drag and drop existing desktop shortcuts, folders, or files into any frame. This will generate automatically a shortcut for the target.
 
   **Supported types**
 
@@ -70,40 +70,40 @@ Frames are containers on your desktop that group related shortcuts and files tog
 
 **Using the Move Dialog:**
 
-1. Right-click on any item in a fence
+1. Right-click on any item in a frame
 2. Select "Move to..." from the context menu
-3. Choose the destination fence from the hierarchical list
+3. Choose the destination frame from the hierarchical list
 4. Confirm the move operation
 
 **Using Copy Item:**
 
-1. Right-click on any item in a fence
+1. Right-click on any item in a frame
 2. Select "Copy Item" from the context menu
-3. Right-click on any other Fence and select "Paste Item"
+3. Right-click on any other frame and select "Paste Item"
 
 ---
 
 ## Customization Options
 
-### 1. Fence Appearance
+### 1. frame Appearance
 
-Access fence customization by right-clicking on a fence title bar and selecting "Customize...":
-This will show the Customize Fence window.
+Access frame customization by right-clicking on a frame title bar and selecting "Customize...":
+This will show the Customize frame window.
 
 
 
-**Fence Settings:**
+**frame Settings:**
 
 - **Custom Color**: Choose from 13 preset colors (Red, Green, Teal, Blue, Bismark, White, Beige, Gray, Black, Purple, Fuchsia, Yellow, Orange)
 - **Custom Launch Effect**: Customize the effect on icon click. See Launch Effects below
-- **Border Color**: Customize the fence border appearance
+- **Border Color**: Customize the frame border appearance
 - **Border Thickness**: Adjust border width (1-5 pixels)
 
 **Title**
 
-- **Title Text Color**: Change fence title color
+- **Title Text Color**: Change frame title color
 - **Title Text Size**: Small, Medium, or Large
-- **Bold Title Text**: Make fence titles bold
+- **Bold Title Text**: Make frame titles bold
 
 **Icons**
 
@@ -136,7 +136,7 @@ When you click on items in Frames, choose from these visual effects:
 
 ## Change Icon Order
 
-Hold down the CTRL button and drag the icon to its new position within the fence.
+Hold down the CTRL button and drag the icon to its new position within the frame.
 
 
 ## Customize Shortcuts
@@ -151,21 +151,21 @@ In the edit window you can set name, target path, arguments and icon for the sho
 
 The icons on the Frames which are targeting files and folders are getting continuously checked for target validity. If target is missing or it is not accessible an icon indicate that this shortcut is not functioning, so you can check the target and fix it or delete the dead shortcut. You can right click on this icon and select "Remove".   
 
-**Clear Dead Shortcuts:** If you want to remove all dead shortcuts within a fence with just one move right click on the fence and select "Clear Dead Shortcuts"
+**Clear Dead Shortcuts:** If you want to remove all dead shortcuts within a frame with just one move right click on the frame and select "Clear Dead Shortcuts"
 
 
 
 ## Convenient Usage Functions
 
-**Hide Fence**: Right click a fence an select "Hide Fence". This sets the fence as hidden and the number of hidden Frames increases ion the tray icon. To show the fence again you can use the tray icon context menu where the hidden Frames are shown as items on "Show Hidden Frames" menu
+**Hide frame**: Right click a frame an select "Hide frame". This sets the frame as hidden and the number of hidden Frames increases ion the tray icon. To show the frame again you can use the tray icon context menu where the hidden Frames are shown as items on "Show Hidden Frames" menu
 
-**Peek Behind**: Right click a fence an select "Hide Fence". The fence hides for 10 second to help access the desktop behind the fence. This feature is helpful if for some reason you need to see behind the fence for a short time. A count down timer is shown in place.
+**Peek Behind**: Right click a frame an select "Hide frame". The frame hides for 10 second to help access the desktop behind the frame. This feature is helpful if for some reason you need to see behind the frame for a short time. A count down timer is shown in place.
 
-**Hide/Unhide All Frames**: Double click the tray icon. All Frames will toggle. Note: This function doesn't change the status of hidden Frames with teh above mentioned "Hide Fence" function.
+**Hide/Unhide All Frames**: Double click the tray icon. All Frames will toggle. Note: This function doesn't change the status of hidden Frames with teh above mentioned "Hide frame" function.
 
-**Rollup/RollDown a fence**: ~~Ctrl + Click~~ Double click on fence title. The fence will rollup into its title. To Roll down again to fence previous height ~~Ctrl + Click~~ Double click again the title area. Changed on v2.5.2.125
+**Rollup/RollDown a frame**: ~~Ctrl + Click~~ Double click on frame title. The frame will rollup into its title. To Roll down again to frame previous height ~~Ctrl + Click~~ Double click again the title area. Changed on v2.5.2.125
 
-**Fence Lock**: Click on the shield icon🛡️on top right corner of the fence. This locks fence position and size. Rollup/Rolldown is still available when locked.
+**frame Lock**: Click on the shield icon🛡️on top right corner of the frame. This locks frame position and size. Rollup/Rolldown is still available when locked.
 
 
 
@@ -185,13 +185,13 @@ Right clicking any shortcut the following usage options are available:
 
 
 ## Search (v2.5.2.135)
-Double click ta any enpty arean on any fence or ``CTRL + ``` to see the search window. Search is performed on all data Frames and matching shortcuts are displayed below the search field.  
+Double click ta any enpty arean on any frame or ``CTRL + ``` to see the search window. Search is performed on all data Frames and matching shortcuts are displayed below the search field.  
 
 
 ## Import/Export Frames
 
-Click on the heart ❤️ menu and select "Export this Fence" to export a fence into a  *.fence file.  This file will be exported into "Exports" subfolder on program path.
-To import a fence exported previously click on the heart ❤️ menu and select "Import a Fence", browse for a *.fence file and import it.
+Click on the heart ❤️ menu and select "Export this frame" to export a frame into a  *.frame file.  This file will be exported into "Exports" subfolder on program path.
+To import a frame exported previously click on the heart ❤️ menu and select "Import a frame", browse for a *.frame file and import it.
 
 
 
@@ -230,7 +230,7 @@ Access settings through the system tray icon → "Options":
 - **Disable Frames Scrollbars:** Hides scrollbars from Frames when contents exceed the available display area
 - **Enable Sounds:**  Toggles program ability to make sound on message boxes 
 
-- **Fence Tint **: Adjust overall Frames tint (0-100%)
+- **frame Tint **: Adjust overall Frames tint (0-100%)
 - **Menu Tint **: Adjust menu icons base tint (0-100%)
 - **Color**: Sets the default Frames color
 - **Launch Effect**: Sets the default launch effect
@@ -291,7 +291,7 @@ Access settings through the system tray icon → "Options":
 
 **Portal Frames Issues**
 
-1. Delete portal fence from Frames.json and try creating again
+1. Delete portal frame from Frames.json and try creating again
 2. Verify the path exists and it is accessible
 
 
@@ -330,9 +330,9 @@ Access settings through the system tray icon → "Options":
 
 **Configuration Files:**
 
-- `Frames.json`: Main fence configuration and layout
+- `Frames.json`: Main frame configuration and layout
 - `Desktop_Frames.log`: Application log file
-- `Shortcuts/`: Folder containing fence shortcut files
+- `Shortcuts/`: Folder containing frame shortcut files
 
 **Backup Structure:**
 
