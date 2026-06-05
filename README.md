@@ -46,19 +46,18 @@ This project is a continuation and substantial modification of the original Bird
 Desktop Frames+ has been significantly enhanced and optimized for improved performance, stability, and user experience, while respecting the terms of the original license and acknowledging the original author.
 
 
-##  Version History 
-The list of changes is moved here: https://github.com/limbo666/DesktopFramesPlus/blob/main/VersionHistory.md
+##  Version History  
+The list of changes is moved here:  
+https://github.com/limbo666/DesktopFramesPlus/blob/main/VersionHistory.md
 
-##  Manual
-
-**$\color{red}{\text{A simple how to use guide is located here:}}$** [https://github.com/limbo666/DesktopFramesPlus/blob/main/desktop_Frames_simple_manual.md](https://github.com/limbo666/DesktopFramesPlus/blob/main/desktop_frames_simple_manual.md)
+##  Manual  
+**$\color{red}{\text{A simple how to use guide is located here:}}$**   
+[https://github.com/limbo666/DesktopFramesPlus/blob/main/desktop_Frames_simple_manual.md](https://github.com/limbo666/DesktopFramesPlus/blob/main/desktop_frames_simple_manual.md)
 
 
 ##  TIPS 
-
-**$\color{red}{\text{Also some advanced usage tips:}}$**  https://github.com/limbo666/DesktopFramesPlus/blob/main/TIPS.md
-
-
+**$\color{red}{\text{Also some advanced usage tips:}}$**  
+https://github.com/limbo666/DesktopFramesPlus/blob/main/TIPS.md
 <br> Read them before starting an issue. 
 
 ---
@@ -68,22 +67,12 @@ The list of changes is moved here: https://github.com/limbo666/DesktopFramesPlus
 If this project has helped you, please consider supporting its development! Your contribution directly impacts how fast and far this project grows.
 
 Maintaining and improving this tool takes time, effort, and resources. Donations help me:
-
  - Dedicate more time to fixing bugs and adding features
-
  - Cover the cost of tools (like AI assistance that speeds up development)
-
  - Stay motivated and keep pushing the project forward
 
-
-🚀 Your support literally drives the pace of development — the more help I get, the more I can deliver!
-
-☕ Buy me a coffee
-
-💡 Help cover my AI subscription
-
-
-Even small contributions mean a lot. Thank you for keeping this project alive and evolving! 🙏
+Your support literally drives the pace of development!  
+Even small contributions mean a lot. Thank you for keeping this project alive and evolving! 
 
 [![Donate](https://raw.githubusercontent.com/limbo666/DesktopFramesPlus/refs/heads/main/Images/paypal.png)](https://www.paypal.com/donate/?hosted_button_id=PPLWC66UC8Q42)
 
