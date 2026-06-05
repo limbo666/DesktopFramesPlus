@@ -47,7 +47,7 @@ Desktop Frames+ has been significantly enhanced and optimized for improved perfo
 
 
 ##  Version History 
-you can find our list of changes here: https://github.com/limbo666/DesktopFramesPlus/blob/main/VersionHistory.md
+The list of changes is moved here: https://github.com/limbo666/DesktopFramesPlus/blob/main/VersionHistory.md
 
 ##  Manual
 
@@ -90,7 +90,22 @@ Even small contributions mean a lot. Thank you for keeping this project alive an
 ---
 
 ## Features
-To be added
+
+-   **Multiple Frame Types:** Create Data Frames for custom shortcuts, Portal Frames that actively mirror folder contents (with internal navigation and filters), and Note Frames for quick text.  
+-   **Tabs Engine:** Keep your desktop clean by organizing shortcuts into multiple tabs within a single frame, complete with tab overflow management.
+-   **Workspace Profiles:** Create independent layouts for different workflows (e.g., Work, Gaming). Switch profiles manually via hotkeys, or use Profile Automation to switch automatically when specific programs are launched.
+-   **Smart Desktop Engine:** Automatically sort and move incoming files into specific Portal Frames or folders based on custom user rules.
+-   **SpotSearch:** A built-in quick-search pane invoked by a hotkey to instantly find and launch shortcuts across all your frames.  
+-   **Dynamic Visibility:** Temporarily "Peek Behind" frames to see the desktop, "Rollup" frames to hide their contents, or enable Auto-hide to conceal frames after a period of inactivity.    
+-   **Focus Mode:** Highlight a specific frame using the tray menu or a hotkey combination. 
+-   **Universal Support:** Fully supports standard files, folders, web links, MS Store apps, Steam games, and Spotify URIs. Includes advanced execution options like "Run as Administrator" and "Run as different user".
+-   **Theming:** Customize individual frame background colors, set global tint levels, or use **Chameleon Mode** to automatically match your frames to your wallpaper's dominant color.   
+-   **Launch Animations:** Select from multiple visual effects (Zoom, Bounce, Fadeout, SlideUp, Rotate, Elastic) when launching applications.
+-   **Precision Layouts:** Utilize "Snap to Dimension" for perfect alignment, easily reorder icons with `CTRL + Drag`, and insert blank spacers to position your icons exactly where you want them.
+-   **Icon Customization:** Extract and assign custom icons from executables, DLLs, or image files for any shortcut, folder, or web link.
+-   **Automated Backups:** Features a daily automatic backup mechanism that saves your layouts, configurations, and shortcuts.   
+-   **Export & Import:** Easily move your setup across different computers by exporting individual frames or entire tabs.
+-   **Fully Portable:** Utilizes relative paths for files and folders to ensure seamless operation across different environments.
 
 
 ##  Summary
