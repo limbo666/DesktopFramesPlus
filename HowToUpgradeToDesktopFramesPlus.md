@@ -1,5 +1,8 @@
 ### How to Upgrade to Desktop Frames + (Without Losing Your Setup)
 
+<img width="301" height="73" alt="image" src="https://github.com/user-attachments/assets/dc2c2d8e-586a-41f0-87fe-d766e7fe3cd2" />
+
+
 The utility has been officially renamed to **Desktop Frames +**.
 
 Because this is a portable application, upgrading is completely safe and doesn't require an installer. The new version features an automated migration engine that will seamlessly update your old configuration files to the new format across all your profiles.
