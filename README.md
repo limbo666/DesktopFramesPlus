@@ -110,7 +110,7 @@ Desktop Frames + brings a powerful and visually optimized experience for users w
 ##  Release
 Get the latest release here:
 https://github.com/limbo666/DesktopFramesPlus/releases
-**UPDATE: Release is suspended until version 2.7 is out**
+**UPDATE: Release 2.7.7.294 is out**
 
 ---
 
