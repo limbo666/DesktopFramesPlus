@@ -1,9 +1,9 @@
 #  Version history  
 
-+---------------------------------+  
-Changed to **Desktop Frames +**  
+
 v 2.7.7.294            
-+---------------------------------+    
+<img width="301" height="73" alt="image" src="https://github.com/user-attachments/assets/9b71557a-3fe3-4d29-a31f-256824ec9dcb" />
+  
 
 - **Fixed**: 🪲 Bug with Frames flickering on restore visibility after autohide  
 - **Added**: Auto roll Frames. Each Frame has another (right click selectable) option to auto roll after a predifined period of time.    
