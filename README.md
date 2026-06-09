@@ -66,7 +66,7 @@ https://github.com/limbo666/DesktopFramesPlus/blob/main/TIPS.md
 
 ---
 
-##  Support
+##  Support Me
 
 If this project has helped you, please consider supporting its development! Your contribution directly impacts how fast and far this project grows.
 
@@ -134,8 +134,8 @@ _See (https://github.com/limbo666/DesktopFramesPlus/issues/51)_
  - Download the release package
  - Extract the all files contained in zip package and overwrite existing int your Desktop Frames + folder 
  - Run `Desktop Frames.exe` .  
-   _Some releases may convert your configuration files and/or folders to be compatible with new functiions_  
-   _For safety measure it is suggested to backup your Desktop Frames + folder before updating_
+   _Some releases may convert your configuration files and/or folders to be compatible with new functions_  
+   _As a safety measure it is suggested to backup your Desktop Frames + folder before updating_
 
 
 ---
