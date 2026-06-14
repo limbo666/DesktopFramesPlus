@@ -21,17 +21,8 @@ You may have noticed a **new name** and a **new logo**. Recently, this repositor
 
 To protect this repository from being suspended and to ensure this tool remains completely free and open-source for the community, I was forced to rebrand. We are now officially **Desktop Frames +**.
 
-What this means for you:
-
- - Same Core Engine: Only the branding has changed. The underlying code is exactly the same.
-
-- Zero Configuration Loss (hopefully- I'm working on it!): Your existing layouts, settings, and internal configuration files will continue to work flawlessly with the new version.
-
-- Still 100% Free: It **will not switch** to a monthly subscription model 😉.
-
 Thank you to everyone who helped this project reach 500+ stars.  
-Your support is the reason this tool exists, and corporate pressure won't stop me from improving it. Let's keep buildin  
-Please update your bookmarks!  
+Your support is the reason this tool exists, and corporate pressure won't stop me from improving it.
 
 A short **how to upgrade guide** can be found on the following link:
   https://github.com/limbo666/DesktopFramesPlus/blob/main/HowToUpgradeToDesktopFramesPlus.md
