@@ -7,7 +7,7 @@
       "Body": "You are using an extremely old version of Desktop Frames +. Cloud features will stop working soon.",
       "Link": "",
       "TargetVersionMin": "0.0.0.0",
-      "TargetVersionMax": "1.9.9.9",
+      "TargetVersionMax": "2.9.9.9",
       "MaxDisplayCount": 10,
       "AutoCloseSeconds": 0,
       "CanUserDismiss": false
