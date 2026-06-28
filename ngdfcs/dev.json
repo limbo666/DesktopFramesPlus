@@ -1,16 +1,16 @@
 {
   "Announcements": [
     {
-      "Id": "MSG_20260628_1315",
-      "Type": "Warning",
-      "Title": "UPDATE NEEDED",
-      "Body": "We have move to new name Desktop Frames + and better functionality.  ",
-      "Link": "https://github.com/limbo666/DesktopFramesPlus/releases/tag/2.7.7.294",
+      "Id": "MSG_20260628_1338",
+      "Type": "Info",
+      "Title": "Support Desktop Frames +",
+      "Body": "If this tool helps your workflow, please consider supporting the project to keep development alive!",
+      "Link": "https://www.paypal.com/donate/?hosted_button_id=PPLWC66UC8Q42",
       "TargetVersionMin": "0.0.0.0",
-      "TargetVersionMax": "2.7.7.290",
-      "MaxDisplayCount": 10,
+      "TargetVersionMax": "99.9.9.9",
+      "MaxDisplayCount": 3,
       "AutoCloseSeconds": 0,
-      "CanUserDismiss": false
+      "CanUserDismiss": true
     }
   ]
 }
