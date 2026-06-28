@@ -1,10 +1,24 @@
 {
   "Meta": {
-    "LatestVersion": "2.7.7.294",
+    "LatestVersion": "0.0.0.0",
     "CriticalUpdate": false,
-    "DownloadUrl": "https://github.com/limbo666/DesktopFramesPlus/releases/tag/2.7.7.294",
+    "DownloadUrl": "",
     "ForceKillSwitch": false
   },
+  "Announcements": [
+    {
+      "Id": "MSG_INFO_01",
+      "Type": "Info",
+      "Title": "Did you know?",
+      "Body": "We added a new search feature. Press Ctrl+`.",
+      "Link": "",
+      "TargetVersionMin": "0.0.0.0",
+      "TargetVersionMax": "99.9.9.9",
+      "MaxDisplayCount": 3,
+      "AutoCloseSeconds": 0,
+      "CanUserDismiss": true
+    }
+  ],
   "RemoteSettings": {
     "EnableBackgroundLogging": false,
     "SearchEngineUrl": ""
