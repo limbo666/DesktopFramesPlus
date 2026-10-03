@@ -71,7 +71,7 @@ namespace Desktop_Frames
             win.LocationChanged += (sender, e) =>
             {
                 if (_isSnapping) return;
-                if (ActiveDragWindow != win) return;
+                if (ActiveDragWindow != win || !Layouts.LayoutManager.IsEditing(win)) return;
 
                 _isSnapping = true;
                 try

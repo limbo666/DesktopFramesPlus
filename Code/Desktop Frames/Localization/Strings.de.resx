@@ -1867,6 +1867,249 @@ Jetzt neu starten?</value>
   <data name="VuSignalGain" xml:space="preserve">
     <value>Signalverstärkung (Faktor):</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>Momentaufnahmen</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>Momentaufnahmen — {0}</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>Momentaufnahmen…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>Rahmenanordnungen ansehen und wiederherstellen sowie gespeicherte Momentaufnahmen verwalten.</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>Meine Anordnung</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>Momentaufnahme speichern</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>Aktuelle Anordnung übernehmen…</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>Die aktuelle Rahmenanordnung als gewünschte Anordnung übernehmen?
+
+Verwenden Sie dies nach dem Anordnen der Rahmen oder einer bewussten Änderung Ihrer Monitore. Die vorherige gewünschte Anordnung wird als Sicherheitskopie gespeichert.</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>Die heutige automatische Momentaufnahme wird nach 5 Sekunden ohne bewusste Änderungen aktualisiert. Frühere Tage und angeheftete Momentaufnahmen bleiben unverändert. Durch Windows verschobene Rahmen ändern die gespeicherte Anordnung nicht.</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>Höchstalter (Tage)</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>Maximale Anzahl an Momentaufnahmen</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = unbegrenzt</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>Aufbewahrung anwenden…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>Ältere löschen…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>Manuelle und angeheftete Momentaufnahmen bleiben erhalten. Die neueste nicht angeheftete automatische Momentaufnahme oder Sicherheitskopie wird ebenfalls immer aufbewahrt.</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>Momentaufnahme wiederherstellen…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>Anheften / lösen</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>Löschen…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>Die ausgewählte Momentaufnahme löschen? Ihre aktuelle Anordnung bleibt erhalten.</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>Die Wiederherstellung ändert nur Positionen und Größen. Vorhandene Verknüpfungen, Notizen und Rahmen bleiben erhalten. Gelöschte Rahmen werden nicht neu erstellt.</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>Das aktive Profil wurde geändert. Schließen Sie dieses Fenster und öffnen Sie die Momentaufnahmen erneut.</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>Automatische Anordnung — heute</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>Automatische Anordnung</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>Nicht lesbare Momentaufnahme</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+Gespeichert: {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>Manuell</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>Sicherheitskopie</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>Noch keine Momentaufnahmen vorhanden. Speichern Sie Ihre gewünschte Anordnung, um eine zu erstellen.</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>Wählen Sie eine Momentaufnahme für die Vorschau aus.</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+Gespeichert: {1:G} · Rahmen: {2} · Monitore: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>Fehlende Monitore: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>Die gespeicherten Monitore sind verfügbar.</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>Monitorauflösung oder Skalierung weicht von dieser Momentaufnahme ab.</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>Vorschau nicht verfügbar: {0}</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>Positionen und Größen aus „{0}“ wiederherstellen?
+
+Ihre aktuelle gewünschte Anordnung wird vorher gespeichert, damit Sie die Wiederherstellung rückgängig machen können.</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>Geben Sie ganze Zahlen ein: 0–36500 Tage und 0–100000 Momentaufnahmen. Null bedeutet unbegrenzt.</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>Diese Aufbewahrungsregeln speichern? {0} automatische Momentaufnahmen oder Sicherheitskopien werden jetzt gelöscht.
+
+Manuelle und angeheftete Momentaufnahmen sind geschützt. Die neueste automatische Momentaufnahme oder Sicherheitskopie bleibt erhalten.</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>Geben Sie zuerst ein Alter in Tagen ein.</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>Keine löschbaren alten Momentaufnahmen gefunden.</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>{0} automatische Momentaufnahmen oder Sicherheitskopien löschen, die älter als {1} Tage sind?
+
+Manuelle und angeheftete Momentaufnahmen sowie die neueste automatische Momentaufnahme oder Sicherheitskopie bleiben erhalten.</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>Keine Anordnung geladen.</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>Anfängliche Anordnung — bitte überprüfen</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>Warten auf die gespeicherte Monitorkonfiguration. Ihre gewünschte Anordnung ist geschützt.</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>Ihre gewünschte Anordnung ist geschützt.</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>Die Rahmenposition konnte nicht gelesen werden.</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Windows konnte eine Rahmenposition nicht wiederherstellen.</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>Die Monitorkonfiguration wurde geändert. Ihre gespeicherte Anordnung ist geschützt; es wird auf Ihre Monitore gewartet.</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>Gespeicherte Anordnung wiederhergestellt. Bewusste Verschiebungen und Größenänderungen werden gespeichert.</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>Die heutige automatische Momentaufnahme ist aktuell. Ihre gewünschte Anordnung ist geschützt.</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>Gespeicherte Anordnung</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>Vor dem Übernehmen einer neuen Anordnung</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>Diese Anordnung ist jetzt Ihre gewünschte Anordnung.</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>Schließen Sie die gespeicherten Monitore mit der gespeicherten Auflösung und Skalierung an, bevor Sie diese Anordnung wiederherstellen. Ihre aktuelle Anordnung wurde nicht geändert.</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>Der Monitor eines vorhandenen Rahmens fehlt. Die Wiederherstellung wurde abgebrochen.</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>Vor der Wiederherstellung von {0}</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>Wiederhergestellte passende Rahmen: {0}. Verknüpfungen und Notizen bleiben erhalten.</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>Schutz der Anordnung: {0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>Ungültiger Name der Anordnung.</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>Die gespeicherte gewünschte Anordnung konnte nicht gelesen werden. Sie wurde beibehalten; es wurde keine neue Ausgangsanordnung gespeichert.</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>Die Datei der Anordnung ist zu groß.</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>Leere Datei der Anordnung.</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>Ungültiger Typ der Momentaufnahme.</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>Momentaufnahme nicht gefunden.</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>Ungültige Momentaufnahme.</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>Lösen Sie diese Momentaufnahme vor dem Löschen.</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>Aufbewahrungswerte dürfen nicht negativ sein.</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>Nicht unterstützte oder ungültige Datei der Anordnung.</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>Die Anordnung enthält ungültige Monitor- oder Rahmenpositionen.</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Windows meldet noch keine stabile Monitoridentität.</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>Die Monitorkonfiguration ist noch nicht bereit.</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>Rahmen</value>
+  </data>
+</root>
   <data name="SecLanguage" xml:space="preserve">
     <value>Sprache</value>
   </data>

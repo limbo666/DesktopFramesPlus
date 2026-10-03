@@ -1942,4 +1942,246 @@
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>语言模板已成功导出！</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>快照</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>快照 — {0}</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>快照…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>预览和恢复框的布局，并管理已保存的快照。</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>我的布局</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>保存快照</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>采用当前布局…</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>将框目前的位置作为期望布局吗？
+
+请在排列好框或主动更改显示器配置后使用此选项。之前的期望布局将保留为安全快照。</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>停止主动更改 5 秒后，今天的自动快照会更新。之前日期的快照和已固定的快照保持不变。Windows 移动框不会更改已保存的布局。</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>最长保留时间（天）</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>快照数量上限</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = 不限制</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>应用保留规则…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>删除旧快照…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>手动快照和已固定的快照会保留。清理时始终保留未固定的自动快照和安全快照中最新的一份。</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>上一页</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>下一页</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>恢复快照…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>固定 / 取消固定</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>删除…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>删除选中的快照吗？当前布局将保持不变。</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>恢复操作只更改位置和大小。现有的快捷方式、笔记和框都会保留。已删除的框不会重新创建。</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>当前配置文件已更改。请关闭此窗口，然后重新打开快照。</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>自动布局 — 今天</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>自动布局</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>无法读取的快照</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+保存时间：{1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>手动</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>安全快照</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>尚无快照。保存期望布局即可创建快照。</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>选择快照以查看预览。</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+保存时间：{1:G} · 框：{2} · 显示器：{3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>缺少显示器：{0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>已保存的显示器均可用。</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>显示器分辨率或缩放比例与此快照不同。</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>预览不可用：{0}</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>恢复“{0}”中的位置和大小吗？
+
+系统将先保存当前的期望布局，以便撤销此次恢复。</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>请输入整数：0–36500 天，0–100000 份快照。0 表示不限制。</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>保存这些清理规则吗？现在将删除 {0} 份自动快照或安全快照。
+
+手动快照和已固定的快照受到保护，自动快照和安全快照中最新的一份也会保留。</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>请先输入保留天数。</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>未找到符合删除条件的旧快照。</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>删除超过 {1} 天的 {0} 份自动快照或安全快照吗？
+
+手动快照、已固定的快照，以及自动快照和安全快照中最新的一份都会保留。</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>尚未加载布局。</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>初始布局 — 请检查此布局</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>正在等待已保存的显示器配置。期望布局已受到保护。</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>期望布局已受到保护。</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>无法读取框的位置。</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Windows 无法恢复框的位置。</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>显示器配置已更改。已保存的布局受到保护；正在等待显示器恢复。</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>已恢复保存的布局。主动移动和调整大小的操作将被记住。</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>今天的自动快照已是最新。期望布局已受到保护。</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>已保存的布局</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>采用新布局之前</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>此布局现已成为期望布局。</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>恢复此布局前，请连接已保存的显示器，并使用已保存的分辨率和缩放比例。当前布局尚未更改。</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>现有框所用的一台显示器缺失。已取消恢复。</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>恢复 {0} 之前</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>已恢复匹配的框：{0}。快捷方式和笔记均已保留。</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>布局保护：{0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>布局名称无效。</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>无法读取已保存的期望布局。该布局已保留，未写入新的基准布局。</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>布局文件过大。</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>布局文件为空。</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>快照类型无效。</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>未找到快照。</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>快照无效。</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>请先取消固定此快照，再将其删除。</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>保留规则的数值不能为负数。</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>布局文件不受支持或无效。</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>布局包含无效的显示器位置或框位置。</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Windows 尚未提供稳定的显示器标识。</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>显示器配置尚未就绪。</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>显示器</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>框</value>
+  </data>
 </root>

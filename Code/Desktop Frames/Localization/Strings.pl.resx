@@ -1867,6 +1867,249 @@ Uruchomić ponownie teraz?</value>
   <data name="VuSignalGain" xml:space="preserve">
     <value>Wzmocnienie sygnału (mnożnik):</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>Migawki</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>Migawki — {0}</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>Migawki…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>Podgląd i przywracanie układu ramek oraz zarządzanie zapisanymi migawkami.</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>Mój układ</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>Zapisz migawkę</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>Użyj bieżącego układu…</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>Przyjąć bieżące położenie ramek jako zamierzony układ?
+
+Użyj tej opcji po rozmieszczeniu ramek lub celowej zmianie konfiguracji monitorów. Zostanie zachowana migawka bezpieczeństwa poprzedniego zamierzonego układu.</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>Dzisiejsza automatyczna migawka aktualizuje się po 5 sekundach bez celowych zmian. Migawki z poprzednich dni i przypięte pozostają bez zmian. Przesunięcia ramek przez system Windows nie zmieniają zapisanego układu.</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>Maksymalny wiek (dni)</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>Maksymalna liczba migawek</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = bez limitu</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>Zastosuj zasady przechowywania…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>Usuń starsze…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>Migawki ręczne i przypięte są zachowywane. Czyszczenie zawsze pozostawia najnowszą spośród nieprzypiętych migawek automatycznych i migawek bezpieczeństwa.</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>Poprzednia</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>Następna</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>Przywróć migawkę…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>Przypnij / odepnij</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>Usuń…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>Usunąć wybraną migawkę? Bieżący układ pozostanie bez zmian.</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>Przywracanie zmienia tylko położenie i rozmiary. Bieżące skróty, notatki i ramki są zachowywane. Usunięte ramki nie są tworzone ponownie.</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>Aktywny profil uległ zmianie. Zamknij to okno i ponownie otwórz Migawki.</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>Układ automatyczny — dzisiaj</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>Układ automatyczny</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>Nieczytelna migawka</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+Zapisano: {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>Automatyczna</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>Ręczna</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>Bezpieczeństwa</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>Nie ma jeszcze migawek. Zapisz zamierzony układ, aby utworzyć migawkę.</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>Wybierz migawkę, aby zobaczyć jej podgląd.</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+Zapisano: {1:G} · Ramki: {2} · Monitory: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>Brakujące monitory: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>Zapisane monitory są dostępne.</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>Rozdzielczość lub skalowanie monitorów różni się od zapisanych w tej migawce.</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>Podgląd niedostępny: {0}</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>Przywrócić położenie i rozmiary z migawki „{0}”?
+
+Bieżący zamierzony układ zostanie najpierw zapisany, aby umożliwić cofnięcie przywracania.</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>Wprowadź liczby całkowite: 0–36500 dni i 0–100000 migawek. Zero oznacza brak limitu.</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>Zapisać te zasady czyszczenia? Liczba migawek automatycznych i migawek bezpieczeństwa do usunięcia teraz: {0}.
+
+Migawki ręczne i przypięte są chronione. Najnowsza migawka automatyczna lub bezpieczeństwa zostanie zachowana.</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>Najpierw wprowadź wiek w dniach.</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>Nie znaleziono starych migawek, które można usunąć.</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>Usunąć migawki automatyczne i migawki bezpieczeństwa starsze niż {1} dni? Liczba migawek do usunięcia: {0}.
+
+Migawki ręczne, przypięte oraz najnowsza migawka automatyczna lub bezpieczeństwa zostaną zachowane.</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>Nie wczytano układu.</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>Układ początkowy — sprawdź rozmieszczenie</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>Oczekiwanie na zapisaną konfigurację monitorów. Zamierzony układ jest chroniony.</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>Zamierzony układ jest chroniony.</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>Nie udało się odczytać położenia ramki.</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>System Windows nie mógł przywrócić położenia ramki.</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>Konfiguracja monitorów uległa zmianie. Zapisany układ jest chroniony; oczekiwanie na monitory.</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>Przywrócono zapisany układ. Celowe przesunięcia i zmiany rozmiarów będą zapamiętywane.</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>Dzisiejsza automatyczna migawka jest aktualna. Zamierzony układ jest chroniony.</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>Zapisany układ</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>Przed przyjęciem nowego układu</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>Ta konfiguracja jest teraz zamierzonym układem.</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>Przed przywróceniem tego układu podłącz zapisane monitory z zapisaną rozdzielczością i skalowaniem. Bieżący układ nie został zmieniony.</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>Brakuje monitora jednej z bieżących ramek. Przywracanie zostało anulowane.</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>Przed przywróceniem: {0}</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>Przywrócone pasujące ramki: {0}. Skróty i notatki zostały zachowane.</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>Ochrona układu: {0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>Nieprawidłowa nazwa układu.</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>Nie udało się odczytać zapisanego zamierzonego układu. Został zachowany; nie zapisano nowego układu odniesienia.</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>Plik układu jest zbyt duży.</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>Plik układu jest pusty.</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>Nieprawidłowy typ migawki.</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>Nie znaleziono migawki.</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>Nieprawidłowa migawka.</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>Odepnij tę migawkę przed jej usunięciem.</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>Wartości przechowywania nie mogą być ujemne.</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>Nieobsługiwany lub nieprawidłowy plik układu.</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>Układ zawiera nieprawidłowe położenia monitorów lub ramek.</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>System Windows nie udostępnia jeszcze stabilnego identyfikatora monitora.</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>Konfiguracja monitorów nie jest gotowa.</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>Ramka</value>
+  </data>
+</root>
   <data name="SecLanguage" xml:space="preserve">
     <value>Język</value>
   </data>

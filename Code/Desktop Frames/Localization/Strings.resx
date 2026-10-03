@@ -1927,6 +1927,249 @@ Restart now?</value>
   <data name="LastRunAt" xml:space="preserve">
     <value>Last successful run: {0}</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>Snapshots</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>Snapshots — {0}</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>Snapshots…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>Preview and restore frame arrangements, and manage saved snapshots.</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>My layout</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>Save snapshot</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>Use current arrangement…</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>Accept the frames as they appear now as your intended layout?
+
+Use this after arranging your frames or deliberately changing your monitor setup. A safety snapshot of the previous intended layout will be kept.</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>Today's automatic snapshot updates after 5 seconds without intentional changes. Earlier days and pinned snapshots stay unchanged. Windows moving frames does not change the saved layout.</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>Maximum age (days)</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>Maximum number of snapshots</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = no limit</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>Apply retention…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>Delete older…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>Manual and pinned snapshots are kept. Cleanup always preserves the newest unpinned automatic/safety snapshot.</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>Restore snapshot…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>Pin / unpin</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>Delete…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>Delete the selected snapshot? Your current arrangement will stay as it is.</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>Restoring changes positions and sizes only. Current shortcuts, notes and frames are preserved. Deleted frames are not recreated.</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>The active profile changed. Close this window and open Snapshots again.</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>Automatic layout — today</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>Automatic layout</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>Unreadable snapshot</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+Saved {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>Safety</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>No snapshots yet. Save your intended layout to create one.</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>Select a snapshot to preview it.</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+Saved {1:G} · Frames: {2} · Monitors: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>Missing monitors: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>The saved monitors are available.</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>Monitor resolution or scaling differs from this snapshot.</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>Preview unavailable: {0}</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>Restore positions and sizes from “{0}”?
+
+Your current intended layout will be saved first so you can undo this restore.</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>Enter whole numbers: 0–36500 days and 0–100000 snapshots. Zero means no limit.</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>Save these cleanup rules? {0} automatic/safety snapshots will be deleted now.
+
+Manual and pinned snapshots are protected, and the newest automatic/safety snapshot is kept.</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>Enter an age in days first.</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>No eligible old snapshots were found.</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>Delete {0} automatic/safety snapshots older than {1} days?
+
+Manual, pinned and the newest automatic/safety snapshot will be kept.</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>No layout loaded.</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>Initial layout — check this arrangement</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>Waiting for the saved monitor setup. Your intended layout is protected.</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>Your intended layout is protected.</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>Could not read the frame position.</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Windows could not restore a frame position.</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>Display setup changed. Your saved layout is protected; waiting for your monitors.</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>Saved layout restored. Intentional moves and resizes will be remembered.</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>Today's automatic snapshot is up to date. Your intended layout is protected.</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>Saved layout</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>Before accepting a new arrangement</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>This arrangement is now your intended layout.</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>Connect the saved monitors at their saved resolution and scaling before restoring this layout. Your current layout has not been changed.</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>A current frame's monitor is missing. Restore was cancelled.</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>Before restoring {0}</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>Restored matching frames: {0}. Shortcuts and notes were kept.</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>Layout protection: {0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>Invalid layout name.</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>The saved intended layout could not be read. It has been preserved; no new baseline was written.</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>Layout file is too large.</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>Empty layout file.</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>Invalid snapshot kind.</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>Snapshot not found.</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>Invalid snapshot.</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>Unpin this snapshot before deleting it.</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>Retention values cannot be negative.</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>Unsupported or invalid layout file.</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>The layout contains invalid monitor or frame positions.</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Windows is not reporting a stable monitor identity yet.</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>The monitor configuration is not ready.</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>Frame</value>
+  </data>
+</root>
   <data name="TabInterface" xml:space="preserve">
     <value>Interface</value>
   </data>

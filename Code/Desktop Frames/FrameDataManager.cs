@@ -265,6 +265,7 @@ namespace Desktop_Frames
 
                 string formattedJson = JsonConvert.SerializeObject(serializedData, Formatting.Indented);
                 File.WriteAllText(_jsonFilePath, formattedJson);
+                Layouts.LayoutManager.ConfigurationSaved();
 
                 LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.Settings,
                     $"Saved frames.json with consistent formatting for {serializedData.Count} frames");

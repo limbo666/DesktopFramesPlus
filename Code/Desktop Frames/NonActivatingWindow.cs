@@ -38,11 +38,13 @@ public class NonActivatingWindow : Window
 
         if (msg == WM_ENTERSIZEMOVE)
         {
+            Desktop_Frames.Layouts.LayoutManager.BeginEdit(this);
             Framemanager.OnResizingStarted(this);
         }
         else if (msg == WM_EXITSIZEMOVE)
         {
             Framemanager.OnResizingEnded(this);
+            Desktop_Frames.Layouts.LayoutManager.EndEdit(this);
         }
 
         // Handle existing focus prevention

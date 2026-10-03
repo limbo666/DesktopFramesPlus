@@ -1867,6 +1867,249 @@ Cada ventana lee sus textos mientras se construye, así que el cambio se ve al r
   <data name="VuSignalGain" xml:space="preserve">
     <value>Ganancia de señal (multiplicador):</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>Instantáneas</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>Instantáneas — {0}</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>Instantáneas…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>Previsualizar y restaurar la disposición de los marcos y gestionar las instantáneas guardadas.</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>Mi disposición</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>Guardar instantánea</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>Usar la disposición actual…</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>¿Usar la posición actual de los marcos como disposición deseada?
+
+Utilice esta opción después de organizar los marcos o cambiar deliberadamente la configuración de monitores. Se conservará una instantánea de seguridad de la disposición deseada anterior.</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>La instantánea automática de hoy se actualiza tras 5 segundos sin cambios intencionados. Los días anteriores y las instantáneas fijadas no cambian. Los movimientos de marcos realizados por Windows no modifican la disposición guardada.</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>Antigüedad máxima (días)</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>Número máximo de instantáneas</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = sin límite</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>Aplicar conservación…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>Eliminar antiguas…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>Las instantáneas manuales y fijadas se conservan. La limpieza siempre mantiene la más reciente de las instantáneas automáticas o de seguridad no fijadas.</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>Anterior</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>Siguiente</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>Restaurar instantánea…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>Fijar / desfijar</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>Eliminar…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>¿Eliminar la instantánea seleccionada? La disposición actual no cambiará.</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>La restauración solo cambia posiciones y tamaños. Los accesos directos, las notas y los marcos actuales se conservan. Los marcos eliminados no se vuelven a crear.</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>El perfil activo ha cambiado. Cierre esta ventana y vuelva a abrir Instantáneas.</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>Disposición automática — hoy</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>Disposición automática</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>Instantánea ilegible</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+Guardada el {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>Automática</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>Seguridad</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>Aún no hay instantáneas. Guarde la disposición deseada para crear una.</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>Seleccione una instantánea para previsualizarla.</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+Guardada el {1:G} · Marcos: {2} · Monitores: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>Monitores ausentes: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>Los monitores guardados están disponibles.</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>La resolución o la escala de los monitores difiere de la de esta instantánea.</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>Vista previa no disponible: {0}</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>¿Restaurar las posiciones y los tamaños de «{0}»?
+
+Primero se guardará la disposición deseada actual para poder deshacer esta restauración.</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>Introduzca números enteros: 0–36500 días y 0–100000 instantáneas. Cero significa sin límite.</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>¿Guardar estas reglas de limpieza? Número de instantáneas automáticas o de seguridad que se eliminarán ahora: {0}.
+
+Las instantáneas manuales y fijadas están protegidas y se conserva la más reciente de las instantáneas automáticas o de seguridad.</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>Introduzca primero una antigüedad en días.</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>No se encontraron instantáneas antiguas que se puedan eliminar.</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>¿Eliminar las instantáneas automáticas o de seguridad con más de {1} días? Número que se eliminará: {0}.
+
+Se conservarán las instantáneas manuales y fijadas, además de la más reciente de las instantáneas automáticas o de seguridad.</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>No hay ninguna disposición cargada.</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>Disposición inicial — compruebe esta disposición</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>Esperando la configuración de monitores guardada. La disposición deseada está protegida.</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>La disposición deseada está protegida.</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>No se pudo leer la posición del marco.</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Windows no pudo restaurar la posición de un marco.</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>La configuración de monitores ha cambiado. La disposición guardada está protegida; esperando los monitores.</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>Se ha restaurado la disposición guardada. Se recordarán los movimientos y cambios de tamaño intencionados.</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>La instantánea automática de hoy está actualizada. La disposición deseada está protegida.</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>Disposición guardada</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>Antes de adoptar una nueva disposición</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>Esta es ahora la disposición deseada.</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>Conecte los monitores guardados con la resolución y la escala guardadas antes de restaurar esta disposición. La disposición actual no se ha modificado.</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>Falta el monitor de uno de los marcos actuales. Se ha cancelado la restauración.</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>Antes de restaurar {0}</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>Marcos coincidentes restaurados: {0}. Se han conservado los accesos directos y las notas.</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>Protección de la disposición: {0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>Nombre de disposición no válido.</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>No se pudo leer la disposición deseada guardada. Se ha conservado; no se ha guardado una nueva disposición de referencia.</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>El archivo de disposición es demasiado grande.</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>El archivo de disposición está vacío.</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>Tipo de instantánea no válido.</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>No se encontró la instantánea.</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>Instantánea no válida.</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>Desfije esta instantánea antes de eliminarla.</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>Los valores de conservación no pueden ser negativos.</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>Archivo de disposición no compatible o no válido.</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>La disposición contiene posiciones de monitores o marcos no válidas.</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Windows aún no proporciona un identificador estable para el monitor.</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>La configuración de monitores no está lista.</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>Marco</value>
+  </data>
+</root>
   <data name="SecLanguage" xml:space="preserve">
     <value>Idioma</value>
   </data>

@@ -1867,6 +1867,249 @@
   <data name="VuSignalGain" xml:space="preserve">
     <value>Усиление сигнала (множитель):</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>Снимки</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>Снимки — {0}</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>Снимки…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>Предпросмотр и восстановление расположения рамок, управление сохранёнными снимками.</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>Моё расположение</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>Сохранить снимок</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>Принять текущее расположение…</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>Принять текущее положение рамок как желаемое расположение?
+
+Используйте эту возможность после размещения рамок или намеренного изменения конфигурации мониторов. Будет сохранён страховочный снимок предыдущего желаемого расположения.</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>Сегодняшний автоматический снимок обновляется через 5 секунд без намеренных изменений. Снимки за предыдущие дни и закреплённые снимки не меняются. Перемещение рамок системой Windows не изменяет сохранённое расположение.</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>Максимальный возраст (дни)</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>Максимальное количество снимков</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = без ограничений</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>Применить правила хранения…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>Удалить старые…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>Ручные и закреплённые снимки сохраняются. Очистка всегда оставляет самый новый из незакреплённых автоматических и страховочных снимков.</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>Далее</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>Восстановить снимок…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>Закрепить / открепить</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>Удалить…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>Удалить выбранный снимок? Текущее расположение останется без изменений.</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>Восстановление изменяет только положение и размеры. Текущие ярлыки, заметки и рамки сохраняются. Удалённые рамки не создаются заново.</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>Активный профиль изменился. Закройте это окно и снова откройте снимки.</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>Автоматическое расположение — сегодня</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>Автоматическое расположение</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>Снимок не читается</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+Сохранено: {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>Автоматический</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>Ручной</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>Страховочный</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>Снимков пока нет. Сохраните желаемое расположение, чтобы создать снимок.</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>Выберите снимок для предпросмотра.</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+Сохранено: {1:G} · Рамки: {2} · Мониторы: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>Отсутствующие мониторы: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>Сохранённые мониторы доступны.</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>Разрешение или масштабирование мониторов отличается от этого снимка.</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>Предпросмотр недоступен: {0}</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>Восстановить положение и размеры из снимка «{0}»?
+
+Текущее желаемое расположение будет сначала сохранено, чтобы можно было отменить восстановление.</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>Введите целые числа: 0–36500 дней и 0–100000 снимков. Ноль означает отсутствие ограничений.</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>Сохранить эти правила очистки? Количество автоматических и страховочных снимков, которые будут удалены сейчас: {0}.
+
+Ручные и закреплённые снимки защищены. Самый новый автоматический или страховочный снимок будет сохранён.</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>Сначала укажите возраст в днях.</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>Старых снимков, которые можно удалить, не найдено.</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>Удалить автоматические и страховочные снимки старше {1} дней? Количество снимков к удалению: {0}.
+
+Ручные и закреплённые снимки, а также самый новый автоматический или страховочный снимок будут сохранены.</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>Расположение не загружено.</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>Исходное расположение — проверьте его</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>Ожидание сохранённой конфигурации мониторов. Желаемое расположение защищено.</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>Желаемое расположение защищено.</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>Не удалось прочитать положение рамки.</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Windows не удалось восстановить положение рамки.</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>Конфигурация мониторов изменилась. Сохранённое расположение защищено; ожидание мониторов.</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>Сохранённое расположение восстановлено. Намеренные перемещения и изменения размеров будут запоминаться.</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>Сегодняшний автоматический снимок актуален. Желаемое расположение защищено.</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>Сохранённое расположение</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>Перед принятием нового расположения</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>Это расположение теперь принято как желаемое.</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>Перед восстановлением этого расположения подключите сохранённые мониторы с сохранённым разрешением и масштабированием. Текущее расположение не изменено.</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>Отсутствует монитор одной из текущих рамок. Восстановление отменено.</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>Перед восстановлением: {0}</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>Восстановлено совпадающих рамок: {0}. Ярлыки и заметки сохранены.</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>Защита расположения: {0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>Недопустимое имя расположения.</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>Не удалось прочитать сохранённое желаемое расположение. Оно сохранено без изменений; новое исходное расположение не записано.</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>Файл расположения слишком большой.</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>Файл расположения пуст.</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>Недопустимый тип снимка.</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>Снимок не найден.</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>Недопустимый снимок.</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>Открепите этот снимок перед удалением.</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>Значения правил хранения не могут быть отрицательными.</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>Неподдерживаемый или недопустимый файл расположения.</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>Расположение содержит недопустимые позиции мониторов или рамок.</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Windows пока не сообщает стабильный идентификатор монитора.</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>Конфигурация мониторов ещё не готова.</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>Монитор</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>Рамка</value>
+  </data>
+</root>
   <data name="SecLanguage" xml:space="preserve">
     <value>Язык</value>
   </data>

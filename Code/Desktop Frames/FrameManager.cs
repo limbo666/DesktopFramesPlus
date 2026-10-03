@@ -3176,6 +3176,7 @@ namespace Desktop_Frames
 
         public static void LoadAndCreateFrames(TargetChecker targetChecker)
         {
+            Layouts.LayoutManager.BeginLoad();
             // Get current program version from assembly
             string currentVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "0.0.0";
 
@@ -3431,10 +3432,12 @@ namespace Desktop_Frames
             // --- RESTORE PERSISTENT ACCORDION STACK LINKS FROM JSON ---
             FrameDataManager.RebuildDockingMap();
 
+            Layouts.LayoutManager.Initialize();
             foreach (dynamic frame in FrameDataManager.FrameData.ToList())
             {
                 CreateFrame(frame, targetChecker);
             }
+            Layouts.LayoutManager.CompleteLoad();
 
             // --- NEW: Initialize Auto-Hide Engine ---
             InitializeAutoHideTimer();
@@ -4432,6 +4435,7 @@ namespace Desktop_Frames
             // Handle manual resize to update both Height and UnrolledHeight
             win.SizeChanged += (s, e) =>
             {
+                if (Layouts.LayoutManager.Paused) return;
                 // Get current frame reference by ID to avoid stale references
                 string frameId = win.Tag?.ToString();
                 if (string.IsNullOrEmpty(frameId))
@@ -5748,6 +5752,7 @@ namespace Desktop_Frames
                         bool isLocked = currentFrame.IsLocked?.ToString().ToLower() == "true";
                         if (!isLocked)
                         {
+                            Layouts.LayoutManager.BeginEdit(win);
                             SnapManager.StartDrag(win);
                             try
                             {
@@ -5755,7 +5760,8 @@ namespace Desktop_Frames
                             }
                             finally
                             {
-                                SnapManager.EndDrag(win);
+                                try { SnapManager.EndDrag(win); }
+                                finally { Layouts.LayoutManager.EndEdit(win); }
                             }
                             LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation, $"Dragging frame '{currentFrame.Title}'");
                         }
@@ -6629,11 +6635,9 @@ namespace Desktop_Frames
 
             win.LocationChanged += (s, e) =>
             {
-                // --- THE UNIVERSAL DRAG GATEKEEPER ---
-                // Only save coordinates to JSON if the USER is physically dragging this window with their mouse!
-                // Completely ignores programmatic movement from Auto-Roll, Manual Roll-Up, and CascadeStack.
-                if (SnapManager.ActiveDragWindow != win) return;
-                // -------------------------------------
+                // Preserve the drag-only gate for docking/roll-up movements, and
+                // reject edits invalidated by a display configuration change.
+                if (SnapManager.ActiveDragWindow != win || !Layouts.LayoutManager.IsEditing(win)) return;
 
                 string frameId = win.Tag?.ToString();
                 if (string.IsNullOrEmpty(frameId)) return;
