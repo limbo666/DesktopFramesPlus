@@ -1,10 +1,39 @@
 #  Version history  
 
+v 2.7.8.375   
+<img width="282" height="80" alt="image" src="https://github.com/user-attachments/assets/6d898fd5-fa7d-443d-a98c-3a8fb58528a3" />
+- **Fixed**: 🪲 Bug with icon opacity not following the frame opacity.
+- **Added**: ☑️ Checkbox to select whether icons follow the frame opacity (see above).
+- **Added**: 🎩 Plugin engine and plugin frames (limited to internal plugins).
+- **Added**: Photo Frame plugin. What would Desktop Frames + be without actual photo frames? 
+- **Added**: ️Terminal plugin.  
+- **Added**: ️System Performance plugin.
+- **Added**: ️VU meter plugin.
+- **Added**: ️Simple Calculator plugin.
+- **Added**: ️IP Info plugin.
+- **Added**: ️System Queue Saturation plugin.
+- **Fixed**: 🪲 Bug in the move item function.
+- **Fixed**: 🪲 Bug with loading values in the customization window.
+- **Fixed**: 🪲 Bug when showing previously hidden frames. 
+- **Fixed**: 🪲 Bug with network targets that caused the program to hang on loading.
+- **Changed**: Minor changes to the update detection engine.
+- **Added**: 🍒 Context menu theming.
+- **Added**: Function to detect clicks on the taskbar's lower right corner (Show Desktop).
+- **Fixed**: 💊 Bug in color customization.
+- **Changed**: Large code refactoring, suggested and implemented by https://github.com/lilei105 (Thanks, pal!).
+- **Added**: ♨️ List view for Portal Frames, as suggested by https://github.com/Darlio (Thanks, pal!).
+- **Improved**: 🩵 Snap Near Frames function to snap and move with the parent frame above. Suggested as "Grouping the frames" by lanalancia.
+- **Added**: ️Multi-language engine. Thanks to vittop89 (https://github.com/vittop89) and coopsocialelibera (https://github.com/coopsocialelibera).
+- **Changed**: Options screen rearranged for better control organization.
+- **Added**: Snapshot system to save and restore layouts. Thanks to Sharrnah (https://github.com/Sharrnah/).
+- **Fixed**: Autoroll and Snap Near Frames bug caused by the snapshot system blocking the functions. 
+- **Fixed**: 🪲 Bug in settings management. Thanks to danieltobon21 (https://github.com/danieltobon21).
+- **Fixed**: 🪲 Bug in the startup load mechanism.
+
+
 
 v 2.7.7.294            
 <img width="301" height="73" alt="image" src="https://github.com/user-attachments/assets/9b71557a-3fe3-4d29-a31f-256824ec9dcb" />
-  
-
 - **Fixed**: 🪲 Bug with Frames flickering on restore visibility after autohide.  
 - **Added**: Auto roll Frames. Each Frame has another (right click selectable) option to auto roll after a predifined period of time.    
 - **Improved**: Options window. Control grouping changed through the optiosn winow tabs. Added up/down controls. Controls re-arranged.  
