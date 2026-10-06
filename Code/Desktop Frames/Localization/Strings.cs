@@ -847,5 +847,14 @@ namespace Desktop_Frames.Localization
         public static string NewFrameDefaultTitle => Get("NewFrameDefaultTitle");
         public static string RandomNameAdjectives => Get("RandomNameAdjectives");
         public static string RandomNamePlaces => Get("RandomNamePlaces");
+
+        public static string DlgClose => Get("DlgClose");
+
+        public static string LayoutPreviewTitle => Get("LayoutPreviewTitle");
+        public static string LayoutDetailsTitle => Get("LayoutDetailsTitle");
+        public static string LayoutCleanupSettings => Get("LayoutCleanupSettings");
+        public static string LayoutBtnSave => Get("LayoutBtnSave");
+
+
     }
 }

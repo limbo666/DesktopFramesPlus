@@ -2169,7 +2169,6 @@ Manual, pinned and the newest automatic/safety snapshot will be kept.</value>
   <data name="LayoutFrame" xml:space="preserve">
     <value>Frame</value>
   </data>
-</root>
   <data name="TabInterface" xml:space="preserve">
     <value>Interface</value>
   </data>
@@ -2184,5 +2183,20 @@ Manual, pinned and the newest automatic/safety snapshot will be kept.</value>
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Language template exported successfully!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Layout Details</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Clean Settiings</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Monitor Layout Preview</value>
   </data>
 </root>

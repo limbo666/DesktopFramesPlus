@@ -293,6 +293,9 @@
   <data name="BtnOrganizeNow" xml:space="preserve">
     <value>今すぐ整理（実行）</value>
   </data>
+  <data name="BtnReadMore" xml:space="preserve">
+    <value>詳細を読む…</value>
+  </data>
   <data name="BtnReset" xml:space="preserve">
     <value>リセット</value>
   </data>
@@ -313,6 +316,9 @@
   </data>
   <data name="BtnSmartDesktopRules" xml:space="preserve">
     <value>Smart Desktop ルール...</value>
+  </data>
+  <data name="BtnUpdateNow" xml:space="preserve">
+    <value>今すぐ更新</value>
   </data>
   <data name="ButtonNo" xml:space="preserve">
     <value>いいえ</value>
@@ -460,6 +466,9 @@
   </data>
   <data name="DlgBrowseError" xml:space="preserve">
     <value>参照エラー</value>
+  </data>
+  <data name="DlgClearNote" xml:space="preserve">
+    <value>メモを消去</value>
   </data>
   <data name="DlgConfirmImport" xml:space="preserve">
     <value>インポートの確認</value>
@@ -1082,6 +1091,9 @@
   <data name="MsgCannotDeleteLastTab" xml:space="preserve">
     <value>最後に残ったタブは削除できません。</value>
   </data>
+  <data name="MsgClearNoteConfirm" xml:space="preserve">
+    <value>このメモのすべてのテキストを消去してもよろしいですか？</value>
+  </data>
   <data name="MsgConfirmDeleteProfile" xml:space="preserve">
     <value>プロファイル「{0}」を削除してもよろしいですか？
 この操作は元に戻せません。</value>
@@ -1356,6 +1368,9 @@
   </data>
   <data name="NetUnreachable" xml:space="preserve">
     <value>到達不能</value>
+  </data>
+  <data name="NewFrameDefaultTitle" xml:space="preserve">
+    <value>新しいフレーム - ショートカットをここにドロップ</value>
   </data>
   <data name="NoteAutoOrganize" xml:space="preserve">
     <value>注: Auto-Organize は、新しいファイルがないか常にデスクトップを監視します。ファイルが有効なルールの条件に一致すると、指定した Portal Frame またはフォルダーに自動的に（実体として）移動されます。この機能により、デスクトップを常に整理された状態に保ち、ダウンロードしたファイルを適切な場所へ自動的に振り分けることができます。</value>
@@ -1912,6 +1927,276 @@
   <data name="LastRunAt" xml:space="preserve">
     <value>前回の成功した実行: {0}</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>スナップショット
+</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>スナップショット — {0}
+</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>スナップショット…
+</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>フレームの配置をプレビューおよび復元し、保存されたスナップショットを管理します</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>マイレイアウト</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>スナップショットを保存
+</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>現在の配置を使用…
+</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>現在表示されているフレームを意図したレイアウトとして適用しますか？
+
+フレームを配置した後、またはモニター構成を意図的に変更した後に使用してください。以前の意図したレイアウトの安全用スナップショットが保持されます。</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>今日の自動スナップショットは、意図的な変更がない状態で5秒後に更新されます。過去の日付のスナップショットと固定されたスナップショットは変更されません。フレーム内でウィンドウを移動しても、保存されたレイアウトは変更されません</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>最大経過日数（日）
+</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>スナップショットの最大数
+</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = 制限なし</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>保持設定を適用…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>古いものを削除…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>手動および固定済みのスナップショットは保持されます。クリーンアップでは常に、固定されていない最新の自動/安全スナップショットが保持されます。
+</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>前へ
+</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>次へ
+</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>スナップショットを復元…
+</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>固定 / 固定解除</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>削除…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>選択したスナップショットを削除しますか？現在の配置はそのまま維持されます。</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>復元では位置とサイズのみが変更されます。現在のショートカット、メモ、フレームは保持されます。削除されたフレームは再作成されません。
+</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>アクティブなプロファイルが変更されました。このウィンドウを閉じて「スナップショット」をもう一度開いてください。
+</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>自動レイアウト - 今日</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>自動レイアウト</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>読み取れないスナップショット
+</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+保存日時 {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>手動</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>安全</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>まだスナップショットはありません。意図したレイアウトを保存して作成してください。</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>プレビューするスナップショットを選択してください。
+</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+保存日時 {1:G} · フレーム: {2} · モニター: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>不足しているモニター: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>保存されたモニターを利用できます。</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>モニターの解像度または拡大率がこのスナップショットと異なります。</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>プレビューを利用できません: {0}
+</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>「{0}」から位置とサイズを復元しますか？
+
+現在の意図したレイアウトを先に保存するため、この復元を元に戻すことができます。</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>整数を入力してください：0～36500日、0～100000スナップショット。0は制限なしを意味します。</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>これらのクリーンアップルールを保存しますか？現在、{0}件の自動/安全スナップショットが削除されます。
+
+手動および固定済みのスナップショットは保護され、最新の自動/安全スナップショットは保持されます。</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>まず日数を入力してください。</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>条件に該当する古いスナップショットは見つかりませんでした。</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>{1}日より古い自動/安全スナップショットを{0}件削除しますか？
+
+手動、固定済み、および最新の自動/安全スナップショットは保持されます。</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>レイアウトが読み込まれていません。</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>初期レイアウト — この配置を確認</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>保存されたモニター構成を待機しています。意図したレイアウトは保護されています。
+</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>意図したレイアウトは保護されています。
+</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>フレームの位置を読み取れませんでした。
+</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Windows はフレームの位置を復元できませんでした。
+</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>ディスプレイ構成が変更されました。保存されたレイアウトは保護されています。モニターを待機しています。</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>保存されたレイアウトを復元しました。意図的な移動やサイズ変更は記憶されます。</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>今日の自動スナップショットは最新です。意図したレイアウトは保護されています。
+</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>保存されたレイアウト
+</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>新しい配置を適用する前</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>この配置が現在の意図したレイアウトです。</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>このレイアウトを復元する前に、保存時と同じ解像度および拡大率で保存されたモニターを接続してください。現在のレイアウトは変更されていません。
+</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>現在のフレームのモニターが見つかりません。復元はキャンセルされました。
+</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>{0} を復元する前</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>一致するフレームを復元しました: {0}。ショートカットとメモは保持されました。
+</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>レイアウト保護: {0}
+</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>無効なレイアウト名です。</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>保存された意図したレイアウトを読み取れませんでした。レイアウトは保持され、新しい基準レイアウトは保存されませんでした。</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>レイアウトファイルが大きすぎます。</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>レイアウトファイルが空です。</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>無効なスナップショット種別です。</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>スナップショットが見つかりません。
+</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>無効なスナップショットです。</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>削除する前に、このスナップショットの固定を解除してください。
+</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>保持期間の値に負の数は指定できません。</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>サポートされていないか無効なレイアウトファイルです。</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>レイアウトに無効なモニターまたはフレーム位置が含まれています。</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Windows はまだ安定したモニター識別情報を報告していません。</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>モニター構成の準備ができていません。</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>モニター</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>フレーム</value>
+  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>インターフェース</value>
   </data>
@@ -1926,5 +2211,20 @@
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>言語テンプレートを正常にエクスポートしました！</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>スナップショットの詳細</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>クリーンアップ設定</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>モニターレイアウトのプレビュー</value>
   </data>
 </root>

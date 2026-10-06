@@ -1927,21 +1927,6 @@
   <data name="LastRunAt" xml:space="preserve">
     <value>上次成功运行：{0}</value>
   </data>
-  <data name="TabInterface" xml:space="preserve">
-    <value>界面</value>
-  </data>
-  <data name="TabAppearance" xml:space="preserve">
-    <value>外观</value>
-  </data>
-  <data name="TabIdleBehaviors" xml:space="preserve">
-    <value>空闲行为</value>
-  </data>
-  <data name="BtnExportTemplate" xml:space="preserve">
-    <value>导出语言模板...</value>
-  </data>
-  <data name="MsgTemplateExported" xml:space="preserve">
-    <value>语言模板已成功导出！</value>
-  </data>
   <data name="LayoutSnapshots" xml:space="preserve">
     <value>快照</value>
   </data>
@@ -2183,5 +2168,35 @@
   </data>
   <data name="LayoutFrame" xml:space="preserve">
     <value>框</value>
+  </data>
+  <data name="TabInterface" xml:space="preserve">
+    <value>界面</value>
+  </data>
+  <data name="TabAppearance" xml:space="preserve">
+    <value>外观</value>
+  </data>
+  <data name="TabIdleBehaviors" xml:space="preserve">
+    <value>空闲行为</value>
+  </data>
+  <data name="BtnExportTemplate" xml:space="preserve">
+    <value>导出语言模板...</value>
+  </data>
+  <data name="MsgTemplateExported" xml:space="preserve">
+    <value>语言模板已成功导出！</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>快照详细信息</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>清理设置</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>显示器布局预览</value>
   </data>
 </root>

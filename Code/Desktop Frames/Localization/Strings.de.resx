@@ -1867,6 +1867,66 @@ Jetzt neu starten?</value>
   <data name="VuSignalGain" xml:space="preserve">
     <value>Signalverstärkung (Faktor):</value>
   </data>
+  <data name="SecLanguage" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="LblLanguage" xml:space="preserve">
+    <value>Sprache der Oberfläche:</value>
+  </data>
+  <data name="LangAutomatic" xml:space="preserve">
+    <value>Automatisch (Windows folgen)</value>
+  </data>
+  <data name="BtnImportLanguagePack" xml:space="preserve">
+    <value>Sprachpaket importieren…</value>
+  </data>
+  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
+    <value>Sprachordner öffnen</value>
+  </data>
+  <data name="LanguagePackFilter" xml:space="preserve">
+    <value>Sprachpakete (*.resx)|*.resx</value>
+  </data>
+  <data name="LanguagePackImported" xml:space="preserve">
+    <value>Sprachpaket installiert: {0}. Nach einem Neustart erscheint es in der Liste.</value>
+  </data>
+  <data name="LanguagePackBadName" xml:space="preserve">
+    <value>Der Dateiname muss ein Kulturcode sein, etwa de.resx oder pt-BR.resx.</value>
+  </data>
+  <data name="NoteLanguageRestart" xml:space="preserve">
+    <value>Hinweis: Die Sprache wechselt nach dem Neustart des Programms. Pakete im Ordner Languages werden beim nächsten Start gelesen.</value>
+  </data>
+  <data name="CatImages" xml:space="preserve">
+    <value>Bilder</value>
+  </data>
+  <data name="CatDocuments" xml:space="preserve">
+    <value>Dokumente</value>
+  </data>
+  <data name="CatExecutables" xml:space="preserve">
+    <value>Programme</value>
+  </data>
+  <data name="CatArchives" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="CatCustomExtensions" xml:space="preserve">
+    <value>Eigene Erweiterungen...</value>
+  </data>
+  <data name="ConflictAutoRename" xml:space="preserve">
+    <value>Automatisch umbenennen (z. B. Datei (1).jpg)</value>
+  </data>
+  <data name="ConflictOverwrite" xml:space="preserve">
+    <value>Überschreiben (alte Datei in den Papierkorb)</value>
+  </data>
+  <data name="ConflictSkip" xml:space="preserve">
+    <value>Überspringen (auf dem Desktop lassen)</value>
+  </data>
+  <data name="TargetPortalFrame" xml:space="preserve">
+    <value>Portal-Rahmen: {0}</value>
+  </data>
+  <data name="LastRunNever" xml:space="preserve">
+    <value>Letzte erfolgreiche Ausführung: nie</value>
+  </data>
+  <data name="LastRunAt" xml:space="preserve">
+    <value>Letzte erfolgreiche Ausführung: {0}</value>
+  </data>
   <data name="LayoutSnapshots" xml:space="preserve">
     <value>Momentaufnahmen</value>
   </data>
@@ -2109,67 +2169,6 @@ Manuelle und angeheftete Momentaufnahmen sowie die neueste automatische Momentau
   <data name="LayoutFrame" xml:space="preserve">
     <value>Rahmen</value>
   </data>
-</root>
-  <data name="SecLanguage" xml:space="preserve">
-    <value>Sprache</value>
-  </data>
-  <data name="LblLanguage" xml:space="preserve">
-    <value>Sprache der Oberfläche:</value>
-  </data>
-  <data name="LangAutomatic" xml:space="preserve">
-    <value>Automatisch (Windows folgen)</value>
-  </data>
-  <data name="BtnImportLanguagePack" xml:space="preserve">
-    <value>Sprachpaket importieren…</value>
-  </data>
-  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
-    <value>Sprachordner öffnen</value>
-  </data>
-  <data name="LanguagePackFilter" xml:space="preserve">
-    <value>Sprachpakete (*.resx)|*.resx</value>
-  </data>
-  <data name="LanguagePackImported" xml:space="preserve">
-    <value>Sprachpaket installiert: {0}. Nach einem Neustart erscheint es in der Liste.</value>
-  </data>
-  <data name="LanguagePackBadName" xml:space="preserve">
-    <value>Der Dateiname muss ein Kulturcode sein, etwa de.resx oder pt-BR.resx.</value>
-  </data>
-  <data name="NoteLanguageRestart" xml:space="preserve">
-    <value>Hinweis: Die Sprache wechselt nach dem Neustart des Programms. Pakete im Ordner Languages werden beim nächsten Start gelesen.</value>
-  </data>
-  <data name="CatImages" xml:space="preserve">
-    <value>Bilder</value>
-  </data>
-  <data name="CatDocuments" xml:space="preserve">
-    <value>Dokumente</value>
-  </data>
-  <data name="CatExecutables" xml:space="preserve">
-    <value>Programme</value>
-  </data>
-  <data name="CatArchives" xml:space="preserve">
-    <value>Archive</value>
-  </data>
-  <data name="CatCustomExtensions" xml:space="preserve">
-    <value>Eigene Erweiterungen...</value>
-  </data>
-  <data name="ConflictAutoRename" xml:space="preserve">
-    <value>Automatisch umbenennen (z. B. Datei (1).jpg)</value>
-  </data>
-  <data name="ConflictOverwrite" xml:space="preserve">
-    <value>Überschreiben (alte Datei in den Papierkorb)</value>
-  </data>
-  <data name="ConflictSkip" xml:space="preserve">
-    <value>Überspringen (auf dem Desktop lassen)</value>
-  </data>
-  <data name="TargetPortalFrame" xml:space="preserve">
-    <value>Portal-Rahmen: {0}</value>
-  </data>
-  <data name="LastRunNever" xml:space="preserve">
-    <value>Letzte erfolgreiche Ausführung: nie</value>
-  </data>
-  <data name="LastRunAt" xml:space="preserve">
-    <value>Letzte erfolgreiche Ausführung: {0}</value>
-  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>Benutzeroberfläche</value>
   </data>
@@ -2184,5 +2183,20 @@ Manuelle und angeheftete Momentaufnahmen sowie die neueste automatische Momentau
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Sprachvorlage erfolgreich exportiert!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Schnappschussdetails</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Bereinigungseinstellungen</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Vorschau des Monitorlayouts</value>
   </data>
 </root>

@@ -81,6 +81,43 @@ namespace Desktop_Frames
         /// Category: Icon Rendering
         /// Moved from: Framemanager.AddIcon
         /// </summary>
+        //public static void AddIcon(dynamic icon, WrapPanel wpcont)
+        //{
+        //    try
+        //    {
+        //        // Extract icon properties
+        //        IDictionary<string, object> iconDict = icon is IDictionary<string, object> dict ?
+        //            dict : ((JObject)icon).ToObject<IDictionary<string, object>>();
+
+        //        string filePath = iconDict.ContainsKey("Filename") ? (string)iconDict["Filename"] : "Unknown";
+        //        bool isFolder = iconDict.ContainsKey("IsFolder") && (bool)iconDict["IsFolder"];
+        //        bool isLink = iconDict.ContainsKey("IsLink") && (bool)iconDict["IsLink"];
+        //        bool isNetwork = iconDict.ContainsKey("IsNetwork") && (bool)iconDict["IsNetwork"];
+        //        bool isShortcut = Path.GetExtension(filePath).ToLower() == ".lnk";
+
+        //        // Enhanced target path resolution with Unicode support and folder detection
+        //        string targetPath = filePath;
+        //        if (isShortcut)
+        //        {
+        //            targetPath = FilePathUtilities.GetShortcutTargetUnicodeSafe(filePath);
+
+        //            // Re-check if the target is actually a folder for Unicode shortcuts
+        //            if (!string.IsNullOrEmpty(targetPath) && System.IO.Directory.Exists(targetPath))
+        //            {
+        //                isFolder = true; // Update folder flag for shortcuts targeting folders
+        //                LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.IconHandling,
+        //                    $"Corrected isFolder to true for Unicode shortcut {filePath} targeting folder {targetPath}");
+        //            }
+        //        }
+        //        string arguments = iconDict.ContainsKey("Arguments") ? (string)iconDict["Arguments"] : null;
+
+        //        LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.IconHandling,
+        //            $"AddIcon: {filePath} | IsFolder:{isFolder} | IsLink:{isLink} | IsShortcut:{isShortcut}");
+
+        //        // Get icon spacing from frame data
+
+
+
         public static void AddIcon(dynamic icon, WrapPanel wpcont)
         {
             try
@@ -94,27 +131,13 @@ namespace Desktop_Frames
                 bool isLink = iconDict.ContainsKey("IsLink") && (bool)iconDict["IsLink"];
                 bool isNetwork = iconDict.ContainsKey("IsNetwork") && (bool)iconDict["IsNetwork"];
                 bool isShortcut = Path.GetExtension(filePath).ToLower() == ".lnk";
-
-                // Enhanced target path resolution with Unicode support and folder detection
-                string targetPath = filePath;
-                if (isShortcut)
-                {
-                    targetPath = FilePathUtilities.GetShortcutTargetUnicodeSafe(filePath);
-
-                    // Re-check if the target is actually a folder for Unicode shortcuts
-                    if (!string.IsNullOrEmpty(targetPath) && System.IO.Directory.Exists(targetPath))
-                    {
-                        isFolder = true; // Update folder flag for shortcuts targeting folders
-                        LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.IconHandling,
-                            $"Corrected isFolder to true for Unicode shortcut {filePath} targeting folder {targetPath}");
-                    }
-                }
                 string arguments = iconDict.ContainsKey("Arguments") ? (string)iconDict["Arguments"] : null;
 
                 LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.IconHandling,
                     $"AddIcon: {filePath} | IsFolder:{isFolder} | IsLink:{isLink} | IsShortcut:{isShortcut}");
 
                 // Get icon spacing from frame data
+
                 int iconSpacing = GetIconSpacingForFile(filePath);
 
                 // Create main StackPanel container
@@ -136,6 +159,41 @@ namespace Desktop_Frames
                     if (iconCache.TryGetValue(filePath, out var cached)) cachedIcon = cached;
                 }
 
+                //if (cachedIcon != null)
+                //{
+                //    ico.Source = cachedIcon;
+                //    ApplyPostCreationIconOverride(ico, filePath);
+                //}
+                //else
+                //{
+                //    ico.Source = CreateFrozenBitmap("pack://application:,,,/Resources/file-WhiteX.png");
+
+                //    LazyIconLoader.RequestIcon(new IconLoadRequest
+                //    {
+                //        FilePath = filePath,
+                //        TargetPath = targetPath,
+                //        IsFolder = isFolder,
+                //        IsLink = isLink,
+                //        IsShortcut = isShortcut,
+                //        IconDict = iconDict,
+                //        TargetImage = ico,
+                //        OnLoaded = () => ApplyPostCreationIconOverride(ico, filePath)
+                //    });
+                //}
+
+                //sp.Children.Add(ico);
+
+                //// Create and add text label
+                //TextBlock lbl = CreateIconLabel(iconDict, filePath);
+                //sp.Children.Add(lbl);
+
+                //// Set tag for event handling (matches ClickEventAdder expectation)
+                //sp.Tag = new { FilePath = filePath, IsFolder = isFolder, Arguments = arguments };
+
+                //// Create tooltip
+                //CreateIconTooltip(sp, filePath, targetPath, arguments);
+
+
                 if (cachedIcon != null)
                 {
                     ico.Source = cachedIcon;
@@ -148,7 +206,6 @@ namespace Desktop_Frames
                     LazyIconLoader.RequestIcon(new IconLoadRequest
                     {
                         FilePath = filePath,
-                        TargetPath = targetPath,
                         IsFolder = isFolder,
                         IsLink = isLink,
                         IsShortcut = isShortcut,
@@ -167,8 +224,8 @@ namespace Desktop_Frames
                 // Set tag for event handling (matches ClickEventAdder expectation)
                 sp.Tag = new { FilePath = filePath, IsFolder = isFolder, Arguments = arguments };
 
-                // Create tooltip
-                CreateIconTooltip(sp, filePath, targetPath, arguments);
+                // Create basic tooltip immediately (it will be updated if it's a shortcut later)
+                CreateIconTooltip(sp, filePath, filePath, arguments);
 
                 // Add to container
                 wpcont.Children.Add(sp);
@@ -831,11 +888,27 @@ namespace Desktop_Frames
         /// Applies safe hardware acceleration to existing panels without breaking drag/drop logic.
         /// Category: UI Optimization
         /// </summary>
+        //public static void OptimizeFramePanel(WrapPanel panel, ScrollViewer scrollViewer)
+        //{
+        //    if (panel == null) return;
+
+        //    panel.CacheMode = new BitmapCache { EnableClearType = false, RenderAtScale = 1.0, SnapsToDevicePixels = true };
+        //    panel.UseLayoutRounding = true;
+
+        //    if (scrollViewer != null)
+        //    {
+        //        VirtualizingPanel.SetScrollUnit(scrollViewer, ScrollUnit.Pixel);
+        //        RenderOptions.SetBitmapScalingMode(scrollViewer, BitmapScalingMode.LowQuality);
+        //    }
+        //}
+
         public static void OptimizeFramePanel(WrapPanel panel, ScrollViewer scrollViewer)
         {
             if (panel == null) return;
 
-            panel.CacheMode = new BitmapCache { EnableClearType = false, RenderAtScale = 1.0, SnapsToDevicePixels = true };
+            // BUG FIX: Temporarily disable BitmapCache. WPF BitmapCache corrupts visuals 
+            // if the visual tree updates (async icon load) while the parent is animating or collapsed (Rolled up).
+            // panel.CacheMode = new BitmapCache { EnableClearType = false, RenderAtScale = 1.0, SnapsToDevicePixels = true };
             panel.UseLayoutRounding = true;
 
             if (scrollViewer != null)
@@ -846,12 +919,12 @@ namespace Desktop_Frames
         }
 
 
-		/// <summary>
-		/// Enhanced AddIcon with frame ext for proper sizing and spacing
-		/// Used by: RefreshFrameContentSimple for tabbed frames
-		/// Category: Icon Rendering
-		/// </summary>
-		public static void AddIconWithframeContext(dynamic icon, WrapPanel wpcont, dynamic frame)
+        /// <summary>
+        /// Enhanced AddIcon with frame ext for proper sizing and spacing
+        /// Used by: RefreshFrameContentSimple for tabbed frames
+        /// Category: Icon Rendering
+        /// </summary>
+        public static void AddIconWithframeContext(dynamic icon, WrapPanel wpcont, dynamic frame)
         {
             try
             {

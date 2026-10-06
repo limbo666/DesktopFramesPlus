@@ -293,6 +293,9 @@ Desktop Frames + wordt onderhouden door Nikos Georgousis en is verbeterd en geop
   <data name="BtnOrganizeNow" xml:space="preserve">
     <value>Nu organiseren (uitvoeren)</value>
   </data>
+  <data name="BtnReadMore" xml:space="preserve">
+    <value>Meer lezen...</value>
+  </data>
   <data name="BtnReset" xml:space="preserve">
     <value>Resetten</value>
   </data>
@@ -313,6 +316,9 @@ Desktop Frames + wordt onderhouden door Nikos Georgousis en is verbeterd en geop
   </data>
   <data name="BtnSmartDesktopRules" xml:space="preserve">
     <value>Smart Desktop-regels...</value>
+  </data>
+  <data name="BtnUpdateNow" xml:space="preserve">
+    <value>Nu bijwerken</value>
   </data>
   <data name="ButtonNo" xml:space="preserve">
     <value>Nee</value>
@@ -460,6 +466,9 @@ Desktop Frames + wordt onderhouden door Nikos Georgousis en is verbeterd en geop
   </data>
   <data name="DlgBrowseError" xml:space="preserve">
     <value>Fout bij bladeren</value>
+  </data>
+  <data name="DlgClearNote" xml:space="preserve">
+    <value>Notitie wissen</value>
   </data>
   <data name="DlgConfirmImport" xml:space="preserve">
     <value>Import bevestigen</value>
@@ -1082,6 +1091,9 @@ Desktop Frames + wordt onderhouden door Nikos Georgousis en is verbeterd en geop
   <data name="MsgCannotDeleteLastTab" xml:space="preserve">
     <value>Het laatste overgebleven tabblad kan niet worden verwijderd.</value>
   </data>
+  <data name="MsgClearNoteConfirm" xml:space="preserve">
+    <value>Weet u zeker dat u alle tekst uit deze notitie wilt wissen?</value>
+  </data>
   <data name="MsgConfirmDeleteProfile" xml:space="preserve">
     <value>Weet u zeker dat u het profiel '{0}' wilt verwijderen?
 Dit kan niet ongedaan worden gemaakt.</value>
@@ -1356,6 +1368,9 @@ Nu opnieuw starten?</value>
   </data>
   <data name="NetUnreachable" xml:space="preserve">
     <value>Niet bereikbaar</value>
+  </data>
+  <data name="NewFrameDefaultTitle" xml:space="preserve">
+    <value>Nieuw frame - Sleep uw snelkoppelingen hierheen</value>
   </data>
   <data name="NoteAutoOrganize" xml:space="preserve">
     <value>Opmerking: Auto-Organize houdt voortdurend uw bureaublad in de gaten op nieuwe bestanden. Wanneer een bestand voldoet aan de voorwaarden van een ingeschakelde regel, wordt het automatisch en fysiek verplaatst naar het opgegeven Portal Frame of de opgegeven map. Gebruik dit om uw bureaublad permanent opgeruimd te houden en downloads automatisch naar de juiste locatie te sturen.</value>
@@ -1912,6 +1927,265 @@ Nu opnieuw starten?</value>
   <data name="LastRunAt" xml:space="preserve">
     <value>Laatst geslaagde uitvoering: {0}</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>Momentopnamen</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>Momentopnamen — {0}
+</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>Momentopnamen…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>Bekijk voorbeelden van frame-indelingen, herstel ze en beheer opgeslagen momentopnamen.</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>Mijn indeling</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>Momentopname opslaan
+</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>Huidige indeling gebruiken…
+</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>De frames zoals ze nu worden weergegeven als uw gewenste indeling accepteren?
+
+Gebruik dit nadat u uw frames hebt gerangschikt of uw monitorconfiguratie bewust hebt gewijzigd. Er wordt een veiligheidssnapshot van de vorige gewenste indeling bewaard.</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>De automatische momentopname van vandaag wordt na 5 seconden bijgewerkt als er geen bewuste wijzigingen zijn. Momentopnamen van eerdere dagen en vastgezette momentopnamen blijven ongewijzigd. Het verplaatsen van vensters binnen frames verandert de opgeslagen indeling niet.</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>Maximale ouderdom (dagen)
+</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>Maximaal aantal momentopnamen
+</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = geen limiet</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>Bewaring toepassen…</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>Oudere verwijderen…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>Handmatige en vastgezette momentopnamen worden behouden. Opruimen bewaart altijd de nieuwste niet-vastgezette automatische/veiligheidsmomentopname.
+</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>Vorige
+</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>Volgende</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>Momentopname herstellen…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>Vastzetten / Losmaken
+</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>Verwijderen…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>De geselecteerde momentopname verwijderen? Uw huidige indeling blijft ongewijzigd.</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>Bij het herstellen worden alleen posities en afmetingen gewijzigd. Huidige snelkoppelingen, notities en frames blijven behouden. Verwijderde frames worden niet opnieuw gemaakt.</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>Het actieve profiel is gewijzigd. Sluit dit venster en open Momentopnamen opnieuw.
+</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>Automatische indeling - Vandaag</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>Automatische indeling</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>Onleesbare momentopname
+</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+Opgeslagen {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>Handmatig</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>Veiligheid</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>Nog geen momentopnamen. Sla uw gewenste indeling op om er een te maken.</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>Selecteer een momentopname om deze te bekijken.
+</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+Opgeslagen {1:G} · Frames: {2} · Monitoren: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>Ontbrekende monitoren: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>De opgeslagen monitoren zijn beschikbaar.</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>De monitorresolutie of schaal verschilt van deze momentopname.</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>Voorbeeld niet beschikbaar: {0}
+</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>Posities en afmetingen herstellen vanuit “{0}”?
+
+Uw huidige gewenste indeling wordt eerst opgeslagen, zodat u deze herstelactie ongedaan kunt maken.</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>Voer gehele getallen in: 0–36500 dagen en 0–100000 momentopnamen. Nul betekent geen limiet.</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>Deze opruimingsregels opslaan? Er worden nu {0} automatische/veiligheidsmomentopnamen verwijderd.
+
+Handmatige en vastgezette momentopnamen zijn beschermd en de nieuwste automatische/veiligheidsmomentopname blijft behouden.</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>Voer eerst een leeftijd in dagen in.</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>Er zijn geen geschikte oude momentopnamen gevonden</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>{0} automatische/veiligheidsmomentopnamen verwijderen die ouder zijn dan {1} dagen?
+
+Handmatige, vastgezette en de nieuwste automatische/veiligheidsmomentopname blijven behouden.
+</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>Geen indeling geladen.</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>Initiële indeling — deze indeling controleren</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>Wachten op de opgeslagen monitorconfiguratie. Uw gewenste indeling is beschermd.
+</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>Uw gewenste indeling is beschermd.</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>De framepositie kon niet worden gelezen.</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Windows kon een framepositie niet herstellen.</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>De beeldschermconfiguratie is gewijzigd. Uw opgeslagen indeling is beschermd; wachten op uw monitoren.</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>Opgeslagen indeling hersteld. Bewuste verplaatsingen en formaatwijzigingen worden onthouden.</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>De automatische momentopname van vandaag is bijgewerkt. Uw gewenste indeling is beschermd.
+</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>Opgeslagen indeling
+</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>Voordat u een nieuwe indeling accepteert</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>Deze indeling is nu uw gewenste indeling.</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>Sluit de opgeslagen monitoren aan met hun opgeslagen resolutie en schaal voordat u deze indeling herstelt. Uw huidige indeling is niet gewijzigd.</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>De monitor van een huidig frame ontbreekt. Het herstellen is geannuleerd.</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>Voordat {0} wordt hersteld</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>Overeenkomende frames hersteld: {0}. Snelkoppelingen en notities zijn behouden.</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>Indelingsbeveiliging: {0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>Ongeldige naam van de indeling.</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>De opgeslagen gewenste indeling kon niet worden gelezen. Deze is behouden; er is geen nieuwe basisindeling opgeslagen.</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>Het indelingsbestand is te groot.</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>Leeg indelingsbestand.</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>Ongeldig type momentopname.</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>Momentopname niet gevonden.</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>Ongeldige momentopname.</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>Maak deze momentopname los voordat u deze verwijdert.
+</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>Bewaarwaarden mogen niet negatief zijn.</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>Niet-ondersteund of ongeldig indelingsbestand.</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>De indeling bevat ongeldige monitor- of frameposities.</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Windows rapporteert nog geen stabiele monitoridentiteit.</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>De monitorconfiguratie is niet gereed.</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>Frame</value>
+  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>Interface</value>
   </data>
@@ -1926,5 +2200,20 @@ Nu opnieuw starten?</value>
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Taaltemplate succesvol geëxporteerd!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Sluiten</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Details van momentopname</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Opruimingsinstellingen</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Opslaan</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Voorbeeld van monitorindeling</value>
   </data>
 </root>

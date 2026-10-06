@@ -933,7 +933,7 @@ namespace Desktop_Frames
 
             CreateCheckBox(c, Strings.OptAutomaticBackup, "EnableAutoBackup", SettingsManager.EnableAutoBackup);
 
-            CreateSectionHeader(c, Strings.LayoutSnapshots, ColorTools);
+            CreateSectionHeader(c, Strings.LayoutSnapshots, Color.FromRgb(180, 52, 120));
             c.Children.Add(new TextBlock
             {
                 Text = Strings.LayoutOptionsDescription,
@@ -941,7 +941,7 @@ namespace Desktop_Frames
                 Foreground = Brushes.DimGray,
                 Margin = new Thickness(0, 0, 0, 10)
             });
-            Button snapshots = CreateStyledButton(Strings.LayoutSnapshotsButton, ColorTools);
+            Button snapshots = CreateStyledButton(Strings.LayoutSnapshotsButton, Color.FromRgb(180, 52, 120));
             snapshots.Width = 255;
             snapshots.Height = 45;
             snapshots.HorizontalAlignment = HorizontalAlignment.Left;
@@ -1465,9 +1465,9 @@ namespace Desktop_Frames
                     }
                 }
 
-                // 3. Tools
-                var toolsContent = (StackPanel)((ScrollViewer)((TabItem)_tabControl.Items[2]).Content).Content;
-                // 4. Idle Behaviors (Tab 3)
+                //// 3. Tools
+                //var toolsContent = (StackPanel)((ScrollViewer)((TabItem)_tabControl.Items[2]).Content).Content;
+                //// 4. Idle Behaviors (Tab 3)
                 var idleContent = (StackPanel)((ScrollViewer)((TabItem)_tabControl.Items[3]).Content).Content;
                 foreach (var child in idleContent.Children)
                 {
@@ -1486,7 +1486,7 @@ namespace Desktop_Frames
                 }
 
                 // 5. Tools (Tab 4)
-                var toolsContent = (StackPanel)((TabItem)_tabControl.Items[4]).Content;
+                var toolsContent = (StackPanel)((ScrollViewer)((TabItem)_tabControl.Items[4]).Content).Content;
                 foreach (var child in toolsContent.Children) if (child is CheckBox cb && cb.Name == "EnableAutoBackup") SettingsManager.EnableAutoBackup = cb.IsChecked == true;
 
                 // 6. Profiles (Tab 5) 

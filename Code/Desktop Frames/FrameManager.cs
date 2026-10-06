@@ -291,8 +291,42 @@ namespace Desktop_Frames
         private static System.Windows.Threading.DispatcherTimer _transitionCleanupTimer;
 
         // --- NEW: Auto Roll Tracking Engine ---
+        //
+        // _autoRolledFrames is the single source of truth for the *transient*
+        // auto-roll state. It is deliberately kept separate from the JSON
+        // "IsRolled" flag, because that flag represents the user's *manual*
+        // roll intent and is expected to survive restarts. Auto-roll is a
+        // runtime behavior: it rolls idle frames up and silently wakes them
+        // on hover. If we wrote IsRolled="true" here, frames would come back
+        // rolled up on next launch and would never wake on hover, which is
+        // not what the feature is for.
+        //
+        // Because the state lives only in memory, other subsystems that
+        // resize windows (most notably LayoutManager.ApplyWindows) must
+        // explicitly consult this set before touching a frame's height.
+        // IsFrameAutoRolled below is the supported way to do that.
         private static readonly HashSet<string> _autoRolledFrames = new HashSet<string>();
         private static readonly Dictionary<string, DispatcherTimer> _autoRollTimers = new Dictionary<string, DispatcherTimer>();
+        // --------------------------------------
+
+        /// <summary>
+        /// Read-only query for the transient auto-roll state.
+        ///
+        /// LayoutManager calls this before applying a layout so it does not
+        /// grow a rolled-up frame behind Framemanager's back. A frame that is
+        /// auto-rolled has a physically short window (28px) and a collapsed
+        /// WrapPanel; forcing its Height back to the unrolled value without
+        /// also restoring the WrapPanel would leave the frame expanded and
+        /// empty until the user happens to mouse over it.
+        ///
+        /// Safe to call from the UI thread only (the set is populated from
+        /// DispatcherTimer ticks and mouse handlers, both of which run there).
+        /// </summary>
+        public static bool IsFrameAutoRolled(string frameId)
+        {
+            if (string.IsNullOrEmpty(frameId)) return false;
+            return _autoRolledFrames.Contains(frameId);
+        }
         // --------------------------------------
 
         public static void RefreshScrollbarSettings()
@@ -3429,10 +3463,35 @@ namespace Desktop_Frames
                 _transitionCleanupTimer.Start();
             }
 
+
+            // ------------------------------------------------------------------
+            // ORDER MATTERS. Do not swap these two calls back.
+            //
+            // LayoutManager.Initialize() runs ApplyData, which rewrites every
+            // frame's X/Y/Width/UnrolledHeight from the saved layout snapshot.
+            // Docked children are special: their Y is *derived* from their
+            // parents' bottom edge (parent.Y + parent.Height + 10), not stored
+            // independently. That derivation is the job of
+            // FrameDataManager.RebuildDockingMap()'s self-heal pass.
+            //
+            // If RebuildDockingMap runs first, the self-heal uses the parent's
+            // pre-layout UnrolledHeight, and then ApplyData clobbers the
+            // child's freshly-healed Y with the snapshot's Y. When the
+            // snapshot was captured while the parent was rolled up (the common
+            // case when auto-roll is enabled), that snapshot Y is the *rolled*
+            // Y — so the child renders inside the unrolled parent's body at
+            // startup and only snaps into place once a cascade is triggered.
+            //
+            // Running RebuildDockingMap AFTER Initialize makes the self-heal
+            // consume the layout's freshly-applied parent Y and UnrolledHeight,
+            // so docked children start the session already sitting below their
+            // parents' true bottom edges.
+            // ------------------------------------------------------------------
+            Layouts.LayoutManager.Initialize();
+
             // --- RESTORE PERSISTENT ACCORDION STACK LINKS FROM JSON ---
             FrameDataManager.RebuildDockingMap();
 
-            Layouts.LayoutManager.Initialize();
             foreach (dynamic frame in FrameDataManager.FrameData.ToList())
             {
                 CreateFrame(frame, targetChecker);
@@ -4435,23 +4494,34 @@ namespace Desktop_Frames
             // Handle manual resize to update both Height and UnrolledHeight
             win.SizeChanged += (s, e) =>
             {
-                if (Layouts.LayoutManager.Paused) return;
                 // Get current frame reference by ID to avoid stale references
                 string frameId = win.Tag?.ToString();
                 if (string.IsNullOrEmpty(frameId))
                 {
-
                     return;
                 }
 
                 // --- ACCORDION STACK CASCADE HOOK ---
-                // Triggers on manual grip resizing AND smooth roll-up/roll-down animations
+                // Triggers on manual grip resizing AND smooth roll-up/roll-down
+                // animations. Runs BEFORE the LayoutManager.Paused guard on
+                // purpose: docking geometry is a runtime property independent
+                // of layout protection. While paused (startup, display change,
+                // unrecoverable topology) the parent's auto-roll animation
+                // still fires, and its docked children must still follow it.
+                // If this were gated by Paused, children would be stranded at
+                // their pre-roll Y until some later event accidentally
+                // triggered another cascade.
+                //
+                // This block only mutates Y of docked children. It never
+                // touches size, so it cannot fight ApplyWindows' height logic.
                 if (win.IsLoaded && Math.Abs(e.NewSize.Height - e.PreviousSize.Height) > 0.1)
                 {
                     double deltaY = e.NewSize.Height - e.PreviousSize.Height;
                     SnapManager.CascadeStack(frameId, deltaY);
                 }
                 // ------------------------------------
+
+                if (Layouts.LayoutManager.Paused) return;
 
                 // Skip updates if this frame is currently in a rollup/rolldown transition
                 // --- NEW: Also skip if it is Auto-Rolled (so we don't save the rolled-up height) ---
@@ -4617,6 +4687,17 @@ namespace Desktop_Frames
                     // Don't auto-roll if it's already rolled manually, or caught in transition
                     if (isManuallyRolled || _framesInTransition.Contains(frameIdForTimer)) return;
 
+                    // Mark the frame as transiently auto-rolled. This does NOT write
+                    // IsRolled="true" to JSON, and it must stay that way:
+                    //   - IsRolled is the persistent user intent (manual roll), and
+                    //   - auto-roll is a runtime visual state that the mouse is
+                    //     expected to undo.
+                    // If this distinction is ever collapsed into a single flag,
+                    // frames will return rolled up after every restart and the
+                    // hover-to-wake behavior will stop working. Any subsystem
+                    // that resizes windows (LayoutManager, SnapManager, etc.)
+                    // must therefore check Framemanager.IsFrameAutoRolled(id)
+                    // before changing height.
                     _autoRolledFrames.Add(frameIdForTimer);
                     _framesInTransition.Add(frameIdForTimer);
 
@@ -5427,86 +5508,7 @@ namespace Desktop_Frames
 
 
 
-            //// --- STEP 4 START: Configure and Add Events ---
-            //titletb.HorizontalContentAlignment = HorizontalAlignment.Center;
-            //titletb.Visibility = Visibility.Collapsed;
-
-            //// 1. Handle Keys (Enter = Save, Escape = Cancel)
-            //titletb.KeyDown += (sender, e) =>
-            //{
-            //    if (e.Key == Key.Enter)
-            //    {
-            //        string originalTitle = frame.Title.ToString();
-            //        string newTitle = titletb.Text;
-            //        string finalTitle = InterCore.ProcessTitleChange(frame, newTitle, originalTitle);
-
-            //        // Update LIVE Data
-            //        string id = frame.Id?.ToString();
-            //        var liveFrame = GetFrameData().FirstOrDefault(f => f.Id?.ToString() == id);
-
-            //        if (liveFrame != null)
-            //        {
-            //            if (liveFrame is Newtonsoft.Json.Linq.JObject jFrame)
-            //                jFrame["Title"] = finalTitle;
-            //            else
-            //                liveFrame.Title = finalTitle;
-            //            frame.Title = finalTitle;
-            //        }
-
-            //        titlelabel.Content = finalTitle;
-            //        win.Title = finalTitle;
-            //        titletb.Visibility = Visibility.Collapsed;
-            //        titlelabel.Visibility = Visibility.Visible;
-
-            //        FrameDataManager.SaveFrameData();
-            //        win.EndKeyboardInteractiveEdit();
-            //    }
-            //    else if (e.Key == Key.Escape)
-            //    {
-            //        // ESCAPE: Cancel and Revert
-            //        titletb.Text = frame.Title.ToString();
-            //        titletb.Visibility = Visibility.Collapsed;
-            //        titlelabel.Visibility = Visibility.Visible;
-            //        win.EndKeyboardInteractiveEdit();
-            //        e.Handled = true;
-
-            //        LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.UI, "Rename cancelled via Escape");
-            //        }
-            //    }
-            //    ;
-
-            //// 2. Handle Focus Loss (Save when clicking away)
-            //titletb.LostFocus += (sender, e) =>
-            //{
-            //    // If invisible, we already handled it (e.g. via Escape)
-            //    if (titletb.Visibility != Visibility.Visible) return;
-
-            //    string originalTitle = frame.Title.ToString();
-            //    string newTitle = titletb.Text;
-            //    string finalTitle = InterCore.ProcessTitleChange(frame, newTitle, originalTitle);
-
-            //    string id = frame.Id?.ToString();
-            //    var liveFrame = GetFrameData().FirstOrDefault(f => f.Id?.ToString() == id);
-
-            //    if (liveFrame != null)
-            //    {
-            //        if (liveFrame is Newtonsoft.Json.Linq.JObject jFrame)
-            //            jFrame["Title"] = finalTitle;
-            //        else
-            //            liveFrame.Title = finalTitle;
-            //        frame.Title = finalTitle;
-            //    }
-
-            //    titlelabel.Content = finalTitle;
-            //    win.Title = finalTitle;
-            //    titletb.Visibility = Visibility.Collapsed;
-            //    titlelabel.Visibility = Visibility.Visible;
-
-            //    FrameDataManager.SaveFrameData();
-            //    win.EndKeyboardInteractiveEdit();
-            //    LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.UI, $"Rename saved via LostFocus: {finalTitle}");
-            //};
-            //// --- STEP 4 END ---
+     
 
 
             // Move lockIcon to the Grid

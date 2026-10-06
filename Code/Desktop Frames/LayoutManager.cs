@@ -271,6 +271,7 @@ namespace Desktop_Frames.Layouts
             try
             {
                 ApplyData(intended!, displays);
+
                 foreach (var window in Windows.ToList())
                 {
                     var frame = intended!.Frames.FirstOrDefault(f => f.Id == window.Tag?.ToString());
@@ -280,18 +281,132 @@ namespace Desktop_Frames.Layouts
                     var rect = LayoutResolver.Resolve(frame, target);
                     var raw = FrameDataManager.FrameData.FirstOrDefault(f => f.Id?.ToString() == frame.Id);
                     bool rolled = raw?.IsRolled?.ToString().ToLowerInvariant() == "true";
+
+                    // --- Runtime state ownership ---
+                    //
+                    // Auto-roll (owned by Framemanager): a frame whose ID is in
+                    //   Framemanager._autoRolledFrames is physically short and
+                    //   has a collapsed WrapPanel. We must not grow it here, or
+                    //   it would sit expanded but empty until a mouse-over.
+                    //   That state is intentionally never written to the JSON
+                    //   "IsRolled" flag (which carries manual roll intent).
+                    //
+                    // Docking (owned by SnapManager.CascadeStack): a docked
+                    //   child's Y is derived from its parents' bottom edges,
+                    //   not stored independently. The layout snapshot's Y for
+                    //   such a child is only valid if every parent is in the
+                    //   same roll state it had at capture time. When that
+                    //   isn't the case — e.g. a parent was captured while
+                    //   auto-rolled and is now unrolled — the snapshot Y is
+                    //   the rolled Y and applying it would drop the child
+                    //   inside the parent's body. RepositionDockedChildren()
+                    //   below is the authority for these frames.
+                    bool autoRolled = Framemanager.IsFrameAutoRolled(frame.Id);
+
+                    bool parentCurrentlyRolled = false;
+                    if (FrameDataManager.DockingMap.TryGetValue(frame.Id, out var parentIds))
+                    {
+                        foreach (var pid in parentIds)
+                        {
+                            var pRaw = FrameDataManager.FrameData.FirstOrDefault(f => f.Id?.ToString() == pid);
+                            bool pJsonRolled = pRaw?.IsRolled?.ToString().ToLowerInvariant() == "true";
+                            if (pJsonRolled || Framemanager.IsFrameAutoRolled(pid))
+                            {
+                                parentCurrentlyRolled = true;
+                                break;
+                            }
+                        }
+                    }
+
                     window.Width = rect.Width / target.Scale;
-                    window.Height = rolled ? 28 : rect.Height / target.Scale;
+                    if (!autoRolled)
+                    {
+                        window.Height = rolled ? 28 : rect.Height / target.Scale;
+                    }
+
+                    // Horizontal position (Left/Width) is always safe: it is
+                    // orthogonal to both auto-roll and vertical docking.
+                    window.Left = rect.X / target.Scale;
+
+                    // Vertical position: for docked children whose parents are
+                    // currently rolled, keep the runtime Y — the post-pass
+                    // below will place it correctly. For everything else, use
+                    // the snapshot Y.
+                    if (!parentCurrentlyRolled)
+                    {
+                        window.Top = rect.Y / target.Scale;
+                    }
+
+                    // Native SetWindowPos is kept because it forces the OS
+                    // rect atomically, avoiding a transient frame where the
+                    // WPF property has changed but the OS window has not.
                     if (!LayoutDisplays.SetWindowPos(new WindowInteropHelper(window).Handle, IntPtr.Zero,
-                        (int)Math.Round(rect.X), (int)Math.Round(rect.Y), (int)Math.Round(rect.Width),
-                        (int)Math.Round(window.Height * target.Scale), 0x0014))
+                        (int)Math.Round(rect.X), (int)Math.Round(window.Top * target.Scale),
+                        (int)Math.Round(rect.Width), (int)Math.Round(window.Height * target.Scale), 0x0014))
                         throw new InvalidOperationException(Strings.LayoutRestorePositionFailed);
                 }
+
+                // Post-pass: enforce the docking cascade's rule for every
+                // docked child. This is the single point that guarantees
+                // children sit exactly 10px below the lowest bottom edge among
+                // their parents — the same rule SnapManager.CascadeStack
+                // enforces at runtime. Without this, a stale snapshot Y for a
+                // child whose parents' roll state has since changed would
+                // leave the frame overlapping its parents.
+                RepositionDockedChildren();
+
                 FrameDataManager.SaveFrameData();
             }
             finally { applying = false; }
         }
 
+        /// <summary>
+        /// Repositions every frame that appears in FrameDataManager.DockingMap
+        /// so its top edge sits exactly 10px below the lowest bottom edge
+        /// among its parents. Mirrors SnapManager.CascadeStack's rule and
+        /// runs to a fixed point so a child of a moved child also moves.
+        ///
+        /// This is the authoritative Y-setter for docked frames after a
+        /// layout application. It is intentionally independent of the layout
+        /// snapshot: the snapshot may have been captured while parents were
+        /// auto-rolled, in which case its Y for the child is the rolled Y and
+        /// would place the child inside the parent's body.
+        /// </summary>
+        internal static void RepositionDockedChildren()
+        {
+            if (FrameDataManager.DockingMap.Count == 0) return;
+            var windows = Application.Current.Windows.OfType<NonActivatingWindow>().ToList();
+
+            // Fixed-point iteration. The docking graph is a shallow DAG in
+            // practice; a handful of passes suffice. The cap prevents a
+            // pathological cycle from spinning here.
+            for (int pass = 0; pass < 8; pass++)
+            {
+                bool moved = false;
+                foreach (var kvp in FrameDataManager.DockingMap)
+                {
+                    string childId = kvp.Key;
+                    var parentIds = kvp.Value;
+                    if (parentIds == null || parentIds.Count == 0) continue;
+
+                    var childWindow = windows.FirstOrDefault(w => w.Tag?.ToString() == childId);
+                    if (childWindow == null) continue;
+
+                    var activeParents = windows.Where(w => parentIds.Contains(w.Tag?.ToString())).ToList();
+                    if (activeParents.Count == 0) continue;
+
+                    double maxParentBottom = activeParents.Max(p => p.Top + p.Height);
+                    double targetTop = maxParentBottom + 10.0;
+
+                    if (Math.Abs(childWindow.Top - targetTop) > 0.5)
+                    {
+                        childWindow.Top = targetTop;
+                        moved = true;
+                    }
+                }
+                if (!moved) break;
+            }
+        }
         private static void OnDisplayChange(object? sender, EventArgs e)
         {
             // Set immediately, even when the UI dispatcher is busy in a native move/size loop.

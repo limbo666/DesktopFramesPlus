@@ -2169,7 +2169,6 @@ Verranno conservate le istantanee manuali e fissate e la più recente tra quelle
   <data name="LayoutFrame" xml:space="preserve">
     <value>Riquadro</value>
   </data>
-</root>
   <data name="TabInterface" xml:space="preserve">
     <value>Interfaccia</value>
   </data>
@@ -2184,5 +2183,20 @@ Verranno conservate le istantanee manuali e fissate e la più recente tra quelle
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Modello di lingua esportato con successo!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Dettagli istantanea</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Impostazioni di pulizia</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Salva</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Anteprima del layout dei monitor</value>
   </data>
 </root>

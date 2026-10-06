@@ -1867,6 +1867,66 @@ Reiniciar agora?</value>
   <data name="VuSignalGain" xml:space="preserve">
     <value>Ganho do sinal (multiplicador):</value>
   </data>
+  <data name="SecLanguage" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="LblLanguage" xml:space="preserve">
+    <value>Idioma da interface:</value>
+  </data>
+  <data name="LangAutomatic" xml:space="preserve">
+    <value>Automático (seguir o Windows)</value>
+  </data>
+  <data name="BtnImportLanguagePack" xml:space="preserve">
+    <value>Importar um pacote de idioma…</value>
+  </data>
+  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
+    <value>Abrir a pasta de idiomas</value>
+  </data>
+  <data name="LanguagePackFilter" xml:space="preserve">
+    <value>Pacotes de idioma (*.resx)|*.resx</value>
+  </data>
+  <data name="LanguagePackImported" xml:space="preserve">
+    <value>Pacote de idioma instalado: {0}. Reinicie para o ver na lista.</value>
+  </data>
+  <data name="LanguagePackBadName" xml:space="preserve">
+    <value>O nome do ficheiro tem de ser um código de idioma, como pt.resx ou pt-BR.resx.</value>
+  </data>
+  <data name="NoteLanguageRestart" xml:space="preserve">
+    <value>Nota: o idioma muda depois de reiniciar o programa. Os pacotes colocados na pasta Languages são lidos no arranque seguinte.</value>
+  </data>
+  <data name="CatImages" xml:space="preserve">
+    <value>Imagens</value>
+  </data>
+  <data name="CatDocuments" xml:space="preserve">
+    <value>Documentos</value>
+  </data>
+  <data name="CatExecutables" xml:space="preserve">
+    <value>Executáveis</value>
+  </data>
+  <data name="CatArchives" xml:space="preserve">
+    <value>Arquivos</value>
+  </data>
+  <data name="CatCustomExtensions" xml:space="preserve">
+    <value>Extensões personalizadas...</value>
+  </data>
+  <data name="ConflictAutoRename" xml:space="preserve">
+    <value>Mudar o nome automaticamente (ex. Ficheiro (1).jpg)</value>
+  </data>
+  <data name="ConflictOverwrite" xml:space="preserve">
+    <value>Substituir (o antigo vai para a reciclagem)</value>
+  </data>
+  <data name="ConflictSkip" xml:space="preserve">
+    <value>Ignorar (deixar no ambiente de trabalho)</value>
+  </data>
+  <data name="TargetPortalFrame" xml:space="preserve">
+    <value>Moldura Portal: {0}</value>
+  </data>
+  <data name="LastRunNever" xml:space="preserve">
+    <value>Última execução bem-sucedida: nunca</value>
+  </data>
+  <data name="LastRunAt" xml:space="preserve">
+    <value>Última execução bem-sucedida: {0}</value>
+  </data>
   <data name="LayoutSnapshots" xml:space="preserve">
     <value>Instantâneos</value>
   </data>
@@ -2109,67 +2169,6 @@ Serão conservados os instantâneos manuais e afixados e o mais recente dos inst
   <data name="LayoutFrame" xml:space="preserve">
     <value>Moldura</value>
   </data>
-</root>
-  <data name="SecLanguage" xml:space="preserve">
-    <value>Idioma</value>
-  </data>
-  <data name="LblLanguage" xml:space="preserve">
-    <value>Idioma da interface:</value>
-  </data>
-  <data name="LangAutomatic" xml:space="preserve">
-    <value>Automático (seguir o Windows)</value>
-  </data>
-  <data name="BtnImportLanguagePack" xml:space="preserve">
-    <value>Importar um pacote de idioma…</value>
-  </data>
-  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
-    <value>Abrir a pasta de idiomas</value>
-  </data>
-  <data name="LanguagePackFilter" xml:space="preserve">
-    <value>Pacotes de idioma (*.resx)|*.resx</value>
-  </data>
-  <data name="LanguagePackImported" xml:space="preserve">
-    <value>Pacote de idioma instalado: {0}. Reinicie para o ver na lista.</value>
-  </data>
-  <data name="LanguagePackBadName" xml:space="preserve">
-    <value>O nome do ficheiro tem de ser um código de idioma, como pt.resx ou pt-BR.resx.</value>
-  </data>
-  <data name="NoteLanguageRestart" xml:space="preserve">
-    <value>Nota: o idioma muda depois de reiniciar o programa. Os pacotes colocados na pasta Languages são lidos no arranque seguinte.</value>
-  </data>
-  <data name="CatImages" xml:space="preserve">
-    <value>Imagens</value>
-  </data>
-  <data name="CatDocuments" xml:space="preserve">
-    <value>Documentos</value>
-  </data>
-  <data name="CatExecutables" xml:space="preserve">
-    <value>Executáveis</value>
-  </data>
-  <data name="CatArchives" xml:space="preserve">
-    <value>Arquivos</value>
-  </data>
-  <data name="CatCustomExtensions" xml:space="preserve">
-    <value>Extensões personalizadas...</value>
-  </data>
-  <data name="ConflictAutoRename" xml:space="preserve">
-    <value>Mudar o nome automaticamente (ex. Ficheiro (1).jpg)</value>
-  </data>
-  <data name="ConflictOverwrite" xml:space="preserve">
-    <value>Substituir (o antigo vai para a reciclagem)</value>
-  </data>
-  <data name="ConflictSkip" xml:space="preserve">
-    <value>Ignorar (deixar no ambiente de trabalho)</value>
-  </data>
-  <data name="TargetPortalFrame" xml:space="preserve">
-    <value>Moldura Portal: {0}</value>
-  </data>
-  <data name="LastRunNever" xml:space="preserve">
-    <value>Última execução bem-sucedida: nunca</value>
-  </data>
-  <data name="LastRunAt" xml:space="preserve">
-    <value>Última execução bem-sucedida: {0}</value>
-  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>Interface</value>
   </data>
@@ -2184,5 +2183,20 @@ Serão conservados os instantâneos manuais e afixados e o mais recente dos inst
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Modelo de idioma exportado com sucesso!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Detalhes do instantâneo</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Configurações de limpeza</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Pré-visualização do layout dos monitores</value>
   </data>
 </root>

@@ -1867,6 +1867,66 @@ Cada ventana lee sus textos mientras se construye, así que el cambio se ve al r
   <data name="VuSignalGain" xml:space="preserve">
     <value>Ganancia de señal (multiplicador):</value>
   </data>
+  <data name="SecLanguage" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="LblLanguage" xml:space="preserve">
+    <value>Idioma de la interfaz:</value>
+  </data>
+  <data name="LangAutomatic" xml:space="preserve">
+    <value>Automático (seguir Windows)</value>
+  </data>
+  <data name="BtnImportLanguagePack" xml:space="preserve">
+    <value>Importar un paquete de idioma…</value>
+  </data>
+  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
+    <value>Abrir la carpeta de idiomas</value>
+  </data>
+  <data name="LanguagePackFilter" xml:space="preserve">
+    <value>Paquetes de idioma (*.resx)|*.resx</value>
+  </data>
+  <data name="LanguagePackImported" xml:space="preserve">
+    <value>Paquete de idioma instalado: {0}. Reinicia para verlo en la lista.</value>
+  </data>
+  <data name="LanguagePackBadName" xml:space="preserve">
+    <value>El nombre del archivo debe ser un código de idioma, como es.resx o pt-BR.resx.</value>
+  </data>
+  <data name="NoteLanguageRestart" xml:space="preserve">
+    <value>Nota: el idioma cambia después de reiniciar el programa. Los paquetes copiados en la carpeta Languages se leen en el siguiente inicio.</value>
+  </data>
+  <data name="CatImages" xml:space="preserve">
+    <value>Imágenes</value>
+  </data>
+  <data name="CatDocuments" xml:space="preserve">
+    <value>Documentos</value>
+  </data>
+  <data name="CatExecutables" xml:space="preserve">
+    <value>Ejecutables</value>
+  </data>
+  <data name="CatArchives" xml:space="preserve">
+    <value>Archivos comprimidos</value>
+  </data>
+  <data name="CatCustomExtensions" xml:space="preserve">
+    <value>Extensiones personalizadas...</value>
+  </data>
+  <data name="ConflictAutoRename" xml:space="preserve">
+    <value>Renombrar automáticamente (p. ej. Archivo (1).jpg)</value>
+  </data>
+  <data name="ConflictOverwrite" xml:space="preserve">
+    <value>Sobrescribir (el antiguo va a la papelera)</value>
+  </data>
+  <data name="ConflictSkip" xml:space="preserve">
+    <value>Omitir (dejar en el escritorio)</value>
+  </data>
+  <data name="TargetPortalFrame" xml:space="preserve">
+    <value>Marco Portal: {0}</value>
+  </data>
+  <data name="LastRunNever" xml:space="preserve">
+    <value>Última ejecución correcta: nunca</value>
+  </data>
+  <data name="LastRunAt" xml:space="preserve">
+    <value>Última ejecución correcta: {0}</value>
+  </data>
   <data name="LayoutSnapshots" xml:space="preserve">
     <value>Instantáneas</value>
   </data>
@@ -2109,67 +2169,6 @@ Se conservarán las instantáneas manuales y fijadas, además de la más recient
   <data name="LayoutFrame" xml:space="preserve">
     <value>Marco</value>
   </data>
-</root>
-  <data name="SecLanguage" xml:space="preserve">
-    <value>Idioma</value>
-  </data>
-  <data name="LblLanguage" xml:space="preserve">
-    <value>Idioma de la interfaz:</value>
-  </data>
-  <data name="LangAutomatic" xml:space="preserve">
-    <value>Automático (seguir Windows)</value>
-  </data>
-  <data name="BtnImportLanguagePack" xml:space="preserve">
-    <value>Importar un paquete de idioma…</value>
-  </data>
-  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
-    <value>Abrir la carpeta de idiomas</value>
-  </data>
-  <data name="LanguagePackFilter" xml:space="preserve">
-    <value>Paquetes de idioma (*.resx)|*.resx</value>
-  </data>
-  <data name="LanguagePackImported" xml:space="preserve">
-    <value>Paquete de idioma instalado: {0}. Reinicia para verlo en la lista.</value>
-  </data>
-  <data name="LanguagePackBadName" xml:space="preserve">
-    <value>El nombre del archivo debe ser un código de idioma, como es.resx o pt-BR.resx.</value>
-  </data>
-  <data name="NoteLanguageRestart" xml:space="preserve">
-    <value>Nota: el idioma cambia después de reiniciar el programa. Los paquetes copiados en la carpeta Languages se leen en el siguiente inicio.</value>
-  </data>
-  <data name="CatImages" xml:space="preserve">
-    <value>Imágenes</value>
-  </data>
-  <data name="CatDocuments" xml:space="preserve">
-    <value>Documentos</value>
-  </data>
-  <data name="CatExecutables" xml:space="preserve">
-    <value>Ejecutables</value>
-  </data>
-  <data name="CatArchives" xml:space="preserve">
-    <value>Archivos comprimidos</value>
-  </data>
-  <data name="CatCustomExtensions" xml:space="preserve">
-    <value>Extensiones personalizadas...</value>
-  </data>
-  <data name="ConflictAutoRename" xml:space="preserve">
-    <value>Renombrar automáticamente (p. ej. Archivo (1).jpg)</value>
-  </data>
-  <data name="ConflictOverwrite" xml:space="preserve">
-    <value>Sobrescribir (el antiguo va a la papelera)</value>
-  </data>
-  <data name="ConflictSkip" xml:space="preserve">
-    <value>Omitir (dejar en el escritorio)</value>
-  </data>
-  <data name="TargetPortalFrame" xml:space="preserve">
-    <value>Marco Portal: {0}</value>
-  </data>
-  <data name="LastRunNever" xml:space="preserve">
-    <value>Última ejecución correcta: nunca</value>
-  </data>
-  <data name="LastRunAt" xml:space="preserve">
-    <value>Última ejecución correcta: {0}</value>
-  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>Interfaz</value>
   </data>
@@ -2184,5 +2183,20 @@ Se conservarán las instantáneas manuales y fijadas, además de la más recient
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>¡Plantilla de idioma exportada correctamente!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Detalles de la instantánea</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Configuración de limpieza</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Vista previa del diseño de monitores</value>
   </data>
 </root>

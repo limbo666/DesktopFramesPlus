@@ -50,6 +50,24 @@ namespace Desktop_Frames
                 {
                     int processed = 0;
                     // Batch size of 15 prevents stuttering
+                    //while (processed < 15 && _loadQueue.TryDequeue(out var request))
+                    //{
+                    //    if (token.IsCancellationRequested) break;
+
+                    //    ImageSource icon = null;
+                    //    lock (IconManager.IconCache)
+                    //    {
+                    //        if (IconManager.IconCache.TryGetValue(request.FilePath, out var cached))
+                    //            icon = cached;
+                    //    }
+
+                    //    if (icon == null)
+                    //    {
+                    //        icon = IconManager.GetIconForFile(request.TargetPath, request.FilePath, request.IsFolder, request.IsLink, request.IsShortcut, request.IconDict);
+                    //        if (icon != null && icon.CanFreeze && !icon.IsFrozen) icon.Freeze();
+                    //    }
+
+                    //    if (icon != null)
                     while (processed < 15 && _loadQueue.TryDequeue(out var request))
                     {
                         if (token.IsCancellationRequested) break;
@@ -63,11 +81,24 @@ namespace Desktop_Frames
 
                         if (icon == null)
                         {
+                            // BACKGROUND THREAD: Safe to do disk I/O to resolve shortcuts
+                            if (request.IsShortcut && string.IsNullOrEmpty(request.TargetPath))
+                            {
+                                request.TargetPath = FilePathUtilities.GetShortcutTargetUnicodeSafe(request.FilePath);
+                                if (!string.IsNullOrEmpty(request.TargetPath) && System.IO.Directory.Exists(request.TargetPath))
+                                {
+                                    request.IsFolder = true; // Upgrade to folder icon
+                                }
+                            }
+                            if (string.IsNullOrEmpty(request.TargetPath)) request.TargetPath = request.FilePath;
+
                             icon = IconManager.GetIconForFile(request.TargetPath, request.FilePath, request.IsFolder, request.IsLink, request.IsShortcut, request.IconDict);
                             if (icon != null && icon.CanFreeze && !icon.IsFrozen) icon.Freeze();
                         }
 
                         if (icon != null)
+
+
                         {
                             await Application.Current.Dispatcher.InvokeAsync(() =>
                             {

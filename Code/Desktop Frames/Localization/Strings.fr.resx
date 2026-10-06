@@ -1867,6 +1867,66 @@ Redémarrer maintenant ?</value>
   <data name="VuSignalGain" xml:space="preserve">
     <value>Gain du signal (multiplicateur) :</value>
   </data>
+  <data name="SecLanguage" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="LblLanguage" xml:space="preserve">
+    <value>Langue de l'interface :</value>
+  </data>
+  <data name="LangAutomatic" xml:space="preserve">
+    <value>Automatique (suivre Windows)</value>
+  </data>
+  <data name="BtnImportLanguagePack" xml:space="preserve">
+    <value>Importer un pack de langue…</value>
+  </data>
+  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
+    <value>Ouvrir le dossier des langues</value>
+  </data>
+  <data name="LanguagePackFilter" xml:space="preserve">
+    <value>Packs de langue (*.resx)|*.resx</value>
+  </data>
+  <data name="LanguagePackImported" xml:space="preserve">
+    <value>Pack de langue installé : {0}. Redémarrez pour le voir dans la liste.</value>
+  </data>
+  <data name="LanguagePackBadName" xml:space="preserve">
+    <value>Le nom du fichier doit être un code de culture, comme fr.resx ou pt-BR.resx.</value>
+  </data>
+  <data name="NoteLanguageRestart" xml:space="preserve">
+    <value>Remarque : la langue change après le redémarrage du programme. Les packs déposés dans le dossier Languages sont pris en compte au démarrage suivant.</value>
+  </data>
+  <data name="CatImages" xml:space="preserve">
+    <value>Images</value>
+  </data>
+  <data name="CatDocuments" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="CatExecutables" xml:space="preserve">
+    <value>Exécutables</value>
+  </data>
+  <data name="CatArchives" xml:space="preserve">
+    <value>Archives</value>
+  </data>
+  <data name="CatCustomExtensions" xml:space="preserve">
+    <value>Extensions personnalisées...</value>
+  </data>
+  <data name="ConflictAutoRename" xml:space="preserve">
+    <value>Renommer automatiquement (ex. Fichier (1).jpg)</value>
+  </data>
+  <data name="ConflictOverwrite" xml:space="preserve">
+    <value>Remplacer (l'ancien fichier va à la corbeille)</value>
+  </data>
+  <data name="ConflictSkip" xml:space="preserve">
+    <value>Ignorer (laisser sur le bureau)</value>
+  </data>
+  <data name="TargetPortalFrame" xml:space="preserve">
+    <value>Cadre Portail : {0}</value>
+  </data>
+  <data name="LastRunNever" xml:space="preserve">
+    <value>Dernière exécution réussie : jamais</value>
+  </data>
+  <data name="LastRunAt" xml:space="preserve">
+    <value>Dernière exécution réussie : {0}</value>
+  </data>
   <data name="LayoutSnapshots" xml:space="preserve">
     <value>Instantanés</value>
   </data>
@@ -2109,67 +2169,6 @@ Les instantanés manuels et épinglés ainsi que le plus récent des instantané
   <data name="LayoutFrame" xml:space="preserve">
     <value>Cadre</value>
   </data>
-</root>
-  <data name="SecLanguage" xml:space="preserve">
-    <value>Langue</value>
-  </data>
-  <data name="LblLanguage" xml:space="preserve">
-    <value>Langue de l'interface :</value>
-  </data>
-  <data name="LangAutomatic" xml:space="preserve">
-    <value>Automatique (suivre Windows)</value>
-  </data>
-  <data name="BtnImportLanguagePack" xml:space="preserve">
-    <value>Importer un pack de langue…</value>
-  </data>
-  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
-    <value>Ouvrir le dossier des langues</value>
-  </data>
-  <data name="LanguagePackFilter" xml:space="preserve">
-    <value>Packs de langue (*.resx)|*.resx</value>
-  </data>
-  <data name="LanguagePackImported" xml:space="preserve">
-    <value>Pack de langue installé : {0}. Redémarrez pour le voir dans la liste.</value>
-  </data>
-  <data name="LanguagePackBadName" xml:space="preserve">
-    <value>Le nom du fichier doit être un code de culture, comme fr.resx ou pt-BR.resx.</value>
-  </data>
-  <data name="NoteLanguageRestart" xml:space="preserve">
-    <value>Remarque : la langue change après le redémarrage du programme. Les packs déposés dans le dossier Languages sont pris en compte au démarrage suivant.</value>
-  </data>
-  <data name="CatImages" xml:space="preserve">
-    <value>Images</value>
-  </data>
-  <data name="CatDocuments" xml:space="preserve">
-    <value>Documents</value>
-  </data>
-  <data name="CatExecutables" xml:space="preserve">
-    <value>Exécutables</value>
-  </data>
-  <data name="CatArchives" xml:space="preserve">
-    <value>Archives</value>
-  </data>
-  <data name="CatCustomExtensions" xml:space="preserve">
-    <value>Extensions personnalisées...</value>
-  </data>
-  <data name="ConflictAutoRename" xml:space="preserve">
-    <value>Renommer automatiquement (ex. Fichier (1).jpg)</value>
-  </data>
-  <data name="ConflictOverwrite" xml:space="preserve">
-    <value>Remplacer (l'ancien fichier va à la corbeille)</value>
-  </data>
-  <data name="ConflictSkip" xml:space="preserve">
-    <value>Ignorer (laisser sur le bureau)</value>
-  </data>
-  <data name="TargetPortalFrame" xml:space="preserve">
-    <value>Cadre Portail : {0}</value>
-  </data>
-  <data name="LastRunNever" xml:space="preserve">
-    <value>Dernière exécution réussie : jamais</value>
-  </data>
-  <data name="LastRunAt" xml:space="preserve">
-    <value>Dernière exécution réussie : {0}</value>
-  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>Interface</value>
   </data>
@@ -2184,5 +2183,20 @@ Les instantanés manuels et épinglés ainsi que le plus récent des instantané
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Modèle de langue exporté avec succès !</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Détails de l’instantané</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Paramètres de nettoyage</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Aperçu de la disposition des moniteurs</value>
   </data>
 </root>

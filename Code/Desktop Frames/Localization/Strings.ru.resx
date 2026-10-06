@@ -1867,6 +1867,66 @@
   <data name="VuSignalGain" xml:space="preserve">
     <value>Усиление сигнала (множитель):</value>
   </data>
+  <data name="SecLanguage" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="LblLanguage" xml:space="preserve">
+    <value>Язык интерфейса:</value>
+  </data>
+  <data name="LangAutomatic" xml:space="preserve">
+    <value>Автоматически (как в Windows)</value>
+  </data>
+  <data name="BtnImportLanguagePack" xml:space="preserve">
+    <value>Импортировать языковой пакет…</value>
+  </data>
+  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
+    <value>Открыть папку языков</value>
+  </data>
+  <data name="LanguagePackFilter" xml:space="preserve">
+    <value>Языковые пакеты (*.resx)|*.resx</value>
+  </data>
+  <data name="LanguagePackImported" xml:space="preserve">
+    <value>Языковой пакет установлен: {0}. Перезапустите, чтобы увидеть его в списке.</value>
+  </data>
+  <data name="LanguagePackBadName" xml:space="preserve">
+    <value>Имя файла должно быть кодом языка, например ru.resx или pt-BR.resx.</value>
+  </data>
+  <data name="NoteLanguageRestart" xml:space="preserve">
+    <value>Примечание: язык меняется после перезапуска программы. Пакеты, помещённые в папку Languages, читаются при следующем запуске.</value>
+  </data>
+  <data name="CatImages" xml:space="preserve">
+    <value>Изображения</value>
+  </data>
+  <data name="CatDocuments" xml:space="preserve">
+    <value>Документы</value>
+  </data>
+  <data name="CatExecutables" xml:space="preserve">
+    <value>Программы</value>
+  </data>
+  <data name="CatArchives" xml:space="preserve">
+    <value>Архивы</value>
+  </data>
+  <data name="CatCustomExtensions" xml:space="preserve">
+    <value>Свои расширения...</value>
+  </data>
+  <data name="ConflictAutoRename" xml:space="preserve">
+    <value>Переименовать автоматически (например, Файл (1).jpg)</value>
+  </data>
+  <data name="ConflictOverwrite" xml:space="preserve">
+    <value>Заменить (старый файл — в корзину)</value>
+  </data>
+  <data name="ConflictSkip" xml:space="preserve">
+    <value>Пропустить (оставить на рабочем столе)</value>
+  </data>
+  <data name="TargetPortalFrame" xml:space="preserve">
+    <value>Рамка-портал: {0}</value>
+  </data>
+  <data name="LastRunNever" xml:space="preserve">
+    <value>Последний удачный запуск: никогда</value>
+  </data>
+  <data name="LastRunAt" xml:space="preserve">
+    <value>Последний удачный запуск: {0}</value>
+  </data>
   <data name="LayoutSnapshots" xml:space="preserve">
     <value>Снимки</value>
   </data>
@@ -2109,67 +2169,6 @@
   <data name="LayoutFrame" xml:space="preserve">
     <value>Рамка</value>
   </data>
-</root>
-  <data name="SecLanguage" xml:space="preserve">
-    <value>Язык</value>
-  </data>
-  <data name="LblLanguage" xml:space="preserve">
-    <value>Язык интерфейса:</value>
-  </data>
-  <data name="LangAutomatic" xml:space="preserve">
-    <value>Автоматически (как в Windows)</value>
-  </data>
-  <data name="BtnImportLanguagePack" xml:space="preserve">
-    <value>Импортировать языковой пакет…</value>
-  </data>
-  <data name="BtnOpenLanguagesFolder" xml:space="preserve">
-    <value>Открыть папку языков</value>
-  </data>
-  <data name="LanguagePackFilter" xml:space="preserve">
-    <value>Языковые пакеты (*.resx)|*.resx</value>
-  </data>
-  <data name="LanguagePackImported" xml:space="preserve">
-    <value>Языковой пакет установлен: {0}. Перезапустите, чтобы увидеть его в списке.</value>
-  </data>
-  <data name="LanguagePackBadName" xml:space="preserve">
-    <value>Имя файла должно быть кодом языка, например ru.resx или pt-BR.resx.</value>
-  </data>
-  <data name="NoteLanguageRestart" xml:space="preserve">
-    <value>Примечание: язык меняется после перезапуска программы. Пакеты, помещённые в папку Languages, читаются при следующем запуске.</value>
-  </data>
-  <data name="CatImages" xml:space="preserve">
-    <value>Изображения</value>
-  </data>
-  <data name="CatDocuments" xml:space="preserve">
-    <value>Документы</value>
-  </data>
-  <data name="CatExecutables" xml:space="preserve">
-    <value>Программы</value>
-  </data>
-  <data name="CatArchives" xml:space="preserve">
-    <value>Архивы</value>
-  </data>
-  <data name="CatCustomExtensions" xml:space="preserve">
-    <value>Свои расширения...</value>
-  </data>
-  <data name="ConflictAutoRename" xml:space="preserve">
-    <value>Переименовать автоматически (например, Файл (1).jpg)</value>
-  </data>
-  <data name="ConflictOverwrite" xml:space="preserve">
-    <value>Заменить (старый файл — в корзину)</value>
-  </data>
-  <data name="ConflictSkip" xml:space="preserve">
-    <value>Пропустить (оставить на рабочем столе)</value>
-  </data>
-  <data name="TargetPortalFrame" xml:space="preserve">
-    <value>Рамка-портал: {0}</value>
-  </data>
-  <data name="LastRunNever" xml:space="preserve">
-    <value>Последний удачный запуск: никогда</value>
-  </data>
-  <data name="LastRunAt" xml:space="preserve">
-    <value>Последний удачный запуск: {0}</value>
-  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>Интерфейс</value>
   </data>
@@ -2184,5 +2183,20 @@
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Языковой шаблон успешно экспортирован!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Сведения о снимке</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Настройки очистки</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Предпросмотр компоновки мониторов</value>
   </data>
 </root>

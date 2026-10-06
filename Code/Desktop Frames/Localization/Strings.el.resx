@@ -293,6 +293,9 @@
   <data name="BtnOrganizeNow" xml:space="preserve">
     <value>Οργάνωση Τώρα</value>
   </data>
+  <data name="BtnReadMore" xml:space="preserve">
+    <value>Διαβάστε περισσότερα...</value>
+  </data>
   <data name="BtnReset" xml:space="preserve">
     <value>Επαναφορά</value>
   </data>
@@ -313,6 +316,9 @@
   </data>
   <data name="BtnSmartDesktopRules" xml:space="preserve">
     <value>Κανόνες Smart Desktop...</value>
+  </data>
+  <data name="BtnUpdateNow" xml:space="preserve">
+    <value>Ενημέρωση τώρα</value>
   </data>
   <data name="ButtonNo" xml:space="preserve">
     <value>Όχι</value>
@@ -460,6 +466,9 @@
   </data>
   <data name="DlgBrowseError" xml:space="preserve">
     <value>Σφάλμα Αναζήτησης</value>
+  </data>
+  <data name="DlgClearNote" xml:space="preserve">
+    <value>Εκκαθάριση σημείωσης</value>
   </data>
   <data name="DlgConfirmImport" xml:space="preserve">
     <value>Επιβεβαίωση Εισαγωγής</value>
@@ -1082,6 +1091,9 @@
   <data name="MsgCannotDeleteLastTab" xml:space="preserve">
     <value>Αδυναμία διαγραφής της τελευταίας καρτέλας.</value>
   </data>
+  <data name="MsgClearNoteConfirm" xml:space="preserve">
+    <value>Θέλετε σίγουρα να διαγράψετε όλο το κείμενο από αυτή τη σημείωση;</value>
+  </data>
   <data name="MsgConfirmDeleteProfile" xml:space="preserve">
     <value>Είστε σίγουροι ότι θέλετε να διαγράψετε το προφίλ '{0}'; Δεν μπορεί να αναιρεθεί.</value>
   </data>
@@ -1339,6 +1351,9 @@
   </data>
   <data name="NetUnreachable" xml:space="preserve">
     <value>Μη προσβάσιμο</value>
+  </data>
+  <data name="NewFrameDefaultTitle" xml:space="preserve">
+    <value>Νέο frame - Σύρετε τις συντομεύσεις σας εδώ</value>
   </data>
   <data name="NoteAutoOrganize" xml:space="preserve">
     <value>Σημείωση: Το Auto-Organize παρακολουθεί συνεχώς την Επιφάνεια Εργασίας. Όταν ένα αρχείο ταιριάζει με τους κανόνες, μετακινείται αυτόματα στο Portal Frame ή στον Φάκελο που ορίσατε.</value>
@@ -1895,6 +1910,250 @@
   <data name="LastRunAt" xml:space="preserve">
     <value>Τελευταία επιτυχής εκτέλεση: {0}</value>
   </data>
+  <data name="LayoutSnapshots" xml:space="preserve">
+    <value>Στιγμιότυπα</value>
+  </data>
+  <data name="LayoutWindowTitle" xml:space="preserve">
+    <value>Στιγμιότυπα — {0}</value>
+  </data>
+  <data name="LayoutSnapshotsButton" xml:space="preserve">
+    <value>Στιγμιότυπα…</value>
+  </data>
+  <data name="LayoutOptionsDescription" xml:space="preserve">
+    <value>Προεπισκόπηση και επαναφορά διατάξεων πλαισίων και διαχείριση αποθηκευμένων στιγμιότυπων.</value>
+  </data>
+  <data name="LayoutMyLayout" xml:space="preserve">
+    <value>Η διάταξή μου</value>
+  </data>
+  <data name="LayoutSaveSnapshot" xml:space="preserve">
+    <value>Αποθήκευση στιγμιότυπου</value>
+  </data>
+  <data name="LayoutUseCurrent" xml:space="preserve">
+    <value>Χρήση τρέχουσας διάταξης…</value>
+  </data>
+  <data name="LayoutConfirmCurrent" xml:space="preserve">
+    <value>Να αποδεχτείτε τα πλαίσια όπως εμφανίζονται τώρα ως την επιθυμητή σας διάταξη;
+
+Χρησιμοποιήστε το αφού τακτοποιήσετε τα πλαίσια σας ή αλλάξετε σκόπιμα τη διάταξη των οθονών σας. Θα διατηρηθεί ένα εφεδρικό στιγμιότυπο της προηγούμενης επιθυμητής διάταξης.</value>
+  </data>
+  <data name="LayoutAutomaticHelp" xml:space="preserve">
+    <value>Το σημερινό αυτόματο στιγμιότυπο ενημερώνεται μετά από 5 δευτερόλεπτα χωρίς σκόπιμες αλλαγές. Τα στιγμιότυπα προηγούμενων ημερών και τα καρφιτσωμένα στιγμιότυπα παραμένουν αμετάβλητα. Η μετακίνηση παραθύρων μέσα στα πλαίσια δεν αλλάζει την αποθηκευμένη διάταξη.</value>
+  </data>
+  <data name="LayoutRetentionDays" xml:space="preserve">
+    <value>Μέγιστη παλαιότητα (ημέρες)</value>
+  </data>
+  <data name="LayoutRetentionCount" xml:space="preserve">
+    <value>Μέγιστος αριθμός στιγμιότυπων</value>
+  </data>
+  <data name="LayoutNoLimit" xml:space="preserve">
+    <value>0 = χωρίς όριο</value>
+  </data>
+  <data name="LayoutApplyRetention" xml:space="preserve">
+    <value>Εφαρμογή επιλογων...</value>
+  </data>
+  <data name="LayoutDeleteOlder" xml:space="preserve">
+    <value>Διαγραφή παλαιότερων…</value>
+  </data>
+  <data name="LayoutRetentionHelp" xml:space="preserve">
+    <value>Τα χειροκίνητα και τα καρφιτσωμένα στιγμιότυπα διατηρούνται. Η εκκαθάριση διατηρεί πάντα το νεότερο μη καρφιτσωμένο αυτόματο/εφεδρικό στιγμιότυπο.</value>
+  </data>
+  <data name="LayoutPrevious" xml:space="preserve">
+    <value>Προηγούμενο</value>
+  </data>
+  <data name="LayoutNext" xml:space="preserve">
+    <value>Επόμενο</value>
+  </data>
+  <data name="LayoutPage" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="LayoutRestore" xml:space="preserve">
+    <value>Επαναφορά στιγμιότυπου…</value>
+  </data>
+  <data name="LayoutPinToggle" xml:space="preserve">
+    <value>Καρφίτσωμα / Ξεκαρφίτσωμα</value>
+  </data>
+  <data name="LayoutDelete" xml:space="preserve">
+    <value>Διαγραφή…</value>
+  </data>
+  <data name="LayoutConfirmDelete" xml:space="preserve">
+    <value>Διαγραφή του επιλεγμένου στιγμιότυπου; Η τρέχουσα διάταξή σας θα παραμείνει όπως είναι.</value>
+  </data>
+  <data name="LayoutRestoreHelp" xml:space="preserve">
+    <value>Η επαναφορά αλλάζει μόνο θέσεις και μεγέθη. Οι τρέχουσες συντομεύσεις, σημειώσεις και τα πλαίσια διατηρούνται. Τα διαγραμμένα πλαίσια δεν δημιουργούνται ξανά.</value>
+  </data>
+  <data name="LayoutProfileChanged" xml:space="preserve">
+    <value>Το ενεργό προφίλ άλλαξε. Κλείστε αυτό το παράθυρο και ανοίξτε ξανά τα «Στιγμιότυπα».</value>
+  </data>
+  <data name="LayoutAutomaticToday" xml:space="preserve">
+    <value>Αυτόματη διάταξη - Σήμερα</value>
+  </data>
+  <data name="LayoutAutomatic" xml:space="preserve">
+    <value>Αυτόματη διάταξη</value>
+  </data>
+  <data name="LayoutUnreadable" xml:space="preserve">
+    <value>Μη αναγνώσιμο στιγμιότυπο</value>
+  </data>
+  <data name="LayoutListItem" xml:space="preserve">
+    <value>{0}
+Αποθηκεύτηκε {1:G} · {2}</value>
+  </data>
+  <data name="LayoutPinnedTitle" xml:space="preserve">
+    <value>★ {0}</value>
+  </data>
+  <data name="LayoutKindAutomatic" xml:space="preserve">
+    <value>Αυτόματο</value>
+  </data>
+  <data name="LayoutKindManual" xml:space="preserve">
+    <value>Χειροκίνητο</value>
+  </data>
+  <data name="LayoutKindSafety" xml:space="preserve">
+    <value>Εφεδρικό</value>
+  </data>
+  <data name="LayoutNoSnapshots" xml:space="preserve">
+    <value>Δεν υπάρχουν ακόμη στιγμιότυπα. Αποθηκεύστε την επιθυμητή διάταξή σας για να δημιουργήσετε ένα.</value>
+  </data>
+  <data name="LayoutSelectSnapshot" xml:space="preserve">
+    <value>Επιλέξτε ένα στιγμιότυπο για προεπισκόπηση.</value>
+  </data>
+  <data name="LayoutDetails" xml:space="preserve">
+    <value>{0}
+Αποθηκεύτηκε {1:G} · Πλαίσια: {2} · Οθόνες: {3}
+{4}</value>
+  </data>
+  <data name="LayoutMissingMonitors" xml:space="preserve">
+    <value>Λείπουν οθόνες: {0}</value>
+  </data>
+  <data name="LayoutMonitorsAvailable" xml:space="preserve">
+    <value>Οι αποθηκευμένες οθόνες είναι διαθέσιμες.</value>
+  </data>
+  <data name="LayoutMonitorMismatch" xml:space="preserve">
+    <value>Η ανάλυση ή η κλιμάκωση της οθόνης διαφέρει από αυτό το στιγμιότυπο.</value>
+  </data>
+  <data name="LayoutPreviewUnavailable" xml:space="preserve">
+    <value>Η προεπισκόπηση δεν είναι διαθέσιμη: {0}</value>
+  </data>
+  <data name="LayoutConfirmRestore" xml:space="preserve">
+    <value>Επαναφορά θέσεων και μεγεθών από το «{0}»;
+
+Η τρέχουσα επιθυμητή διάταξή σας θα αποθηκευτεί πρώτα, ώστε να μπορείτε να αναιρέσετε αυτήν την επαναφορά.</value>
+  </data>
+  <data name="LayoutInvalidRetention" xml:space="preserve">
+    <value>Εισαγάγετε ακέραιους αριθμούς: 0–36500 ημέρες και 0–100000 στιγμιότυπα. Το μηδέν σημαίνει χωρίς όριο.</value>
+  </data>
+  <data name="LayoutConfirmRetention" xml:space="preserve">
+    <value>Να αποθηκευτούν αυτοί οι κανόνες εκκαθάρισης; Θα διαγραφούν τώρα {0} αυτόματα/εφεδρικά στιγμιότυπα.
+
+Τα χειροκίνητα και τα καρφιτσωμένα στιγμιότυπα προστατεύονται και το νεότερο αυτόματο/εφεδρικό στιγμιότυπο διατηρείται.</value>
+  </data>
+  <data name="LayoutEnterAge" xml:space="preserve">
+    <value>Εισαγάγετε πρώτα ηλικία σε ημέρες.</value>
+  </data>
+  <data name="LayoutNoOldSnapshots" xml:space="preserve">
+    <value>Δεν βρέθηκαν κατάλληλα παλαιότερα στιγμιότυπα.</value>
+  </data>
+  <data name="LayoutConfirmDeleteOlder" xml:space="preserve">
+    <value>Διαγραφή {0} αυτόματων/εφεδρικών στιγμιότυπων παλαιότερων από {1} ημέρες;
+
+Τα χειροκίνητα, τα καρφιτσωμένα και το νεότερο αυτόματο/εφεδρικό στιγμιότυπο θα διατηρηθούν.</value>
+  </data>
+  <data name="LayoutNotLoaded" xml:space="preserve">
+    <value>Δεν έχει φορτωθεί διάταξη.</value>
+  </data>
+  <data name="LayoutInitial" xml:space="preserve">
+    <value>Αρχική διάταξη — έλεγχος αυτής της διάταξης</value>
+  </data>
+  <data name="LayoutWaiting" xml:space="preserve">
+    <value>Αναμονή για την αποθηκευμένη διαμόρφωση οθονών. Η επιθυμητή σας διάταξη προστατεύεται.</value>
+  </data>
+  <data name="LayoutProtected" xml:space="preserve">
+    <value>Η επιθυμητή σας διάταξη προστατεύεται.</value>
+  </data>
+  <data name="LayoutReadPositionFailed" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η ανάγνωση της θέσης του πλαισίου.
+</value>
+  </data>
+  <data name="LayoutRestorePositionFailed" xml:space="preserve">
+    <value>Τα Windows δεν μπόρεσαν να επαναφέρουν τη θέση ενός πλαισίου.</value>
+  </data>
+  <data name="LayoutDisplayChanged" xml:space="preserve">
+    <value>Η διάταξη των οθονών άλλαξε. Η αποθηκευμένη διάταξή σας προστατεύεται· αναμονή για τις οθόνες σας.</value>
+  </data>
+  <data name="LayoutRecovered" xml:space="preserve">
+    <value>Η αποθηκευμένη διάταξη επαναφέρθηκε. Οι σκόπιμες μετακινήσεις και αλλαγές μεγέθους θα αποθηκεύονται.
+</value>
+  </data>
+  <data name="LayoutSnapshotUpdated" xml:space="preserve">
+    <value>Το σημερινό αυτόματο στιγμιότυπο είναι ενημερωμένο. Η επιθυμητή σας διάταξη προστατεύεται.</value>
+  </data>
+  <data name="LayoutSavedName" xml:space="preserve">
+    <value>Αποθηκευμένη διάταξη</value>
+  </data>
+  <data name="LayoutBeforeAdopting" xml:space="preserve">
+    <value>Πριν από την αποδοχή μιας νέας διάταξης</value>
+  </data>
+  <data name="LayoutAdopted" xml:space="preserve">
+    <value>Αυτή η διάταξη είναι πλέον η επιθυμητή σας διάταξη.</value>
+  </data>
+  <data name="LayoutRestoreMonitorRequired" xml:space="preserve">
+    <value>Συνδέστε τις αποθηκευμένες οθόνες με την αποθηκευμένη ανάλυση και κλιμάκωσή τους πριν επαναφέρετε αυτήν τη διάταξη. Η τρέχουσα διάταξή σας δεν άλλαξε.</value>
+  </data>
+  <data name="LayoutRestoreMissingMonitor" xml:space="preserve">
+    <value>Λείπει η οθόνη ενός τρέχοντος πλαισίου. Η επαναφορά ακυρώθηκε.</value>
+  </data>
+  <data name="LayoutBeforeRestore" xml:space="preserve">
+    <value>Πριν από την επαναφορά του {0}</value>
+  </data>
+  <data name="LayoutRestored" xml:space="preserve">
+    <value>Επαναφέρθηκαν πλαίσια που ταιριάζουν: {0}. Οι συντομεύσεις και οι σημειώσεις διατηρήθηκαν.</value>
+  </data>
+  <data name="LayoutProtectionError" xml:space="preserve">
+    <value>Προστασία διάταξης: {0}</value>
+  </data>
+  <data name="LayoutInvalidName" xml:space="preserve">
+    <value>Μη έγκυρος τύπος στιγμιότυπου.</value>
+  </data>
+  <data name="LayoutIntendedReadFailed" xml:space="preserve">
+    <value>Η αποθηκευμένη επιθυμητή διάταξη δεν ήταν δυνατό να διαβαστεί. Διατηρήθηκε· δεν αποθηκεύτηκε νέα βασική διάταξη.</value>
+  </data>
+  <data name="LayoutFileTooLarge" xml:space="preserve">
+    <value>Το αρχείο διάταξης είναι πολύ μεγάλο.</value>
+  </data>
+  <data name="LayoutFileEmpty" xml:space="preserve">
+    <value>Κενό αρχείο διάταξης.</value>
+  </data>
+  <data name="LayoutInvalidKind" xml:space="preserve">
+    <value>Μη έγκυρος τύπος στιγμιότυπου.</value>
+  </data>
+  <data name="LayoutSnapshotNotFound" xml:space="preserve">
+    <value>Το στιγμιότυπο δεν βρέθηκε.</value>
+  </data>
+  <data name="LayoutInvalidSnapshot" xml:space="preserve">
+    <value>Μη έγκυρο στιγμιότυπο.</value>
+  </data>
+  <data name="LayoutUnpinBeforeDelete" xml:space="preserve">
+    <value>Ξεκαρφιτσώστε αυτό το στιγμιότυπο πριν το διαγράψετε.</value>
+  </data>
+  <data name="LayoutNegativeRetention" xml:space="preserve">
+    <value>Οι τιμές διατήρησης δεν μπορούν να είναι αρνητικές.</value>
+  </data>
+  <data name="LayoutInvalidFile" xml:space="preserve">
+    <value>Μη υποστηριζόμενο ή μη έγκυρο αρχείο διάταξης.</value>
+  </data>
+  <data name="LayoutInvalidGeometry" xml:space="preserve">
+    <value>Η διάταξη περιέχει μη έγκυρες θέσεις οθονών ή πλαισίων.</value>
+  </data>
+  <data name="LayoutMonitorIdentityPending" xml:space="preserve">
+    <value>Τα Windows δεν αναφέρουν ακόμη σταθερή ταυτότητα οθόνης.</value>
+  </data>
+  <data name="LayoutMonitorsNotReady" xml:space="preserve">
+    <value>Η διαμόρφωση των οθονών δεν είναι έτοιμη.</value>
+  </data>
+  <data name="LayoutMonitor" xml:space="preserve">
+    <value>Οθόνη</value>
+  </data>
+  <data name="LayoutFrame" xml:space="preserve">
+    <value>Frame</value>
+  </data>
   <data name="TabInterface" xml:space="preserve">
     <value>Περιβάλλον</value>
   </data>
@@ -1909,5 +2168,20 @@
   </data>
   <data name="MsgTemplateExported" xml:space="preserve">
     <value>Το πρότυπο εξήχθη με επιτυχία!</value>
+  </data>
+  <data name="DlgClose" xml:space="preserve">
+    <value>Κλείσιμο</value>
+  </data>
+  <data name="LayoutDetailsTitle" xml:space="preserve">
+    <value>Λεπτομέρειες στιγμιότυπου</value>
+  </data>
+  <data name="LayoutCleanupSettings" xml:space="preserve">
+    <value>Ρυθμίσεις εκκαθάρισης</value>
+  </data>
+  <data name="LayoutBtnSave" xml:space="preserve">
+    <value>Αποθήκευση</value>
+  </data>
+  <data name="LayoutPreviewTitle" xml:space="preserve">
+    <value>Προεπισκόπηση διάταξης οθονών</value>
   </data>
 </root>
