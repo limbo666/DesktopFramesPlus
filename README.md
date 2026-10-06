@@ -15,19 +15,23 @@
 </p>
 
 
-##  ⚠️ Important Notice: Welcome to Desktop Frames + 
+## Welcome to Desktop Frames + 
 
-You may have noticed a **new name** and a **new logo**. Recently, this repository was targeted by a trademark complaint from a large commercial software company regarding our name (and icon).
+Desktop Frames + creates **virtual Frames** on your desktop, allowing you to group and organize icons in a clean and convenient way. With enhanced visual effects and right-click options, it aims to provide a more polished and customizable user interface.
 
-To protect this repository from being suspended and to ensure this tool remains completely free and open-source for the community, I was forced to rebrand. We are now officially **Desktop Frames +**.
+**Desktop Frames+** is an open-source desktop icon management software, originally created by HakanKokcu under the name BirdyFences.
 
-Thank you to everyone who helped this project reach 500+ stars.  
-Your support is the reason this tool exists, and corporate pressure won't stop me from improving it.
+This project is a continuation and substantial modification of the original BirdyFences codebase, which was licensed under the MIT License at the time of forking. 
 
-A short **how to upgrade guide** can be found on the following link:
-  https://github.com/limbo666/DesktopFramesPlus/blob/main/HowToUpgradeToDesktopFramesPlus.md
+Desktop Frames+ has been significantly enhanced and optimized for improved performance, stability, and user experience, while respecting the terms of the original license and acknowledging the original author.
+
+
+
+
+### 🖕 ⭐🚢🏗️
 
 ## Support Me
+Your support is the reason this tool exists.  
 
 If this project has helped you, please consider supporting its development! Your contribution directly impacts how fast and far this project grows.
 
@@ -48,17 +52,6 @@ If you prefer to make a single, one-time contribution, you can use PayPal:
 
 [![Donate](https://raw.githubusercontent.com/limbo666/DesktopFramesPlus/refs/heads/main/Images/paypal.png)](https://www.paypal.com/donate/?hosted_button_id=PPLWC66UC8Q42)
 
-
-##  About Desktop Frames +
-
-
-Desktop Frames + creates **virtual Frames** on your desktop, allowing you to group and organize icons in a clean and convenient way. With enhanced visual effects and right-click options, it aims to provide a more polished and customizable user interface.
-
-**Desktop Frames+** is an open-source desktop icon management software, originally created by HakanKokcu under the name BirdyFences.
-
-This project is a continuation and substantial modification of the original BirdyFences codebase, which was licensed under the MIT License at the time of forking. 
-
-Desktop Frames+ has been significantly enhanced and optimized for improved performance, stability, and user experience, while respecting the terms of the original license and acknowledging the original author.
 
 
 ##  Version History  
@@ -102,7 +95,7 @@ https://github.com/limbo666/DesktopFramesPlus/blob/main/TIPS.md
 ##  Download
 Get the latest release from releases section:
 https://github.com/limbo666/DesktopFramesPlus/releases
-**UPDATE: Release 2.7.7.294 is out**
+**UPDATE: Release 2.7.8.376 is out**
 
 ---
 
