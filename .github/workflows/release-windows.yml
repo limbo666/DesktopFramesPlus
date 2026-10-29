@@ -1,0 +1,95 @@
+name: Release Windows build
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+      - '[0-9]*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to build
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+
+      # COM references require Visual Studio's .NET Framework MSBuild.
+      - uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
+
+      - name: Read version tag
+        shell: pwsh
+        env:
+          TAG_NAME: ${{ inputs.tag || github.ref_name }}
+        run: |
+          if ($env:TAG_NAME -cnotmatch '^v?([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$') {
+            throw "Expected a version tag such as v2.7.8.359."
+          }
+          $version = $Matches[1]
+          "RELEASE_VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Publish framework-dependent Windows build
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:RUNNER_TEMP 'DesktopFramesPlusPublish'
+          msbuild 'Code/Desktop Frames/Desktop Frames.csproj' /restore /t:Publish /p:Configuration=Release /p:SelfContained=false /p:PublishReadyToRun=false /p:CopyOutputSymbolsToPublishDirectory=true "/p:PublishDir=$publishDir/" "/p:Version=$env:RELEASE_VERSION" "/p:AssemblyVersion=$env:RELEASE_VERSION" "/p:FileVersion=$env:RELEASE_VERSION"
+          if ($LASTEXITCODE -ne 0) { throw "MSBuild publish failed." }
+
+      - name: Package release ZIP
+        shell: pwsh
+        run: |
+          $publishDir = Join-Path $env:RUNNER_TEMP 'DesktopFramesPlusPublish'
+          $expectedDlls = @(
+            'Desktop Frames.dll',
+            'NAudio.Asio.dll', 'NAudio.Core.dll', 'NAudio.dll',
+            'NAudio.Midi.dll', 'NAudio.Wasapi.dll',
+            'NAudio.WinForms.dll', 'NAudio.WinMM.dll',
+            'Newtonsoft.Json.dll'
+          )
+          $rootDlls = @(Get-ChildItem -LiteralPath $publishDir -File -Filter '*.dll' | ForEach-Object Name)
+          $missing = @($expectedDlls | Where-Object { $_ -notin $rootDlls })
+          $extra = @($rootDlls | Where-Object { $_ -notin $expectedDlls })
+          if ($missing.Count -or $extra.Count) {
+            throw "Unexpected root DLLs. Missing: $($missing -join ', '); extra: $($extra -join ', ')."
+          }
+          foreach ($name in @('Desktop Frames.exe', 'Desktop Frames.deps.json', 'Desktop Frames.runtimeconfig.json', 'Desktop Frames.pdb')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $publishDir $name))) {
+              throw "Missing release file: $name"
+            }
+          }
+          $builtVersion = [System.Reflection.AssemblyName]::GetAssemblyName((Join-Path $publishDir 'Desktop Frames.dll')).Version.ToString()
+          if ($builtVersion -ne $env:RELEASE_VERSION) {
+            throw "Built assembly version $builtVersion does not match tag version $env:RELEASE_VERSION."
+          }
+          $config = Get-Content -Raw (Join-Path $publishDir 'Desktop Frames.runtimeconfig.json') | ConvertFrom-Json
+          if ($config.runtimeOptions.frameworks.name -notcontains 'Microsoft.WindowsDesktop.App') {
+            throw 'The build is not framework-dependent on the .NET Desktop Runtime.'
+          }
+          $archive = Join-Path $env:RUNNER_TEMP "DesktopFrames+_v$env:RELEASE_VERSION.zip"
+          Compress-Archive -Path (Join-Path $publishDir '*') -DestinationPath $archive -CompressionLevel Optimal
+          Get-Item -LiteralPath $archive | Select-Object FullName, Length
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ inputs.tag || github.ref_name }}
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP "DesktopFrames+_v$env:RELEASE_VERSION.zip"
+          gh release create $env:TAG_NAME $archive --verify-tag --title "Desktop Frames + $env:RELEASE_VERSION" --notes 'Requires the .NET 8 Desktop Runtime.' --generate-notes
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub release creation failed.' }
