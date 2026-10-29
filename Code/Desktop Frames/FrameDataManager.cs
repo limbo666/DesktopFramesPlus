@@ -277,6 +277,19 @@ namespace Desktop_Frames
                 throw;
             }
         }
+
+        public static bool RemoveFrameById(string frameId)
+        {
+            if (string.IsNullOrEmpty(frameId) || _frameData == null) return false;
+
+            // Frame edits can replace a JObject in the list while a context menu
+            // still holds the old object. Delete by the persisted identity.
+            int removed = _frameData.RemoveAll(frame => frame.Id?.ToString() == frameId);
+            if (removed == 0) return false;
+
+            SaveFrameData();
+            return true;
+        }
         #endregion
 
         #region Frame Creation - Used by: TrayManager, Framemanager

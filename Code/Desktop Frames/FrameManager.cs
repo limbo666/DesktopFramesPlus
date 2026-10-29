@@ -1331,28 +1331,41 @@ namespace Desktop_Frames
                 bool result = MessageBoxesManager.ShowCustomMessageBoxForm();
                 if (result == true)
                 {
-                    if (SettingsManager.ExportShortcutsOnFrameDeletion && frame.ItemsType?.ToString() == "Data")
+                    string frameId = frame.Id?.ToString();
+                    if (string.IsNullOrEmpty(frameId)) return;
+                    dynamic liveFrame = FrameDataManager.FrameData.FirstOrDefault(f => f.Id?.ToString() == frameId);
+                    if (liveFrame == null) return;
+
+                    if (SettingsManager.ExportShortcutsOnFrameDeletion && liveFrame.ItemsType?.ToString() == "Data")
                     {
-                        ExportAllIconsToDesktop(frame, false);
+                        ExportAllIconsToDesktop(liveFrame, false);
                     }
 
-                    BackupManager.BackupDeletedFrame(frame);
+                    BackupManager.BackupDeletedFrame(liveFrame);
 
-                    FrameDataManager.FrameData.Remove(frame);
+                    if (!FrameDataManager.RemoveFrameById(frameId)) return;
                     _heartTextBlocks.Remove(frame);
 
                     // --- BUG FIX: Avoid JObject HashCode Mutation ---
-                    var targetPortal = _portalFrames.FirstOrDefault(kvp => kvp.Key?.Id?.ToString() == frame.Id?.ToString());
+                    var targetPortal = _portalFrames.FirstOrDefault(kvp => kvp.Key?.Id?.ToString() == frameId);
                     if (targetPortal.Value != null)
                     {
                         targetPortal.Value.Dispose();
                         _portalFrames.Remove(targetPortal.Key);
                     }
 
-                    FrameDataManager.SaveFrameData();
+                    if (_activePlugins.Remove(frameId, out var plugin))
+                    {
+                        try { plugin.Cleanup(); }
+                        catch (Exception ex)
+                        {
+                            LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.UI,
+                                $"Failed to clean up plugin for deleted frame '{frameId}': {ex.Message}");
+                        }
+                    }
 
                     var windows = System.Windows.Application.Current.Windows.OfType<NonActivatingWindow>();
-                    var win = windows.FirstOrDefault(w => w.Tag?.ToString() == frame.Id?.ToString());
+                    var win = windows.FirstOrDefault(w => w.Tag?.ToString() == frameId);
                     if (win != null) win.Close();
 
                     UpdateAllHeartContextMenus();
