@@ -2184,4 +2184,10 @@
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Προεπισκόπηση διάταξης οθονών</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Ενεργοποίηση εποχικών εφέ</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Οι αλλαγές στα εποχικά εφέ εφαρμόζονται μετά την αποθήκευση και την επανεκκίνηση της εφαρμογής.</value>
+  </data>
 </root>

@@ -36,6 +36,9 @@ namespace Desktop_Frames
         private static string _lastTriggerValue;
 
         // --- NEW: Seasonal Easter Egg Fields ---
+        // Snapshot on first initialization: saving options or reloading frames must
+        // not partially apply a setting that requires an application restart.
+        private static bool? _seasonalEffectsEnabled;
         private static DispatcherTimer _winterTimer;
         private static bool _isWinterActive = false;
         private static readonly Dictionary<Window, WinterContext> _winterContexts = new Dictionary<Window, WinterContext>();
@@ -505,31 +508,31 @@ namespace Desktop_Frames
                 _registryMonitor.Tick += CheckRegistryTrigger;
                 _registryMonitor.Start();
 
-                // Check for Seasonal Events
-                var now = DateTime.Now;
-                if (now.Month == 12 && now.Day >= 22 && now.Day <= 29)
-                {
-                    ActivateWinterTheme();
-                }
-                else if (now.Month == 1 && now.Day >= 1 && now.Day <= 2)
-                {
-                    // New Year's occupies the two days that follow the
-                    // Christmas window with no gap: on the 31st the winter
-                    // effect runs, on the 1st New Year's takes over. The
-                    // user sees a continuous scene that transitions only in
-                    // its particle content, not in its stage.
-                    ActivateNewYearTheme();
-                }
-                else if ((now.Month == 10 && now.Day >= 29) || (now.Month == 11 && now.Day <= 2))
-                {
-                    ActivateHalloweenTheme();
-                }
+                InitializeSeasonalEffects(DateTime.Now);
 
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.UI, "InterCore system initialized and subscribed to global hotkeys");
             }
             catch (Exception ex)
             {
                 LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.UI, $"InterCore: Error during initialization: {ex.Message}");
+            }
+        }
+
+        private static void InitializeSeasonalEffects(DateTime now)
+        {
+            _seasonalEffectsEnabled ??= SettingsManager.EnableSeasonalEffects;
+            if (!_seasonalEffectsEnabled.Value) return;
+
+            // Preserve the enabled date windows from the 2.7.8.377 release.
+            // Halloween activation remains suspended by that release's emergency fix
+            // for #154; opting in must not restore it before the underlying bug is fixed.
+            if (now.Month == 12 && now.Day >= 22 && now.Day <= 29)
+            {
+                ActivateWinterTheme();
+            }
+            else if (now.Month == 1 && now.Day >= 1 && now.Day <= 2)
+            {
+                ActivateNewYearTheme();
             }
         }
 

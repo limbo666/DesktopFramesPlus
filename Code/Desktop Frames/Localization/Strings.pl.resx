@@ -2199,4 +2199,10 @@ Migawki ręczne, przypięte oraz najnowsza migawka automatyczna lub bezpieczeńs
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Podgląd układu monitorów</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Włącz efekty sezonowe</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Zmiany efektów sezonowych zaczną obowiązywać po zapisaniu ustawień i ponownym uruchomieniu aplikacji.</value>
+  </data>
 </root>

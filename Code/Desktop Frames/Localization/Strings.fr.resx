@@ -2199,4 +2199,10 @@ Les instantanés manuels et épinglés ainsi que le plus récent des instantané
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Aperçu de la disposition des moniteurs</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Activer les effets saisonniers</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Les modifications des effets saisonniers prennent effet après l’enregistrement et le redémarrage de l’application.</value>
+  </data>
 </root>

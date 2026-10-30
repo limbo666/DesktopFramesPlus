@@ -2199,4 +2199,10 @@
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Предпросмотр компоновки мониторов</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Включить сезонные эффекты</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Изменения сезонных эффектов вступят в силу после сохранения настроек и перезапуска приложения.</value>
+  </data>
 </root>

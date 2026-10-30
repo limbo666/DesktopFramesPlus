@@ -2216,4 +2216,10 @@ Handmatige, vastgezette en de nieuwste automatische/veiligheidsmomentopname blij
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Voorbeeld van monitorindeling</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Seizoenseffecten inschakelen</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Wijzigingen in seizoenseffecten worden van kracht na het opslaan en opnieuw starten van de toepassing.</value>
+  </data>
 </root>

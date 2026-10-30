@@ -2227,4 +2227,10 @@
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>モニターレイアウトのプレビュー</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>季節のエフェクトを有効にする</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>季節のエフェクトの変更は、保存してアプリケーションを再起動すると反映されます。</value>
+  </data>
 </root>

@@ -2199,4 +2199,10 @@ Se conservarán las instantáneas manuales y fijadas, además de la más recient
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Vista previa del diseño de monitores</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Activar efectos de temporada</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Los cambios en los efectos de temporada se aplican después de guardar y reiniciar la aplicación.</value>
+  </data>
 </root>

@@ -2199,4 +2199,10 @@ Verranno conservate le istantanee manuali e fissate e la più recente tra quelle
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Anteprima del layout dei monitor</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Abilita effetti stagionali</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Le modifiche agli effetti stagionali hanno effetto dopo il salvataggio e il riavvio dell’applicazione.</value>
+  </data>
 </root>

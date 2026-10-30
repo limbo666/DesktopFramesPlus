@@ -769,6 +769,15 @@ namespace Desktop_Frames
             StackPanel c = new StackPanel();
 
             CreateSectionHeader(c, Strings.SecAppearance, ColorAppearance);
+            CreateCheckBox(c, Strings.OptEnableSeasonalEffects, "EnableSeasonalEffects", SettingsManager.EnableSeasonalEffects);
+            c.Children.Add(new TextBlock
+            {
+                Text = Strings.NoteSeasonalEffectsRestart,
+                FontStyle = FontStyles.Italic,
+                Foreground = Brushes.Gray,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(15, 0, 15, 8)
+            });
             var chamCb = CreateCheckBoxReturn(c, Strings.OptChameleon, "EnableChameleon", SettingsManager.EnableChameleonMode);
             chamCb.ToolTip = Strings.TooltipChameleon;
 
@@ -1445,6 +1454,7 @@ namespace Desktop_Frames
                     if (child is CheckBox cb)
                     {
                         if (cb.Name == "EnableChameleon") SettingsManager.EnableChameleonMode = cb.IsChecked == true;
+                        if (cb.Name == "EnableSeasonalEffects") SettingsManager.EnableSeasonalEffects = cb.IsChecked == true;
                         if (cb.Name == "ApplyTintToIcons") SettingsManager.ApplyTintToIcons = cb.IsChecked == true;
                     }
                     else if (child is Grid g)

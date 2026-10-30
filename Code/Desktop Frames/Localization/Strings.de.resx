@@ -2199,4 +2199,10 @@ Manuelle und angeheftete Momentaufnahmen sowie die neueste automatische Momentau
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Vorschau des Monitorlayouts</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Saisonale Effekte aktivieren</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Änderungen an saisonalen Effekten werden nach dem Speichern und einem Neustart der Anwendung wirksam.</value>
+  </data>
 </root>

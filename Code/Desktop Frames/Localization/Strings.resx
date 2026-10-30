@@ -2199,4 +2199,10 @@ Manual, pinned and the newest automatic/safety snapshot will be kept.</value>
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Monitor Layout Preview</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>Enable seasonal effects</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>Changes to seasonal effects take effect after saving and restarting the application.</value>
+  </data>
 </root>

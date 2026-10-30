@@ -332,6 +332,8 @@ namespace Desktop_Frames.Localization
         public static string OptExecutionToasts => Get("OptExecutionToasts");
         public static string OptFocusFrameHotkey => Get("OptFocusFrameHotkey");
         public static string OptFrameTint => Get("OptFrameTint");
+        public static string OptEnableSeasonalEffects => Get("OptEnableSeasonalEffects");
+        public static string NoteSeasonalEffectsRestart => Get("NoteSeasonalEffectsRestart");
         public static string OptHideIconsRunning => Get("OptHideIconsRunning");
         public static string OptHideIconsWhenHidden => Get("OptHideIconsWhenHidden");
         public static string OptIdleFadeOut => Get("OptIdleFadeOut");

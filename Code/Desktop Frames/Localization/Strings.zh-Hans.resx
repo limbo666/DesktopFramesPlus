@@ -2199,4 +2199,10 @@
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>显示器布局预览</value>
   </data>
+  <data name="OptEnableSeasonalEffects" xml:space="preserve">
+    <value>启用节日特效</value>
+  </data>
+  <data name="NoteSeasonalEffectsRestart" xml:space="preserve">
+    <value>节日特效设置的更改将在保存并重新启动应用程序后生效。</value>
+  </data>
 </root>

@@ -38,6 +38,7 @@ namespace Desktop_Frames
         public static bool UseRecycleBin { get; set; } = true;
         public static bool ShowInTray { get; set; } = true;
         public static bool EnableSounds { get; set; } = true;
+        public static bool EnableSeasonalEffects { get; set; } = true;
         public static NotificationSound NotificationSound { get; set; } = NotificationSound.DefaultSound;
         public static int TintValue { get; set; } = 85;
         public static int MenuTintValue { get; set; } = 30;
@@ -135,6 +136,9 @@ namespace Desktop_Frames
 
         public static void LoadSettings()
         {
+            // Loading a new/empty profile must not inherit the previous profile's opt-out.
+            EnableSeasonalEffects = true;
+
             // 1. DETERMINE SOURCE
             string appRoot = AppDomain.CurrentDomain.BaseDirectory;
             string masterPath = Path.Combine(appRoot, "MasterOptions.json");
@@ -212,6 +216,7 @@ namespace Desktop_Frames
                 ShowBackgroundImageOnPortalFrames,
                 ShowInTray,
                 EnableSounds,
+                EnableSeasonalEffects,
                 NotificationSound = NotificationSound.ToString(),
                 UseRecycleBin,
                 TintValue,
@@ -298,6 +303,7 @@ namespace Desktop_Frames
             try { ShowBackgroundImageOnPortalFrames = data.ShowBackgroundImageOnPortalFrames ?? true; } catch { ShowBackgroundImageOnPortalFrames = true; }
             try { ShowInTray = data.ShowInTray ?? true; } catch { ShowInTray = true; }
             try { EnableSounds = data.EnableSounds ?? true; } catch { EnableSounds = true; }
+            try { EnableSeasonalEffects = data.EnableSeasonalEffects ?? true; } catch { EnableSeasonalEffects = true; }
 
             // --- Notification Sound with Failsafe Logic ---
             try
