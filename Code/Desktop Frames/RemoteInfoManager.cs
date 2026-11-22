@@ -1,7 +1,5 @@
 ﻿using Desktop_Frames.Localization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Reflection;
@@ -11,8 +9,8 @@ namespace Desktop_Frames
 {
     public static class RemoteInfoManager
     {
-        // YOUR REAL GITHUB URL
-        private const string MANIFEST_URL = "https://raw.githubusercontent.com/limbo666/DesktopFramesPlus/refs/heads/main/ngdfcs/getversion.json";
+        private static readonly Uri ManifestUri = new("https://raw.githubusercontent.com/limbo666/DesktopFramesPlus/refs/heads/main/ngdfcs/getversion.json");
+        private const string ReleasesUrl = "https://github.com/limbo666/DesktopFramesPlus/releases";
 
         private static bool _hasChecked = false;
 
@@ -21,86 +19,78 @@ namespace Desktop_Frames
             if (_hasChecked) return;
             _hasChecked = true;
 
-            // Run in background
             Task.Run(async () =>
             {
-                string debugUrlFile = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "developer_repo.txt");
-
-                // 3-second delay for dev testing, 25-second for production release
-                if (System.IO.File.Exists(debugUrlFile))
-                {
-                    await Task.Delay(3000);
-                }
-                else
-                {
-                    await Task.Delay(25000);
-                }
-
-                await PerformCheck();
+                Uri? developerManifest = null;
+#if DEBUG
+                developerManifest = ReadDeveloperManifestUri();
+#endif
+                await Task.Delay(developerManifest == null ? 25000 : 3000);
+                await PerformCheck(developerManifest ?? ManifestUri);
             });
         }
 
-        private static async Task PerformCheck()
+        internal static Uri? GetHttpsUri(string? value)
+        {
+            if (Uri.TryCreate(value, UriKind.Absolute, out var uri) &&
+                uri.Scheme == Uri.UriSchemeHttps &&
+                !string.IsNullOrEmpty(uri.Host) &&
+                string.IsNullOrEmpty(uri.UserInfo))
+            {
+                return uri;
+            }
+
+            return null;
+        }
+
+#if DEBUG
+        private static Uri? ReadDeveloperManifestUri()
+        {
+            string path = System.IO.Path.Combine(AppContext.BaseDirectory, "developer_repo.txt");
+            if (!System.IO.File.Exists(path)) return null;
+
+            try
+            {
+                var uri = GetHttpsUri(System.IO.File.ReadAllText(path).Trim());
+                if (uri == null)
+                    LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.General, "RemoteInfoManager: developer_repo.txt must contain an HTTPS URL without credentials.");
+                return uri;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.General, $"RemoteInfoManager: Could not read developer_repo.txt: {ex.Message}");
+                return null;
+            }
+        }
+#endif
+
+        private static async Task PerformCheck(Uri manifestUri)
         {
             try
             {
-                using (var client = new HttpClient())
+                using (var client = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }))
                 {
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd("DesktopFrames/2.7"); // Identify app
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("DesktopFrames/2.7");
                     client.Timeout = TimeSpan.FromSeconds(10);
 
-                    string targetUrl = MANIFEST_URL;
-                    string debugUrlFile = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "developer_repo.txt");
-
-                    // OVERRIDE: Read secret URL and sanitize
-                    if (System.IO.File.Exists(debugUrlFile))
+                    var requestUri = new UriBuilder(manifestUri)
                     {
-                        try
-                        {
-                            string rawContent = System.IO.File.ReadAllText(debugUrlFile).Trim();
+                        Query = (manifestUri.Query.Length == 0 ? "" : manifestUri.Query[1..] + "&") +
+                            $"t={DateTime.UtcNow.Ticks}"
+                    };
 
-                            // Sanitize: Check if it's not empty and is a valid HTTP/HTTPS URL
-                            if (!string.IsNullOrWhiteSpace(rawContent) &&
-                                (rawContent.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                                 rawContent.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
-                            {
-                                targetUrl = rawContent;
-                                LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, $"RemoteInfoManager: Using validated developer repo.");
-                            }
-                            else
-                            {
-                                LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.General, "RemoteInfoManager: developer_repo.txt is empty or malformed. Falling back to default URL.");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.General, $"RemoteInfoManager: Failed to read developer_repo.txt: {ex.Message}. Falling back to default URL.");
-                        }
-                    }
+                    LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, $"RemoteInfoManager: Downloading manifest from {requestUri.Host}");
 
-                    // Add Cache Buster
-                    string urlWithNoCache = $"{targetUrl}?t={DateTime.Now.Ticks}";
-
-                    LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, $"RemoteInfoManager: Downloading manifest from {urlWithNoCache}");
-
-                    string json = await client.GetStringAsync(urlWithNoCache);
+                    string json = await client.GetStringAsync(requestUri.Uri);
 
                     if (string.IsNullOrWhiteSpace(json)) return;
 
                     var manifest = JsonConvert.DeserializeObject<RemoteManifest>(json);
                     if (manifest == null) return;
 
-                    // 1. Process Updates & Killswitch
+                    // The manifest only supplies data for notifications.
                     ProcessMeta(manifest.Meta);
 
-                    // 2. Process Settings (Silent)
-                    if (manifest.Settings != null)
-                    {
-                        if (manifest.Settings.EnableBackgroundLogging)
-                            SettingsManager.EnableBackgroundValidationLogging = true;
-                    }
-
-                    // 3. Process Announcements (UI)
                     if (manifest.Announcements != null && manifest.Announcements.Count > 0)
                     {
                         foreach (var msg in manifest.Announcements)
@@ -129,12 +119,6 @@ namespace Desktop_Frames
         {
             if (meta == null) return;
 
-            if (meta.ForceKillSwitch)
-            {
-                System.Windows.Application.Current.Dispatcher.Invoke(() => System.Windows.Application.Current.Shutdown());
-                return;
-            }
-
             // VERSION CHECK (4-Part Support: Major.Minor.Build.Revision)
             Version currentVer = Assembly.GetEntryAssembly().GetName().Version;
 
@@ -150,7 +134,7 @@ namespace Desktop_Frames
                         Title = Strings.UpdateAvailable,
                         Body = $"A new version ({remoteVer}) is available.\nYou are currently using {currentVer}.",
                         Type = meta.CriticalUpdate ? "Alert" : "Info",
-                        Link = !string.IsNullOrEmpty(meta.DownloadUrl) ? meta.DownloadUrl : "https://github.com/limbo666/DesktopFramesPlus/releases",
+                        Link = GetHttpsUri(meta.DownloadUrl)?.AbsoluteUri ?? ReleasesUrl,
                         CanUserDismiss = !meta.CriticalUpdate,
                         MaxDisplayCount = meta.CriticalUpdate ? 50 : 3 // Nag more for critical
                     };
@@ -168,7 +152,7 @@ namespace Desktop_Frames
 
         private static bool ShouldShowMessage(RemoteAnnouncement msg)
         {
-            if (string.IsNullOrEmpty(msg.Id)) return false;
+            if (msg == null || string.IsNullOrEmpty(msg.Id)) return false;
 
             // 1. Check Dismissal
             if (RegistryHelper.IsMessageDismissed(msg.Id)) return false;

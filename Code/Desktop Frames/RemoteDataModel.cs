@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 
 namespace Desktop_Frames
 {
@@ -9,7 +7,6 @@ namespace Desktop_Frames
     {
         public RemoteMeta Meta { get; set; }
         public List<RemoteAnnouncement> Announcements { get; set; }
-        public RemoteSettings Settings { get; set; }
     }
 
     public class RemoteMeta
@@ -17,7 +14,6 @@ namespace Desktop_Frames
         public string LatestVersion { get; set; } = "0.0.0.0";
         public bool CriticalUpdate { get; set; }
         public string DownloadUrl { get; set; }
-        public bool ForceKillSwitch { get; set; } // Nuclear option
     }
 
     public class RemoteAnnouncement
@@ -34,11 +30,5 @@ namespace Desktop_Frames
         public int MaxDisplayCount { get; set; } = 1;   // How many times to show?
         public int AutoCloseSeconds { get; set; } = 0;  // 0 = Disable auto-close
         public bool CanUserDismiss { get; set; } = true; // Show "Don't show again" checkbox
-    }
-
-    public class RemoteSettings
-    {
-        public bool EnableBackgroundLogging { get; set; }
-        public string SearchEngineUrl { get; set; }
     }
 }

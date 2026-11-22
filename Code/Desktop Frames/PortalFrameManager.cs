@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -29,7 +30,9 @@ namespace Desktop_Frames
         private readonly ScrollViewer _parentScrollViewer; // --- NEW: Track parent for dual-mode switching ---
         private ListView _detailsListView; // --- NEW: Tabular view control ---
         private bool _isDetailsView = false; // --- NEW: Active mode flag ---
-        private readonly FileSystemWatcher _watcher;
+        private FileSystemWatcher? _watcher;
+        private Button? _retryFolderButton;
+        private bool _disposed;
         private string _targetFolderPath;
         private readonly Dispatcher _dispatcher;
         private readonly DispatcherTimer _debounceTimer;
@@ -553,8 +556,11 @@ namespace Desktop_Frames
             if (frameDict.ContainsKey("FilterString"))
                 _currentFilter = frameDict["FilterString"]?.ToString();
 
-            if (frameDict.ContainsKey("SortMode"))
-                _sortMode = Convert.ToInt32(frameDict["SortMode"]?.ToString() ?? "0");
+            if (frameDict.TryGetValue("SortMode", out var value) &&
+                int.TryParse(value?.ToString(), out int sortMode) && sortMode is >= 0 and <= 3)
+            {
+                _sortMode = sortMode;
+            }
 
             // --- COMPILER FIX: Single, clean ViewMode initialization ---
             _parentScrollViewer = _wpcont.Parent as ScrollViewer;
@@ -562,43 +568,53 @@ namespace Desktop_Frames
             if (string.IsNullOrEmpty(activeViewMode)) activeViewMode = SettingsManager.DefaultPortalView;
             _isDetailsView = string.Equals(activeViewMode, "Details", StringComparison.OrdinalIgnoreCase);
 
-            if (string.IsNullOrEmpty(_targetFolderPath))
-            {
-                throw new Exception("No folder path defined for Portal Frame. Please recreate the frame.");
-            }
+            InitializeFrameContents();
+        }
 
-            if (!Directory.Exists(_targetFolderPath))
+        private FileSystemWatcher StartWatching(string path)
+        {
+            var watcher = new FileSystemWatcher(path)
             {
-                throw new Exception($"The folder '{_targetFolderPath}' does not exist. Please update the Portal Frame settings.");
-            }
-
-            _watcher = new FileSystemWatcher(_targetFolderPath)
-            {
-                EnableRaisingEvents = true,
                 IncludeSubdirectories = false,
-                InternalBufferSize = 65536 // --- BUG FIX: Maximize buffer to survive massive I/O operations ---
+                InternalBufferSize = 65536
             };
 
-            // --- BUG FIX: Simplified "State Reconciler" Trigger ---
-            // The watcher is now just a "ping" to tell us something changed. 
-            // We listen to the Error event to specifically catch buffer overflows!
-            _watcher.Created += (s, e) => TriggerSync();
-            _watcher.Deleted += (s, e) => TriggerSync();
-            _watcher.Renamed += (s, e) => TriggerSync();
-            _watcher.Error += (s, e) => TriggerSync();
+            watcher.Created += (s, e) => TriggerSync();
+            watcher.Deleted += (s, e) => TriggerSync();
+            watcher.Renamed += (s, e) => TriggerSync();
+            watcher.Error += (s, e) => _dispatcher.InvokeAsync(() =>
+            {
+                if (!ReferenceEquals(s, _watcher)) return;
 
-            InitializeFrameContents();
-            //  // --- TEST CODE START ---
-            //  // Hardcode a filter to prove the engine works.
-            //   // This simulates a user typing "*.txt" into the filter bar.
-            //   ApplyFilter("*.txt");
-            //  // --- TEST CODE END ---
+                // Watcher errors can stop monitoring. Reopen it before the next scan.
+                ++_navigationGeneration;
+                StopWatching();
+                TriggerSync(immediate: true);
+            });
+
+            try
+            {
+                watcher.EnableRaisingEvents = true;
+                return watcher;
+            }
+            catch
+            {
+                watcher.Dispose();
+                throw;
+            }
+        }
+
+        private void StopWatching()
+        {
+            _watcher?.Dispose();
+            _watcher = null;
         }
 
         private void TriggerSync(bool immediate = false)
         {
             _dispatcher.InvokeAsync(() =>
             {
+                if (_disposed) return;
                 _debounceTimer.Stop();
                 if (immediate)
                 {
@@ -617,104 +633,135 @@ namespace Desktop_Frames
             _ = RunReconcilerAsync();
         }
 
-        private async System.Threading.Tasks.Task RunReconcilerAsync()
+        private async Task RunReconcilerAsync()
         {
-            int myGeneration = ++_navigationGeneration;
-            string targetPath = _targetFolderPath;
+            if (_disposed) return;
 
+            int generation = ++_navigationGeneration;
+            string targetPath = _targetFolderPath;
+            bool needsWatcher = _watcher == null;
+            FileSystemWatcher? newWatcher = null;
             try
             {
-                if (!Directory.Exists(targetPath)) return;
-
-                // 1. Read Disk & UI State (Background Thread)
-                var diff = await System.Threading.Tasks.Task.Run(() =>
+                if (string.IsNullOrWhiteSpace(targetPath))
                 {
-                    // --- PERFORMANCE FIX: Use EnumerateFileSystemInfos to avoid N+1 disk I/O calls ---
-                    // This fetches attributes instantly during the directory scan instead of hitting the disk for every single file.
-                    var currentDiskFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                    try
-                    {
-                        var dirInfo = new DirectoryInfo(targetPath);
-                        foreach (var fsi in dirInfo.EnumerateFileSystemInfos())
-                        {
-                            if (CoreUtilities.IsTemporaryFile(fsi.FullName)) continue;
+                    ShowFolderUnavailable();
+                    return;
+                }
 
-                            // Attributes are pre-cached in 'fsi', ZERO extra disk I/O required!
-                            if ((fsi.Attributes & FileAttributes.Hidden) == 0 &&
-                                (fsi.Attributes & FileAttributes.System) == 0)
-                            {
-                                currentDiskFiles.Add(fsi.FullName);
-                            }
-                        }
-                    }
-                    catch { } // Handle access denied gracefully
-
-                    List<string> currentUIFiles = new List<string>();
-                    _dispatcher.Invoke(() =>
-                    {
-                        // --- STEP 5: Scan Details View if active ---
-                        if (_isDetailsView && _detailsListView != null)
-                        {
-                            currentUIFiles = _detailsListView.Items.OfType<PortalItemModel>()
-                                .Select(i => i.FullPath)
-                                .Where(p => p != null).ToList();
-                        }
-                        else
-                        {
-                            currentUIFiles = _wpcont.Children.OfType<StackPanel>()
-                                .Select(sp => sp.Tag?.GetType().GetProperty("FilePath")?.GetValue(sp.Tag)?.ToString())
-                                .Where(p => p != null).ToList();
-                        }
-                    });
-
-                    var uiSet = currentUIFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
-                    return new
-                    {
-                        ToRemove = currentUIFiles.Where(p => !currentDiskFiles.Contains(p)).ToList(),
-                        ToAdd = currentDiskFiles.Where(p => !uiSet.Contains(p)).ToList()
-                    };
+                string fullPath = Path.GetFullPath(targetPath);
+                var diskFiles = await Task.Run(() =>
+                {
+                    if (needsWatcher)
+                        newWatcher = StartWatching(fullPath);
+                    return ReadFolderEntries(fullPath);
                 });
 
-                // Abort if the user navigated away while we were scanning!
-                if (myGeneration != _navigationGeneration) return;
-
-                // 2. Remove old icons instantly
-                if (diff.ToRemove.Count > 0)
+                if (generation != _navigationGeneration) return;
+                if (newWatcher != null)
                 {
-                    _dispatcher.Invoke(() =>
-                    {
-                        foreach (var path in diff.ToRemove) RemoveIcon(path);
-                    });
+                    _watcher = newWatcher;
+                    newWatcher = null;
                 }
 
-                if (myGeneration != _navigationGeneration) return;
-
-                // 3. Add new icons (SMOOTH CHUNKING)
-                // Instead of locking the UI thread to load 100 icons at once, we yield to the Background priority.
-                // This keeps the app responsive during massive folder loads and avoids freezing.
-                if (diff.ToAdd.Count > 0)
+                if (_retryFolderButton != null)
                 {
-                    foreach (var path in diff.ToAdd)
-                    {
-                        // Stop immediately if user navigated to another folder
-                        if (myGeneration != _navigationGeneration) break;
-
-                        await _dispatcher.InvokeAsync(() =>
-                        {
-                            AddIcon(path);
-                        }, DispatcherPriority.Background);
-                    }
-
-                    if (myGeneration == _navigationGeneration)
-                    {
-                        _dispatcher.Invoke(() => SortContents());
-                    }
+                    _wpcont.Children.Remove(_retryFolderButton);
+                    _retryFolderButton = null;
+                    if (_isDetailsView) BuildOrSwitchToDetailsView();
                 }
+
+                var displayedFiles = (_isDetailsView && _detailsListView != null
+                        ? _detailsListView.Items.OfType<PortalItemModel>().Select(item => item.FullPath)
+                        : _wpcont.Children.OfType<StackPanel>().Select(panel =>
+                            panel.Tag?.GetType().GetProperty("FilePath")?.GetValue(panel.Tag)?.ToString()))
+                    .OfType<string>().ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                foreach (string path in displayedFiles.Except(diskFiles, StringComparer.OrdinalIgnoreCase))
+                    RemoveIcon(path);
+
+                var pathsToAdd = diskFiles.Except(displayedFiles, StringComparer.OrdinalIgnoreCase).ToList();
+                foreach (string path in pathsToAdd)
+                {
+                    if (generation != _navigationGeneration) return;
+                    await _dispatcher.InvokeAsync(() =>
+                    {
+                        if (generation == _navigationGeneration) AddIcon(path);
+                    }, DispatcherPriority.Background);
+                }
+
+                if (pathsToAdd.Count > 0 && generation == _navigationGeneration)
+                    SortContents();
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException
+                or NotSupportedException or System.ComponentModel.Win32Exception)
+            {
+                if (generation != _navigationGeneration) return;
+                StopWatching();
+                ShowFolderUnavailable();
+                LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.General, $"Portal folder unavailable: {targetPath}: {ex.Message}");
             }
             catch (Exception ex)
             {
                 LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.General, $"Portal Sync Error: {ex.Message}");
             }
+            finally
+            {
+                newWatcher?.Dispose();
+                if (generation == _navigationGeneration && _retryFolderButton != null)
+                    _retryFolderButton.IsEnabled = true;
+            }
+        }
+
+        private static HashSet<string> ReadFolderEntries(string path)
+        {
+            var files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var item in new DirectoryInfo(path).EnumerateFileSystemInfos())
+            {
+                if (!CoreUtilities.IsTemporaryFile(item.FullName) &&
+                    (item.Attributes & (FileAttributes.Hidden | FileAttributes.System)) == 0)
+                {
+                    files.Add(item.FullName);
+                }
+            }
+
+            return files;
+        }
+
+        private void ShowFolderUnavailable()
+        {
+            if (_retryFolderButton == null)
+            {
+                _wpcont.Children.Clear();
+                _detailsListView?.Items.Clear();
+                _retryFolderButton = new Button
+                {
+                    Content = new TextBlock
+                    {
+                        Text = Strings.Get("PortalFolderUnavailableRetry"),
+                        TextWrapping = TextWrapping.Wrap,
+                        MaxWidth = 180
+                    },
+                    Margin = new Thickness(6),
+                    Padding = new Thickness(6, 2, 6, 2)
+                };
+                _retryFolderButton.Click += (s, e) =>
+                {
+                    _retryFolderButton.IsEnabled = false;
+                    TriggerSync(immediate: true);
+                };
+            }
+
+            if (_parentScrollViewer != null)
+            {
+                _parentScrollViewer.Content = _wpcont;
+                _parentScrollViewer.VerticalScrollBarVisibility =
+                    SettingsManager.DisableFrameScrollbars ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
+            }
+            _wpcont.Visibility = Visibility.Visible;
+            _retryFolderButton.ToolTip = _targetFolderPath;
+            if (!_wpcont.Children.Contains(_retryFolderButton))
+                _wpcont.Children.Add(_retryFolderButton);
         }
 
         private void AddIcon(string path)
@@ -1778,6 +1825,9 @@ namespace Desktop_Frames
 
             _dispatcher.Invoke(() =>
             {
+                ++_navigationGeneration;
+                if (_retryFolderButton != null) return;
+
                 if (_parentScrollViewer != null)
                 {
                     if (_isDetailsView)
@@ -1806,7 +1856,8 @@ namespace Desktop_Frames
             // Refresh top navigation bar to ensure Z-order and layout bounds are correct
             _dispatcher.InvokeAsync(() =>
             {
-                var win = Window.GetWindow(_parentScrollViewer) as NonActivatingWindow ?? Window.GetWindow(_wpcont) as NonActivatingWindow;
+                if (_disposed) return;
+                var win = Window.GetWindow(_parentScrollViewer ?? (DependencyObject)_wpcont) as NonActivatingWindow;
                 if (win != null)
                 {
                     string fId = win.Tag?.ToString() ?? _frame.Id?.ToString();
@@ -1825,49 +1876,29 @@ namespace Desktop_Frames
         /// </summary>
         public void NavigateTo(string newPath)
         {
-            if (string.IsNullOrEmpty(newPath) || !System.IO.Directory.Exists(newPath))
-            {
-                LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.General, $"Cannot navigate to invalid path: {newPath}");
-                return;
-            }
+            if (_disposed || string.IsNullOrWhiteSpace(newPath)) return;
 
-            try
-            {
-                _targetFolderPath = newPath;
-
-                if (_watcher != null)
-                {
-                    _watcher.EnableRaisingEvents = false;
-                    _watcher.Path = newPath;
-                    _watcher.EnableRaisingEvents = true;
-                }
-
-                _dispatcher.Invoke(() =>
-                {
-                    _wpcont.Children.Clear();
-                    if (_detailsListView != null) _detailsListView.Items.Clear();
-                });
-
-                InitializeFrameContents();
-                LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, $"Navigated portal frame to: {newPath}");
-            }
-            catch (Exception ex)
-            {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.General, $"Error navigating to {newPath}: {ex.Message}");
-            }
+            ++_navigationGeneration;
+            StopWatching();
+            _targetFolderPath = newPath;
+            InitializeFrameContents();
+            LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, $"Navigated portal frame to: {newPath}");
         }
 
         public void Dispose()
         {
-            if (_watcher != null)
+            if (_disposed) return;
+
+            _disposed = true;
+            ++_navigationGeneration;
+            StopWatching();
+            _debounceTimer.Stop();
+            _debounceTimer.Tick -= ProcessPendingEvents;
+            _columnSaveTimer?.Stop();
+            if (_retryFolderButton != null)
             {
-                _watcher.EnableRaisingEvents = false;
-                _watcher.Dispose();
-            }
-            if (_debounceTimer != null)
-            {
-                _debounceTimer.Stop();
-                _debounceTimer.Tick -= ProcessPendingEvents;
+                _wpcont.Children.Remove(_retryFolderButton);
+                _retryFolderButton = null;
             }
         }
     }

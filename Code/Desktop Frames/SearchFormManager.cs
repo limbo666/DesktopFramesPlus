@@ -1,13 +1,15 @@
-﻿using Desktop_Frames.Localization;
-using Newtonsoft.Json.Linq;
+using Desktop_Frames.Localization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation; // Needed for Animation
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 
@@ -15,38 +17,28 @@ namespace Desktop_Frames
 {
     public class SearchFormManager : Window
     {
-        #region Private Fields
-        private TextBox _searchBox;
-        private TextBlock _watermark; // "Search..." text
-        private TextBlock _appTitle;  // "Desktop Frames +" text
-        private WrapPanel _resultsPanel;
-        private ScrollViewer _scrollViewer;
-        private List<SearchResult> _allShortcuts;
-        private static SearchFormManager _instance;
-        private bool _isClosing = false;
+        private const int ResultLimit = 21;
+        private static SearchFormManager? _instance;
 
-        // Layout Constants
-        private const double WINDOW_WIDTH = 600;
-        private const double HEADER_HEIGHT = 50; // Height of search box area
-        private const double TITLE_HEIGHT = 30;  // Height of "Desktop Frames +" label
-        private const double ITEM_HEIGHT = 90;   // Height of one icon row
-        private const double ITEM_WIDTH = 80;    // Width of one icon
-        private const int ITEMS_PER_ROW = 7;     // 600 / 80 = 7.5
-        private const double MAX_WINDOW_HEIGHT = 600;
-        #endregion
+        private readonly SpotSearchIndex _index;
+        private readonly Dictionary<SpotSearchFrame, string> _frameLabels = new();
+        private readonly Dictionary<SpotSearchTab, string> _tabLabels = new();
+        private readonly Dictionary<(string Path, bool IsFolder), ImageSource> _icons = new();
+        private readonly TextBox _searchBox;
+        private readonly TextBlock _watermark;
+        private readonly ComboBox _frameFilter;
+        private readonly ComboBox _tabFilter;
+        private readonly ComboBox _typeFilter;
+        private readonly StackPanel _resultsPanel = new();
+        private readonly ScrollViewer _scrollViewer;
+        private readonly TextBlock _status;
 
-        #region Data Structure
-        public class SearchResult
-        {
-            public string Name { get; set; }
-            public string Path { get; set; }
-            public bool IsFolder { get; set; }
-            public string frameId { get; set; }
-            public string frameTitle { get; set; }
-        }
-        #endregion
+        private List<SpotSearchEntry> _displayedResults = new();
+        private bool _isClosing;
+        private bool _updatingTabChoices;
 
-        #region Singleton / Static Access
+        private sealed record FilterChoice<T>(string Label, T Value);
+
         public static void ToggleSearch()
         {
             if (_instance == null || !_instance.IsLoaded || _instance._isClosing)
@@ -61,46 +53,20 @@ namespace Desktop_Frames
                 _instance.SafeClose();
             }
         }
-        #endregion
 
         public SearchFormManager()
         {
-            InitializeComponent();
-            LoadAllShortcuts();
-        }
-
-        private void InitializeComponent()
-        {
-            // 1. Window Setup
-            this.Title = Strings.SearchTitle;
-            this.Width = WINDOW_WIDTH;
-            this.Height = HEADER_HEIGHT + TITLE_HEIGHT; // Initial Compact Size
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            this.WindowStyle = WindowStyle.None;
-            this.AllowsTransparency = true;
-            this.Background = Brushes.Transparent;
-            this.ResizeMode = ResizeMode.NoResize;
-            this.Topmost = true;
-            this.ShowInTaskbar = false;
-
-            this.Deactivated += (s, e) => this.SafeClose();
-
-            // 2. Main Card (Rounded, White, Shadow)
-            Border mainBorder = new Border
-            {
-                Background = new SolidColorBrush(Color.FromRgb(252, 252, 252)),
-                CornerRadius = new CornerRadius(12), // Modern rounded corners
-                BorderThickness = new Thickness(1),
-                BorderBrush = new SolidColorBrush(Color.FromArgb(40, 0, 0, 0)),
-                Effect = new DropShadowEffect { BlurRadius = 25, ShadowDepth = 10, Opacity = 0.4, Color = Colors.Black }
-            };
-
-            Grid mainGrid = new Grid();
-            mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(HEADER_HEIGHT) }); // Row 0: Search Input
-            mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // Row 1: Dynamic Content
-
-            // --- SEARCH INPUT AREA ---
-            Grid searchContainer = new Grid { Margin = new Thickness(10, 0, 10, 0) };
+            _index = new SpotSearchIndex(Framemanager.GetFrameData());
+            Title = Strings.SearchTitle;
+            Width = Math.Min(600, SystemParameters.WorkArea.Width);
+            SizeToContent = SizeToContent.Height;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            WindowStyle = WindowStyle.None;
+            AllowsTransparency = true;
+            Background = Brushes.Transparent;
+            ResizeMode = ResizeMode.NoResize;
+            Topmost = true;
+            ShowInTaskbar = false;
 
             _watermark = new TextBlock
             {
@@ -108,96 +74,96 @@ namespace Desktop_Frames
                 FontSize = 18,
                 Foreground = Brushes.Gray,
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(4, 0, 0, 0),
                 IsHitTestVisible = false
             };
-
             _searchBox = new TextBox
             {
                 FontSize = 18,
                 FontFamily = new FontFamily("Segoe UI"),
                 VerticalContentAlignment = VerticalAlignment.Center,
                 BorderThickness = new Thickness(0),
+                Padding = new Thickness(0),
                 Background = Brushes.Transparent,
                 Foreground = Brushes.Black,
-                CaretBrush = Brushes.Black,
-                Tag = "Search..."
+                CaretBrush = Brushes.Black
             };
-            _searchBox.TextChanged += OnSearchTextChanged;
-            _searchBox.PreviewKeyDown += OnSearchKeyDown;
+            AutomationProperties.SetName(_searchBox, Strings.SearchPlaceholder);
 
+            var searchContainer = new Grid { Height = 44, Margin = new Thickness(12, 0, 12, 0) };
             searchContainer.Children.Add(_watermark);
             searchContainer.Children.Add(_searchBox);
-            Grid.SetRow(searchContainer, 0);
 
-            // --- SEPARATOR LINE ---
-            Border separator = new Border
-            {
-                BorderThickness = new Thickness(0, 0, 0, 1),
-                BorderBrush = new SolidColorBrush(Color.FromArgb(30, 0, 0, 0)),
-                VerticalAlignment = VerticalAlignment.Bottom
-            };
-            Grid.SetRow(separator, 0);
-
-            // --- DYNAMIC CONTENT AREA (Row 1) ---
-            // This grid holds both the "Title" (when empty) and the "Results" (when searching)
-            Grid contentArea = new Grid();
-            Grid.SetRow(contentArea, 1);
-
-            // 1. The App Title (Visible initially)
-            _appTitle = new TextBlock
-            {
-                Text = "Desktop Frames +",
-                FontSize = 14,
-                FontWeight = FontWeights.Bold,
-                Foreground = new SolidColorBrush(Utility.GetColorFromName(SettingsManager.SelectedColor)),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(0, 5, 0, 0),
-                Opacity = 1.0
-            };
-
-            // 2. The Results Panel (Hidden initially)
-            _resultsPanel = new WrapPanel
-            {
-                Orientation = Orientation.Horizontal,
-                ItemWidth = ITEM_WIDTH,
-                ItemHeight = ITEM_HEIGHT,
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
+            _frameFilter = new ComboBox();
+            _tabFilter = new ComboBox();
+            _typeFilter = new ComboBox();
+            var filters = new UniformGrid { Columns = 3, Margin = new Thickness(8, 0, 8, 8) };
+            filters.Children.Add(CreateFilterColumn(_frameFilter, "SpotSearchFilterFrame"));
+            filters.Children.Add(CreateFilterColumn(_tabFilter, "SpotSearchFilterTab"));
+            filters.Children.Add(CreateFilterColumn(_typeFilter, "SpotSearchFilterType"));
 
             _scrollViewer = new ScrollViewer
             {
                 Content = _resultsPanel,
+                MaxHeight = Math.Clamp((SystemParameters.WorkArea.Height - 168) / 2, 48, 396),
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-                Padding = new Thickness(0, 5, 0, 5),
-                Opacity = 0.0, // Start hidden
+                Padding = new Thickness(8, 4, 8, 4),
                 Visibility = Visibility.Collapsed
             };
+            _status = new TextBlock
+            {
+                TextAlignment = TextAlignment.Center,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(12, 7, 12, 7),
+                Foreground = Brushes.DimGray
+            };
 
-            contentArea.Children.Add(_appTitle);
-            contentArea.Children.Add(_scrollViewer);
+            var content = new StackPanel();
+            content.Children.Add(searchContainer);
+            content.Children.Add(filters);
+            content.Children.Add(new Border
+            {
+                BorderThickness = new Thickness(0, 0, 0, 1),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(30, 0, 0, 0))
+            });
+            content.Children.Add(_scrollViewer);
+            content.Children.Add(_status);
+            Content = new Border
+            {
+                Child = content,
+                Background = new SolidColorBrush(Color.FromRgb(252, 252, 252)),
+                CornerRadius = new CornerRadius(12),
+                BorderThickness = new Thickness(1),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(40, 0, 0, 0)),
+                Effect = new DropShadowEffect { BlurRadius = 25, ShadowDepth = 10, Opacity = 0.4 }
+            };
 
-            // Assemble
-            mainGrid.Children.Add(searchContainer);
-            mainGrid.Children.Add(separator);
-            mainGrid.Children.Add(contentArea);
+            InitializeFilters();
+            RefreshResults();
 
-            mainBorder.Child = mainGrid;
-            this.Content = mainBorder;
+            _searchBox.TextChanged += (_, _) => RefreshResults();
+            _searchBox.PreviewKeyDown += OnSearchKeyDown;
+            _frameFilter.SelectionChanged += (_, _) =>
+            {
+                UpdateTabChoices();
+                RefreshResults();
+            };
+            _tabFilter.SelectionChanged += (_, _) =>
+            {
+                if (!_updatingTabChoices) RefreshResults();
+            };
+            _typeFilter.SelectionChanged += (_, _) => RefreshResults();
+            PreviewKeyDown += OnWindowKeyDown;
+            Deactivated += (_, _) => SafeClose();
         }
 
-        public void FocusSearch()
-        {
-            _searchBox.Focus();
-        }
+        public void FocusSearch() => _searchBox.Focus();
 
         private void SafeClose()
         {
             if (_isClosing) return;
             _isClosing = true;
-            this.Close();
+            Close();
         }
 
         protected override void OnClosed(EventArgs e)
@@ -207,273 +173,237 @@ namespace Desktop_Frames
             if (_instance == this) _instance = null;
         }
 
-        // --- LOGIC: Load Data ---
-        private void LoadAllShortcuts()
+        private static StackPanel CreateFilterColumn(ComboBox filter, string labelKey)
         {
-            _allShortcuts = new List<SearchResult>();
-            var frames = Framemanager.GetFrameData();
+            string label = Strings.Get(labelKey);
+            filter.MinHeight = 28;
+            filter.DisplayMemberPath = "Label";
+            AutomationProperties.SetName(filter, label);
 
-            foreach (var frame in frames)
+            var column = new StackPanel { Margin = new Thickness(4, 0, 4, 0) };
+            column.Children.Add(new TextBlock
             {
-                if (frame.ItemsType?.ToString() != "Data") continue;
-                JArray items = frame.Items as JArray;
-                bool tabsEnabled = frame.TabsEnabled?.ToString().ToLower() == "true";
-
-                if (tabsEnabled)
-                {
-                    var tabs = frame.Tabs as JArray;
-                    if (tabs != null)
-                    {
-                        foreach (var tab in tabs)
-                        {
-                            var tabItems = tab["Items"] as JArray;
-                            if (tabItems != null) AddItemsToCache(tabItems, frame);
-                        }
-                    }
-                }
-                else if (items != null)
-                {
-                    AddItemsToCache(items, frame);
-                }
-            }
+                Text = label,
+                Foreground = Brushes.DimGray,
+                Margin = new Thickness(0, 0, 0, 3)
+            });
+            column.Children.Add(filter);
+            return column;
         }
 
-        private void AddItemsToCache(JArray items, dynamic frame)
+        private void InitializeFilters()
         {
-            foreach (var item in items)
+            var frames = _index.Entries.Select(entry => entry.Frame).Distinct();
+            foreach (var group in frames.GroupBy(
+                frame => frame.Title ?? Strings.Get("SpotSearchUnnamedFrame"), StringComparer.OrdinalIgnoreCase))
             {
-                string name = item["DisplayName"]?.ToString() ?? System.IO.Path.GetFileNameWithoutExtension(item["Filename"]?.ToString());
-                _allShortcuts.Add(new SearchResult
-                {
-                    Name = name,
-                    Path = item["Filename"]?.ToString(),
-                    IsFolder = item["IsFolder"]?.ToObject<bool>() ?? false,
-                    frameId = frame.Id?.ToString(),
-                    frameTitle = frame.Title?.ToString()
-                });
+                bool duplicate = group.Count() > 1;
+                foreach (var frame in group)
+                    _frameLabels[frame] = duplicate ? Strings.Get("SpotSearchNumberedLabel", group.Key, frame.Index) : group.Key;
             }
+
+            var tabs = _index.Entries.Select(entry => entry.Tab).OfType<SpotSearchTab>().Distinct();
+            foreach (var group in tabs.GroupBy(tab => (tab.Frame, Title: tab.Title ?? Strings.Get("SpotSearchUnnamedTab"))))
+            {
+                bool duplicate = group.Count() > 1;
+                foreach (var tab in group)
+                    _tabLabels[tab] = duplicate ? Strings.Get("SpotSearchNumberedLabel", group.Key.Title, tab.Index) : group.Key.Title;
+            }
+
+            var frameChoices = new List<FilterChoice<SpotSearchFrame?>>
+            {
+                new(Strings.Get("SpotSearchAllFrames"), null)
+            };
+            frameChoices.AddRange(_frameLabels.OrderBy(pair => pair.Key.Index)
+                .Select(pair => new FilterChoice<SpotSearchFrame?>(pair.Value, pair.Key)));
+            _frameFilter.ItemsSource = frameChoices;
+            _frameFilter.SelectedIndex = 0;
+            _frameFilter.IsEnabled = frameChoices.Count > 1;
+
+            var typeChoices = new List<FilterChoice<SpotSearchItemType?>>
+            {
+                new(Strings.Get("SpotSearchAllTypes"), null)
+            };
+            typeChoices.AddRange(Enum.GetValues<SpotSearchItemType>()
+                .Select(type => new FilterChoice<SpotSearchItemType?>(TypeLabel(type), type)));
+            _typeFilter.ItemsSource = typeChoices;
+            _typeFilter.SelectedIndex = 0;
+
+            UpdateTabChoices();
         }
 
-        // --- LOGIC: Search & Animation ---
-        private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+        private void UpdateTabChoices()
         {
-            string query = _searchBox.Text.Trim().ToLower();
+            var frame = (_frameFilter.SelectedItem as FilterChoice<SpotSearchFrame?>)?.Value;
+            var previousTab = (_tabFilter.SelectedItem as FilterChoice<SpotSearchTab?>)?.Value;
+            var choices = new List<FilterChoice<SpotSearchTab?>>
+            {
+                new(Strings.Get("SpotSearchAllTabs"), null)
+            };
+            foreach (var pair in _tabLabels.OrderBy(pair => pair.Key.Frame.Index).ThenBy(pair => pair.Key.Index))
+            {
+                if (frame != null && pair.Key.Frame != frame) continue;
+                string label = frame == null ? FormatLocation(pair.Key.Frame, pair.Key) : pair.Value;
+                choices.Add(new FilterChoice<SpotSearchTab?>(label, pair.Key));
+            }
 
-            // 1. Toggle Watermark
-            _watermark.Visibility = string.IsNullOrEmpty(_searchBox.Text) ? Visibility.Visible : Visibility.Collapsed;
+            _updatingTabChoices = true;
+            _tabFilter.ItemsSource = choices;
+            _tabFilter.IsEnabled = choices.Count > 1;
+            _tabFilter.SelectedItem = choices.FirstOrDefault(choice => choice.Value == previousTab) ?? choices[0];
+            _updatingTabChoices = false;
+        }
+
+        private void RefreshResults()
+        {
+            string query = _searchBox.Text;
+            _watermark.Visibility = query.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
+            var frame = (_frameFilter.SelectedItem as FilterChoice<SpotSearchFrame?>)?.Value;
+            var tab = (_tabFilter.SelectedItem as FilterChoice<SpotSearchTab?>)?.Value;
+            var type = (_typeFilter.SelectedItem as FilterChoice<SpotSearchItemType?>)?.Value;
+            bool active = !string.IsNullOrWhiteSpace(query) || frame != null || tab != null || type != null;
+
+            _displayedResults = _index.Find(query, frame, tab, type).Take(ResultLimit + 1).ToList();
+            bool moreResults = _displayedResults.Count > ResultLimit;
+            if (moreResults) _displayedResults.RemoveAt(ResultLimit);
 
             _resultsPanel.Children.Clear();
+            foreach (var entry in _displayedResults)
+                _resultsPanel.Children.Add(CreateResultButton(entry));
+            _scrollViewer.ScrollToTop();
+            _scrollViewer.Visibility = _displayedResults.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-            if (string.IsNullOrEmpty(query))
-            {
-                // STATE: Empty -> Show Title, Shrink Window
-                AnimateTransition(showResults: false);
-                return;
-            }
-
-            // 2. Filter Logic
-            var matches = _allShortcuts
-                .Where(x => x.Name.ToLower().Contains(query))
-                .Take(21) // Limit (3 rows of 7)
-                .ToList();
-
-            if (matches.Count == 0)
-            {
-                // STATE: No Matches -> Show Title (or maybe "No Results"), Shrink
-                AnimateTransition(showResults: false);
-                return;
-            }
-
-            // 3. Populate Results
-            foreach (var match in matches)
-            {
-                // Create Icon UI
-                StackPanel sp = new StackPanel
-                {
-                    Width = ITEM_WIDTH - 10,
-                    Height = ITEM_HEIGHT - 10,
-                    Margin = new Thickness(5),
-                    Cursor = Cursors.Hand,
-                    Background = Brushes.Transparent
-                };
-
-                ImageSource iconSrc = Utility.GetShellIcon(match.Path, match.IsFolder);
-                if (iconSrc == null) iconSrc = new BitmapImage(new Uri("pack://application:,,,/Resources/file-WhiteX.png"));
-
-                Image img = new Image { Source = iconSrc, Width = 32, Height = 32, Margin = new Thickness(0, 5, 0, 2) };
-
-                TextBlock txt = new TextBlock
-                {
-                    Text = match.Name,
-                    TextAlignment = TextAlignment.Center,
-                    TextWrapping = TextWrapping.Wrap,
-                    FontSize = 11,
-                    Foreground = Brushes.Black,
-                    MaxHeight = 32,
-                    TextTrimming = TextTrimming.CharacterEllipsis
-                };
-
-                sp.Children.Add(img);
-                sp.Children.Add(txt);
-                sp.ToolTip = $"Location: {match.frameTitle}\nPath: {match.Path}";
-
-                sp.MouseLeftButtonDown += (s, ev) => { if (ev.ClickCount == 1) LaunchResult(match); };
-                _resultsPanel.Children.Add(sp);
-            }
-
-            // 4. STATE: Matches Found -> Show Results, Expand Window
-            AnimateTransition(showResults: true, matchCount: matches.Count);
+            _status.Text = !active ? "Desktop Frames +"
+                : _displayedResults.Count == 0 ? Strings.Get("SpotSearchNoResults")
+                : moreResults ? Strings.Get("SpotSearchResultLimit", ResultLimit)
+                : "";
+            _status.Visibility = _status.Text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void AnimateTransition(bool showResults, int matchCount = 0)
+        private Button CreateResultButton(SpotSearchEntry entry)
         {
-            // Calculate Target Height
-            double targetHeight;
-            if (showResults)
+            string location = FormatLocation(entry.Frame, entry.Tab);
+            string type = TypeLabel(entry.Type);
+            bool isFolder = entry.Type == SpotSearchItemType.Folder;
+            var key = (entry.Path, isFolder);
+            if (!_icons.TryGetValue(key, out var icon))
             {
-                int rows = (int)Math.Ceiling((double)matchCount / ITEMS_PER_ROW);
-                // Header + (Rows * ItemHeight) + Padding
-                targetHeight = HEADER_HEIGHT + (rows * ITEM_HEIGHT) + 20;
-                if (targetHeight > MAX_WINDOW_HEIGHT) targetHeight = MAX_WINDOW_HEIGHT;
-            }
-            else
-            {
-                targetHeight = HEADER_HEIGHT + TITLE_HEIGHT;
+                icon = Utility.GetShellIcon(entry.Path, isFolder)
+                    ?? new BitmapImage(new Uri("pack://application:,,,/Resources/file-WhiteX.png"));
+                _icons[key] = icon;
             }
 
-            // 1. Animate Height
-            DoubleAnimation heightAnim = new DoubleAnimation(targetHeight, TimeSpan.FromMilliseconds(250))
+            var row = new DockPanel();
+            var image = new Image { Source = icon, Width = 28, Height = 28, Margin = new Thickness(0, 0, 10, 0) };
+            DockPanel.SetDock(image, Dock.Left);
+            row.Children.Add(image);
+
+            var category = new TextBlock
             {
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                Text = type,
+                Foreground = Brushes.DimGray,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(8, 0, 0, 0)
             };
-            this.BeginAnimation(Window.HeightProperty, heightAnim);
+            DockPanel.SetDock(category, Dock.Right);
+            row.Children.Add(category);
 
-            // 2. Cross-Fade Content
-            if (showResults)
+            var labels = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+            labels.Children.Add(new TextBlock
             {
-                // Fade OUT Title
-                _appTitle.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(0, TimeSpan.FromMilliseconds(150)));
-
-                // Fade IN Results
-                _scrollViewer.Visibility = Visibility.Visible;
-                _scrollViewer.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
-            }
-            else
+                Text = entry.Name,
+                FontWeight = FontWeights.SemiBold,
+                TextTrimming = TextTrimming.CharacterEllipsis
+            });
+            labels.Children.Add(new TextBlock
             {
-                // Fade IN Title
-                _appTitle.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(1, TimeSpan.FromMilliseconds(200)));
+                Text = location,
+                Foreground = Brushes.DimGray,
+                TextTrimming = TextTrimming.CharacterEllipsis
+            });
+            row.Children.Add(labels);
 
-                // Fade OUT Results
-                var fadeOut = new DoubleAnimation(0, TimeSpan.FromMilliseconds(150));
-                fadeOut.Completed += (s, e) => _scrollViewer.Visibility = Visibility.Collapsed;
-                _scrollViewer.BeginAnimation(UIElement.OpacityProperty, fadeOut);
-            }
+            var button = new Button
+            {
+                Content = row,
+                MinHeight = 46,
+                HorizontalContentAlignment = HorizontalAlignment.Stretch,
+                Background = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                Padding = new Thickness(8, 3, 8, 3),
+                Cursor = Cursors.Hand,
+                ToolTip = $"{location}\n{entry.Path}"
+            };
+            AutomationProperties.SetName(button, $"{entry.Name}, {location}, {type}");
+            button.Click += (_, _) => LaunchResult(entry);
+            return button;
+        }
+
+        private string FormatLocation(SpotSearchFrame frame, SpotSearchTab? tab) =>
+            tab == null ? _frameLabels[frame] : $"{_frameLabels[frame]} / {_tabLabels[tab]}";
+
+        private static string TypeLabel(SpotSearchItemType type) => Strings.Get(type switch
+        {
+            SpotSearchItemType.Folder => "SpotSearchTypeFolder",
+            SpotSearchItemType.Link => "SpotSearchTypeLink",
+            _ => "SpotSearchTypeFileOrApp"
+        });
+
+        private void OnWindowKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Escape || _frameFilter.IsDropDownOpen ||
+                _tabFilter.IsDropDownOpen || _typeFilter.IsDropDownOpen) return;
+            e.Handled = true;
+            SafeClose();
         }
 
         private void OnSearchKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape) this.SafeClose();
-
-            if (e.Key == Key.Enter && _resultsPanel.Children.Count > 0)
-            {
-                var firstMatch = _allShortcuts.FirstOrDefault(x => x.Name.ToLower().Contains(_searchBox.Text.Trim().ToLower()));
-                if (firstMatch != null) LaunchResult(firstMatch);
-            }
+            if (e.Key != Key.Enter || _displayedResults.Count == 0) return;
+            e.Handled = true;
+            LaunchResult(_displayedResults[0]);
         }
-        private void LaunchResult(SearchResult result)
-        {
-            if (result == null) return;
 
+        private void LaunchResult(SpotSearchEntry entry)
+        {
             try
             {
-                // 1. PATH RESOLUTION (The "Profile Aware" Fix)
-                // We ignore the path stored in the result if it doesn't exist.
-                // We force a look-up in the current Active Profile's shortcuts.
-                string finalPath = result.Path;
-
-                if (!System.IO.File.Exists(finalPath) && !System.IO.Directory.Exists(finalPath))
+                string finalPath = entry.Path;
+                bool isWebAddress = SpotSearchIndex.IsWebAddress(finalPath);
+                bool isFolder = entry.Type == SpotSearchItemType.Folder;
+                bool isUncRoot = isFolder && Framemanager.IsUncRoot(finalPath);
+                if (!isWebAddress && !isUncRoot && !File.Exists(finalPath) && !(isFolder && Directory.Exists(finalPath)))
                 {
-                    string fileName = System.IO.Path.GetFileName(finalPath);
-                    string profileShortcuts = ProfileManager.GetProfileFilePath("Shortcuts");
-
-                    // A. Check Root
-                    string candidate = System.IO.Path.Combine(profileShortcuts, fileName);
-                    if (System.IO.File.Exists(candidate))
-                    {
-                        finalPath = candidate;
-                    }
-                    // B. Deep Search (Subfolders/Tabs)
-                    else if (System.IO.Directory.Exists(profileShortcuts))
-                    {
-                        try
-                        {
-                            var found = System.IO.Directory.GetFiles(profileShortcuts, fileName, System.IO.SearchOption.AllDirectories).FirstOrDefault();
-                            if (!string.IsNullOrEmpty(found))
-                            {
-                                finalPath = found;
-                            }
-                        }
-                        catch { }
-                    }
+                    MessageBoxesManager.ShowOKOnlyMessageBoxForm(
+                        Strings.Get("MsgFileNotFoundInProfile", finalPath), Strings.DlgLaunchError);
+                    return;
                 }
 
-                // 2. IDENTIFY TYPE (Mimicking Framemanager Logic)
-                bool isStoreApp = false;
-                if (finalPath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase))
-                {
-                    isStoreApp = Utility.IsStoreAppShortcut(finalPath);
-                }
+                if (!isWebAddress && !isUncRoot) finalPath = Path.GetFullPath(finalPath);
+                string extension = isWebAddress || isUncRoot ? "" : Path.GetExtension(finalPath);
+                bool isShortcut = extension.Equals(".lnk", StringComparison.OrdinalIgnoreCase);
+                bool isStoreApp = isShortcut && Utility.IsStoreAppShortcut(finalPath);
+                var startInfo = new ProcessStartInfo { UseShellExecute = true };
 
-                // 3. LAUNCH CONFIGURATION
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo();
-                psi.UseShellExecute = true;
-
-                if (isStoreApp)
+                if (isStoreApp || isFolder)
                 {
-                    // Logic for Store Apps (Netflix, Calculator, etc.)
-                    psi.FileName = "explorer.exe";
-                    psi.Arguments = $"\"{finalPath}\"";
-                    psi.WorkingDirectory = "";
-                }
-                else if (result.IsFolder)
-                {
-                    // Logic for Folders
-                    psi.FileName = "explorer.exe";
-                    psi.Arguments = $"\"{finalPath}\"";
+                    startInfo.FileName = "explorer.exe";
+                    startInfo.ArgumentList.Add(finalPath);
                 }
                 else
                 {
-                    // Logic for Standard Files & .URL files
-                    if (!System.IO.File.Exists(finalPath) && !finalPath.StartsWith("http"))
-                    {
-                        MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgFileNotFoundInProfile", finalPath), Strings.DlgLaunchError);
-                        return;
-                    }
-
-                    psi.FileName = finalPath;
-
-                    // Only set WorkingDirectory for executables/regular files, NOT for .lnk or .url
-                    string ext = System.IO.Path.GetExtension(finalPath).ToLower();
-                    if (ext != ".lnk" && ext != ".url")
-                    {
-                        try
-                        {
-                            string dir = System.IO.Path.GetDirectoryName(finalPath);
-                            if (!string.IsNullOrEmpty(dir)) psi.WorkingDirectory = dir;
-                        }
-                        catch { }
-                    }
+                    startInfo.FileName = finalPath;
+                    if (!isWebAddress && !isShortcut && !extension.Equals(".url", StringComparison.OrdinalIgnoreCase))
+                        startInfo.WorkingDirectory = Path.GetDirectoryName(finalPath) ?? "";
                 }
 
-                // 4. EXECUTE
-                System.Diagnostics.Process.Start(psi);
-                this.SafeClose();
+                Process.Start(startInfo);
+                SafeClose();
             }
             catch (Exception ex)
             {
                 MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgLaunchFailed", ex.Message), Strings.DlgError);
             }
         }
-       
     }
 }

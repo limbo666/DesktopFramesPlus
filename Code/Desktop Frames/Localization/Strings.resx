@@ -2199,4 +2199,127 @@ Manual, pinned and the newest automatic/safety snapshot will be kept.</value>
   <data name="LayoutPreviewTitle" xml:space="preserve">
     <value>Monitor Layout Preview</value>
   </data>
+  <data name="PortalFolderUnavailableRetry" xml:space="preserve">
+    <value>Folder unavailable. Retry</value>
+  </data>
+  <data name="MsgFrameFileLoadFailed" xml:space="preserve">
+    <value>Could not load the frame settings. Fix the file or restore a backup before trying again. {0}</value>
+  </data>
+  <data name="MsgFrameFileSaveBlocked" xml:space="preserve">
+    <value>Save skipped because the frame settings could not be loaded.</value>
+  </data>
+  <data name="AutoOrgPreviewTitle" xml:space="preserve">
+    <value>Organize preview</value>
+  </data>
+  <data name="AutoOrgPreviewLoading" xml:space="preserve">
+    <value>Checking desktop files…</value>
+  </data>
+  <data name="AutoOrgPreviewSummary" xml:space="preserve">
+    <value>{0} matching files · {1} planned moves</value>
+  </data>
+  <data name="AutoOrgPreviewEmpty" xml:space="preserve">
+    <value>No desktop files match the enabled rules.</value>
+  </data>
+  <data name="AutoOrgPreviewFailed" xml:space="preserve">
+    <value>Could not preview desktop files. {0}</value>
+  </data>
+  <data name="AutoOrgPreviewRule" xml:space="preserve">
+    <value>Rule</value>
+  </data>
+  <data name="AutoOrgPreviewDestination" xml:space="preserve">
+    <value>Destination</value>
+  </data>
+  <data name="AutoOrgPreviewAction" xml:space="preserve">
+    <value>Planned action</value>
+  </data>
+  <data name="AutoOrgPreviewMove" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="AutoOrgPreviewRename" xml:space="preserve">
+    <value>Rename and move</value>
+  </data>
+  <data name="AutoOrgPreviewOverwrite" xml:space="preserve">
+    <value>Overwrite (send existing file to Recycle Bin)</value>
+  </data>
+  <data name="AutoOrgPreviewSkip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="AutoOrgPreviewSameLocation" xml:space="preserve">
+    <value>Skip (same location)</value>
+  </data>
+  <data name="AutoOrgPreviewDestinationUnavailable" xml:space="preserve">
+    <value>Destination unavailable</value>
+  </data>
+  <data name="SpotSearchFilterFrame" xml:space="preserve">
+    <value>Frame</value>
+  </data>
+  <data name="SpotSearchFilterTab" xml:space="preserve">
+    <value>Tab</value>
+  </data>
+  <data name="SpotSearchFilterType" xml:space="preserve">
+    <value>Item type</value>
+  </data>
+  <data name="SpotSearchAllFrames" xml:space="preserve">
+    <value>All frames</value>
+  </data>
+  <data name="SpotSearchAllTabs" xml:space="preserve">
+    <value>All tabs</value>
+  </data>
+  <data name="SpotSearchAllTypes" xml:space="preserve">
+    <value>All types</value>
+  </data>
+  <data name="SpotSearchTypeFileOrApp" xml:space="preserve">
+    <value>File or app</value>
+  </data>
+  <data name="SpotSearchTypeFolder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="SpotSearchTypeLink" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="SpotSearchUnnamedFrame" xml:space="preserve">
+    <value>Unnamed frame</value>
+  </data>
+  <data name="SpotSearchUnnamedTab" xml:space="preserve">
+    <value>Unnamed tab</value>
+  </data>
+  <data name="SpotSearchNumberedLabel" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="SpotSearchNoResults" xml:space="preserve">
+    <value>No matching items.</value>
+  </data>
+  <data name="SpotSearchResultLimit" xml:space="preserve">
+    <value>Showing the first {0} matches.</value>
+  </data>
+  <data name="DlgSharedFrameImport" xml:space="preserve">
+    <value>Import shared frame</value>
+  </data>
+  <data name="MsgConfirmSharedFrameImport" xml:space="preserve">
+    <value>Import {0}? {1} packaged shortcuts will be installed, and {2} unsupported or missing items will be skipped. Only import files you trust. Shortcuts and plug-in settings can refer to external locations or programs.</value>
+  </data>
+  <data name="DlgSharedPortalFolder" xml:space="preserve">
+    <value>Choose the folder to monitor for this imported Portal</value>
+  </data>
+  <data name="MsgImportProfileChanged" xml:space="preserve">
+    <value>The active profile changed during import. Open the import again from the intended profile.</value>
+  </data>
+  <data name="MsgRestoreProfileChanged" xml:space="preserve">
+    <value>The active profile changed during restore. Open restore again from the intended profile.</value>
+  </data>
+  <data name="MsgRestoreRecoveryDirectory" xml:space="preserve">
+    <value>Some previous files could not be returned to the profile. The remaining originals are stored in {0}.</value>
+  </data>
+  <data name="MsgRestoreReloadFailed" xml:space="preserve">
+    <value>The restored frames could not be displayed.</value>
+  </data>
+  <data name="MsgProfileReloadFailed" xml:space="preserve">
+    <value>The selected profile could not be displayed.</value>
+  </data>
+  <data name="MsgAutoOrgProfileChanged" xml:space="preserve">
+    <value>The active profile has changed. Reopen Smart Desktop to edit its rules.</value>
+  </data>
+  <data name="MsgAutoOrgRulesUnavailable" xml:space="preserve">
+    <value>The Smart Desktop rules could not be loaded for this profile.</value>
+  </data>
 </root>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -16,11 +15,12 @@ namespace Desktop_Frames
     public static class FrameDataManager
     {
         #region Private Fields - Data Storage
-        // Main frame data collection - moved from Framemanager
-        private static List<dynamic> _frameData;
-
-        // JSON file path - moved from Framemanager  
-        private static string _jsonFilePath;
+        private static readonly object FrameFileLock = new();
+        private static readonly JsonSerializerSettings FrameReadSettings = new() { DateParseHandling = DateParseHandling.None };
+        private static List<dynamic> _frameData = new();
+        private static string _jsonFilePath = "";
+        private static bool _canSave;
+        private static bool _hasFrameFile;
 
         // Key: ChildId, Value: List of ParentIds (Runtime 1-to-Many Accordion Snap Graph)
         public static Dictionary<string, List<string>> DockingMap = new Dictionary<string, List<string>>();
@@ -47,11 +47,7 @@ namespace Desktop_Frames
         /// Used by: Framemanager, backup operations, debugging
         /// Category: File Management
         /// </summary>
-        public static string JsonFilePath
-        {
-            get => _jsonFilePath;
-            set => _jsonFilePath = value;
-        }
+        public static string JsonFilePath => _jsonFilePath;
         #endregion
 
         #region Initialization - Used by: Framemanager startup
@@ -62,50 +58,10 @@ namespace Desktop_Frames
         /// </summary>
         public static void Initialize()
         {
-            try
+            lock (FrameFileLock)
             {
-                // ====================================================================
-                // [LEGACY "FENCES" MIGRATION - DO NOT REMOVE]
-                // Self-Healing Logic: Checks for legacy fences.json and instantly 
-                // renames it to frames.json upon profile load.
-                // ====================================================================
-                string legacyPath = ProfileManager.GetProfileFilePath("fences.json");
-                string newPath = ProfileManager.GetProfileFilePath("frames.json");
-
-                if (!File.Exists(newPath) && File.Exists(legacyPath))
-                {
-                    try
-                    {
-                        // KISS: Read raw text, replace strings, write new file, delete old file.
-                        string rawJson = File.ReadAllText(legacyPath);
-
-                        rawJson = rawJson.Replace("\"FenceBorderColor\"", "\"FrameBorderColor\"");
-                        rawJson = rawJson.Replace("\"frameBorderColor\"", "\"FrameBorderColor\"");
-                        rawJson = rawJson.Replace("\"FenceBorderThickness\"", "\"FrameBorderThickness\"");
-                        rawJson = rawJson.Replace("\"frameBorderThickness\"", "\"FrameBorderThickness\"");
-
-                        File.WriteAllText(newPath, rawJson);
-                        File.Delete(legacyPath);
-
-                        LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, "Auto-Migrated and scrubbed fences.json to frames.json");
-                    }
-                    catch (Exception ex)
-                    {
-                        LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.General, $"Migration scrub failed: {ex.Message}");
-                        newPath = legacyPath; // Fallback to old file if blocked
-                    }
-                }
-
-                _jsonFilePath = newPath;
-
-                LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation,
-                    $"FrameDataManager initialized with path: {_jsonFilePath}");
-            }
-            catch (Exception ex)
-            {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"Error initializing FrameDataManager: {ex.Message}");
-                throw;
+                _canSave = false;
+                _jsonFilePath = ProfileManager.GetProfileFilePath("frames.json");
             }
         }
         #endregion
@@ -120,87 +76,148 @@ namespace Desktop_Frames
         {
             try
             {
-                LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.FrameCreation,
-                    "FrameDataManager: Starting frame data load");
-
-                // Initialize frame data list
-                _frameData = new List<dynamic>();
-
-                // Check if JSON file exists
-                if (!File.Exists(_jsonFilePath))
-                {
-                    LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.FrameCreation,
-                        "JSON file not found. Starting with empty frame configuration.");
-                    return;
-                }
-
-                // Load and parse JSON data
-                if (!LoadFrameDataFromJson())
-                {
-                    LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.FrameCreation,
-                        "Failed to load JSON data. Starting with empty configuration.");
-                    return;
-                }
-
-                // Apply simple migrations and validation
+                LoadFrameDataFromDisk();
                 ApplySimpleMigrations();
-
-                LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.FrameCreation,
-                    $"Successfully loaded {_frameData?.Count ?? 0} frames from JSON");
             }
             catch (Exception ex)
             {
                 LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"Critical error in LoadFrameData: {ex.Message}");
-                _frameData = new List<dynamic>(); // Fallback to empty list
+                    $"Could not load frame data: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// JSON file parsing and loading - moved from Framemanager.LoadFrameDataFromJson
-        /// Used by: LoadFrameData method
-        /// Category: JSON Operations
-        /// </summary>
-        private static bool LoadFrameDataFromJson()
+        internal static void LoadFrameDataFromDisk()
+        {
+            lock (FrameFileLock)
+            {
+                _canSave = false;
+                _hasFrameFile = false;
+                _frameData = new List<dynamic>();
+
+                UsePreparedFrames(PrepareProfileFrames(Path.GetDirectoryName(_jsonFilePath)!));
+            }
+        }
+
+        internal sealed record PreparedFrames(string Path, List<dynamic> Frames, bool HasFrameFile, bool CanSave = true);
+
+        internal static PreparedFrames CaptureLoadedFrames()
+        {
+            lock (FrameFileLock)
+                return new PreparedFrames(_jsonFilePath, _frameData, _hasFrameFile, _canSave);
+        }
+
+        internal static void UsePreparedFrames(PreparedFrames prepared)
+        {
+            lock (FrameFileLock)
+            {
+                _jsonFilePath = prepared.Path;
+                _frameData = prepared.Frames;
+                _hasFrameFile = prepared.HasFrameFile;
+                _canSave = prepared.CanSave;
+            }
+        }
+
+        internal static PreparedFrames PrepareProfileFrames(string profileDirectory)
+        {
+            string path = Path.Combine(profileDirectory, "frames.json");
+            lock (FrameFileLock)
+            {
+                try
+                {
+                    return PrepareProfileFramesCore(profileDirectory, path);
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+                {
+                    if (string.Equals(path, _jsonFilePath, StringComparison.OrdinalIgnoreCase))
+                        _canSave = false;
+                    throw;
+                }
+            }
+        }
+
+        private static PreparedFrames PrepareProfileFramesCore(string profileDirectory, string path)
+        {
+            var frames = ReadFrameFile(path);
+            if (frames == null)
+            {
+                string legacyPath = Path.Combine(profileDirectory, "fences.json");
+                frames = ReadFrameFile(legacyPath);
+                if (frames != null)
+                {
+                    // Create the new file before moving the original out of the migration path.
+                    AtomicFile.WriteUtf8(path, JsonConvert.SerializeObject(frames, Formatting.Indented),
+                        replaceExisting: false);
+                    try
+                    {
+                        File.Move(legacyPath, legacyPath + ".migrated");
+                    }
+                    catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                    {
+                        LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.FrameCreation,
+                            $"Migrated frame settings, but could not archive {legacyPath}: {ex.Message}");
+                    }
+                }
+            }
+
+            return new PreparedFrames(path, frames?.Cast<dynamic>().ToList() ?? new List<dynamic>(), frames != null);
+        }
+
+        private static List<JObject>? ReadFrameFile(string path)
+        {
+            string content;
+            try
+            {
+                content = File.ReadAllText(path);
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
+
+            return ParseFrameData(content, path);
+        }
+
+        internal static List<JObject> ParseFrameData(string content, string source)
         {
             try
             {
-                string jsonContent = File.ReadAllText(_jsonFilePath);
-
-                // Check if the file is empty or contains only whitespace
-                if (string.IsNullOrWhiteSpace(jsonContent))
+                var data = JsonConvert.DeserializeObject<JToken>(content, FrameReadSettings);
+                var frames = data switch
                 {
-                    LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.FrameCreation,
-                        "JSON file is empty or contains only whitespace. Using default frame configuration.");
-                    return false;
-                }
+                    JObject frame => new List<JObject> { frame },
+                    JArray array when array.All(item => item is JObject) => array.Cast<JObject>().ToList(),
+                    _ => throw new JsonSerializationException("Expected a frame object or an array of frame objects.")
+                };
 
-                // First, try to parse as a list of frames
-                try
-                {
-                    _frameData = JsonConvert.DeserializeObject<List<dynamic>>(jsonContent);
-                    LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation,
-                        $"Successfully loaded {_frameData?.Count ?? 0} frames from JSON array.");
-                    return _frameData != null;
-                }
-                catch (JsonException)
-                {
-                    // If that fails, try to parse as a single frames object
-                    LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation,
-                        "Failed to parse as array, trying single object format.");
+                foreach (var frame in frames)
+                    NormalizeLegacyKeys(frame);
 
-                    dynamic singleFrame = JsonConvert.DeserializeObject(jsonContent);
-                    _frameData = new List<dynamic> { singleFrame };
-                    LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation,
-                        "Successfully loaded single frame from JSON object.");
-                    return true;
-                }
+                return frames;
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"Error loading frame data from JSON: {ex.Message}");
-                return false;
+                throw new InvalidDataException($"{source}: {ex.Message}", ex);
+            }
+        }
+
+        private static void NormalizeLegacyKeys(JObject frame)
+        {
+            ConsolidateFrameKey(frame, "FrameBorderColor", "FenceBorderColor", "frameBorderColor");
+            ConsolidateFrameKey(frame, "FrameBorderThickness", "FenceBorderThickness", "frameBorderThickness");
+        }
+
+        private static void ConsolidateFrameKey(JObject frame, string key, params string[] legacyKeys)
+        {
+            foreach (string legacyKey in legacyKeys)
+            {
+                var legacyValue = frame[legacyKey];
+                if (legacyValue == null) continue;
+
+                // An existing zero is a valid border thickness.
+                if (string.IsNullOrEmpty(frame[key]?.ToString()) && !string.IsNullOrEmpty(legacyValue.ToString()))
+                    frame[key] = legacyValue;
+
+                frame.Remove(legacyKey);
             }
         }
 
@@ -213,62 +230,33 @@ namespace Desktop_Frames
         {
             try
             {
-                var serializedData = new List<JObject>();
-
-                foreach (dynamic frame in _frameData)
+                lock (FrameFileLock)
                 {
-                    IDictionary<string, object> frameDict = frame is IDictionary<string, object> dict ?
-                        dict : ((JObject)frame).ToObject<IDictionary<string, object>>();
+                    if (!_canSave)
+                        throw new InvalidOperationException(Localization.Strings.Get("MsgFrameFileSaveBlocked"));
 
-                    // ====================================================================
-                    // [LEGACY "FENCES" MIGRATION - DO NOT REMOVE]
-                    // The Ultimate Interceptor: Forces old or accidentally generated 
-                    // "Fence" keys into official "Frame" keys RIGHT BEFORE saving to disk.
-                    // ====================================================================
-                    // Copies a legacy key over to its official name and removes the legacy one.
-                    // It must never touch the official key itself: this call used to pass the
-                    // official key as one of its own "legacy" keys, so every save deleted the
-                    // user's value and only put it back when the value happened to be non-null
-                    // and not "". That is what let a border thickness of 0 (no border) disappear
-                    // on save and come back as the hardcoded default on the next start, and it is
-                    // also why the real legacy keys below were never migrated at all: the loop
-                    // only ever looked at the official key.
-                    void ConsolidateKey(string officialKey, params string[] legacyKeys)
+                    var serializedData = new List<JObject>();
+                    foreach (object frame in _frameData)
                     {
-                        foreach (string oldKey in legacyKeys)
-                        {
-                            if (string.Equals(oldKey, officialKey, StringComparison.Ordinal)) continue;
-                            if (!frameDict.ContainsKey(oldKey)) continue;
+                        var frameDict = frame is IDictionary<string, object> dict
+                            ? new Dictionary<string, object>(dict)
+                            : ((JObject)frame).ToObject<IDictionary<string, object>>()!;
+                        ApplyFormatConsistency(frameDict);
 
-                            bool officialIsEmpty = !frameDict.ContainsKey(officialKey)
-                                                   || frameDict[officialKey] == null
-                                                   || frameDict[officialKey].ToString() == "";
-
-                            // 0 is a valid value (border thickness, X, Y) and is accepted here.
-                            if (officialIsEmpty && frameDict[oldKey] != null && frameDict[oldKey].ToString() != "")
-                            {
-                                frameDict[officialKey] = frameDict[oldKey];
-                            }
-
-                            frameDict.Remove(oldKey); // Vacuum the legacy key out
-                        }
+                        var serializedFrame = JObject.FromObject(frameDict);
+                        NormalizeLegacyKeys(serializedFrame);
+                        serializedData.Add(serializedFrame);
                     }
 
-                    ConsolidateKey("FrameBorderColor", "FenceBorderColor", "frameBorderColor");
-                    ConsolidateKey("FrameBorderThickness", "FenceBorderThickness", "frameBorderThickness");
+                    string formattedJson = JsonConvert.SerializeObject(serializedData, Formatting.Indented);
+                    AtomicFile.WriteUtf8(_jsonFilePath, formattedJson, replaceExisting: _hasFrameFile);
+                    _hasFrameFile = true;
 
-                    // Apply simple format consistency
-                    ApplyFormatConsistency(frameDict);
-
-                    serializedData.Add(JObject.FromObject(frameDict));
+                    LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.Settings,
+                        $"Saved frames.json with consistent formatting for {serializedData.Count} frames");
                 }
 
-                string formattedJson = JsonConvert.SerializeObject(serializedData, Formatting.Indented);
-                File.WriteAllText(_jsonFilePath, formattedJson);
                 Layouts.LayoutManager.ConfigurationSaved();
-
-                LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.Settings,
-                    $"Saved frames.json with consistent formatting for {serializedData.Count} frames");
             }
             catch (Exception ex)
             {

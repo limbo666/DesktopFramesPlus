@@ -35,7 +35,9 @@ namespace Desktop_Frames.Plugins
         private string _currentPath = "";
         
         // Plugin Settings
-        private string _shellType = "powershell.exe"; // "powershell.exe" or "cmd.exe"
+        private const string PowerShell = "powershell.exe";
+        private const string CommandPrompt = "cmd.exe";
+        private string _shellType = PowerShell;
         private string _terminalColor = "Green"; // "Green", "White", "Cyan"
         private int _fontSize = 12;
         private string _startupDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -175,8 +177,14 @@ namespace Desktop_Frames.Plugins
 
             try
             {
+                string systemDirectory = Environment.SystemDirectory;
+                if (!Path.IsPathFullyQualified(systemDirectory))
+                    throw new InvalidOperationException("Could not resolve the Windows system directory.");
+
                 _terminalProcess = new Process();
-                _terminalProcess.StartInfo.FileName = _shellType;
+                _terminalProcess.StartInfo.FileName = _shellType == CommandPrompt
+                    ? Path.Combine(systemDirectory, CommandPrompt)
+                    : Path.Combine(systemDirectory, "WindowsPowerShell", "v1.0", PowerShell);
 
                 // Apply Startup Directory (fallback to C:\ if invalid)
                 if (System.IO.Directory.Exists(_startupDir))
@@ -541,7 +549,10 @@ namespace Desktop_Frames.Plugins
         {
             if (settings != null)
             {
-                if (settings.ContainsKey("ShellType")) _shellType = settings["ShellType"].ToString();
+                settings.TryGetValue("ShellType", out var shell);
+                _shellType = string.Equals((shell as string)?.Trim(), CommandPrompt, StringComparison.OrdinalIgnoreCase)
+                    ? CommandPrompt
+                    : PowerShell;
                 if (settings.ContainsKey("TerminalColor")) _terminalColor = settings["TerminalColor"].ToString();
                 if (settings.ContainsKey("FontSize") && int.TryParse(settings["FontSize"].ToString(), out int size)) _fontSize = size;
                 if (settings.ContainsKey("StartupDir")) _startupDir = settings["StartupDir"].ToString();
@@ -669,8 +680,8 @@ namespace Desktop_Frames.Plugins
 
             groupSp.Children.Add(new TextBlock { Text = Strings.TermTargetShell, Margin = new Thickness(0, 0, 0, 5) });
             ComboBox cmbShell = new ComboBox { Margin = new Thickness(0, 0, 0, 15) };
-            cmbShell.Items.Add("powershell.exe");
-            cmbShell.Items.Add("cmd.exe");
+            cmbShell.Items.Add(PowerShell);
+            cmbShell.Items.Add(CommandPrompt);
             cmbShell.SelectedItem = _shellType;
             groupSp.Children.Add(cmbShell);
 
@@ -785,11 +796,12 @@ namespace Desktop_Frames.Plugins
                     ((IDictionary<string, object>)frameData)["PluginSettings"] = newSettings;
 
                 try { FrameDataManager.SaveFrameData(); } catch { }
+                string previousShell = _shellType;
                 ApplySettingsData(newSettings);
                 ApplyUIStyles();
 
                 // If shell type changed, restart the process
-                if (_shellType != cmbShell.SelectedItem.ToString())
+                if (_shellType != previousShell)
                 {
                     _outputBox.Document.Blocks.Clear();
                     StartProcess();

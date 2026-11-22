@@ -212,9 +212,9 @@ namespace Desktop_Frames
                         foreach (var item in items)
                         {
                             string filename = item["Filename"]?.ToString();
-                            if (!string.IsNullOrEmpty(filename))
+                            if (!string.IsNullOrEmpty(filename) && SharedFramePackage.IsShortcutName(filename))
                             {
-                                // FIX: Resolve source path from Profile
+                                // Package only shortcut files referenced by the frame.
                                 string sourcePath = Path.Combine(ProfileManager.CurrentProfileDir, filename);
 
                                 if (File.Exists(sourcePath))
@@ -280,6 +280,7 @@ namespace Desktop_Frames
             {
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.ImportExport, "Starting frame import process");
 
+                string profileDirectory = ProfileManager.CurrentProfileDir;
                 string exeDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 				string exportsDir = Path.Combine(exeDir, "Exports");
 
@@ -294,108 +295,47 @@ namespace Desktop_Frames
                 if (openDialog.ShowDialog() != true) return;
 
                 string selectedFile = openDialog.FileName;
-                string tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(tempDir);
+                SharedFramePackage.CheckArchiveSize(selectedFile);
+                using var archive = ZipFile.OpenRead(selectedFile);
+                var package = SharedFramePackage.Read(archive);
+                JObject importedFrame = package.Frame;
 
+                if (!MessageBoxesManager.ShowCustomYesNoMessageBox(
+                    Strings.Get("MsgConfirmSharedFrameImport", Path.GetFileName(selectedFile), package.ShortcutCount, package.SkippedItems),
+                    Strings.Get("DlgSharedFrameImport"))) return;
+
+                if (importedFrame["ItemsType"]?.ToString() == "Portal")
+                {
+                    var folder = new Microsoft.Win32.OpenFolderDialog { Title = Strings.Get("DlgSharedPortalFolder") };
+                    if (folder.ShowDialog() != true) return;
+                    importedFrame["Path"] = folder.FolderName;
+                }
+
+                if (!string.Equals(profileDirectory, ProfileManager.CurrentProfileDir, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException(Strings.Get("MsgImportProfileChanged"));
+
+                var createdFiles = new List<string>();
+                var frames = Framemanager.GetFrameData();
                 try
                 {
-                    ZipFile.ExtractToDirectory(selectedFile, tempDir);
-
-                    // Check for new (frame.json) and legacy (fence.json) internal files
-                    string frameJsonPath = Path.Combine(tempDir, "frame.json");
-                    if (!File.Exists(frameJsonPath))
-                    {
-                        frameJsonPath = Path.Combine(tempDir, "fence.json");
-                    }
-                    if (!File.Exists(frameJsonPath)) throw new FileNotFoundException("Invalid export: missing frame data file");
-
-                    string jsonContent = File.ReadAllText(frameJsonPath);
-
-                    // KISS SCRUBBER: Neutralize legacy ghost keys before the app touches it
-                    jsonContent = jsonContent.Replace("\"FenceBorderColor\"", "\"FrameBorderColor\"");
-                    jsonContent = jsonContent.Replace("\"frameBorderColor\"", "\"FrameBorderColor\"");
-                    jsonContent = jsonContent.Replace("\"FenceBorderThickness\"", "\"FrameBorderThickness\"");
-                    jsonContent = jsonContent.Replace("\"frameBorderThickness\"", "\"FrameBorderThickness\"");
-
-                    dynamic importedFrame = JsonConvert.DeserializeObject<JObject>(jsonContent);
-                    if (importedFrame == null) throw new InvalidDataException("Invalid JSON data");
-
-                    // New ID to avoid conflicts
-                    string newId = Guid.NewGuid().ToString();
-                    importedFrame["Id"] = newId;
-
-                    // Handle Shortcuts (TAB-AWARE FIX)
-                    if (importedFrame.ItemsType?.ToString() == "Data")
-                    {
-                        string sourceShortcuts = Path.Combine(tempDir, "Shortcuts");
-
-                        // FIX: Target current Profile Shortcuts folder
-                        string destShortcuts = ProfileManager.GetProfileFilePath("Shortcuts");
-
-                        if (Directory.Exists(sourceShortcuts))
-                        {
-                            if (!Directory.Exists(destShortcuts)) Directory.CreateDirectory(destShortcuts);
-
-                            foreach (string srcPath in Directory.GetFiles(sourceShortcuts))
-                            {
-                                string fileName = Path.GetFileName(srcPath);
-                                string destPath = Path.Combine(destShortcuts, fileName);
-
-                                // Handle collisions
-                                int counter = 1;
-                                while (File.Exists(destPath))
-                                {
-                                    string tempName = $"{Path.GetFileNameWithoutExtension(fileName)} ({counter++}){Path.GetExtension(fileName)}";
-                                    destPath = Path.Combine(destShortcuts, tempName);
-                                }
-
-                                File.Copy(srcPath, destPath);
-                                string finalFileName = Path.GetFileName(destPath);
-
-                                // Update References Helper
-                                void UpdateReferences(JArray items)
-                                {
-                                    if (items == null) return;
-                                    // Find items that matched the ORIGINAL filename (fileName)
-                                    // Update them to the NEW filename (finalFileName)
-                                    foreach (var item in items)
-                                    {
-                                        string itemFile = Path.GetFileName(item["Filename"]?.ToString() ?? "");
-                                        if (itemFile.Equals(fileName, StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            item["Filename"] = Path.Combine("Shortcuts", finalFileName);
-                                        }
-                                    }
-                                }
-
-                                // 1. Update Main Items
-                                UpdateReferences(importedFrame.Items as JArray);
-
-                                // 2. Update Tab Items (The Fix)
-                                var tabs = importedFrame.Tabs as JArray;
-                                if (tabs != null)
-                                {
-                                    foreach (var tab in tabs)
-                                    {
-                                        UpdateReferences(tab["Items"] as JArray);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Add and Create
-                    var FrameData = Framemanager.GetFrameData();
-                    FrameData.Add(importedFrame);
-                    Framemanager.CreateFrame(importedFrame, new TargetChecker(1000));
+                    package.InstallShortcuts(profileDirectory, createdFiles);
+                    frames.Add(importedFrame);
                     FrameDataManager.SaveFrameData();
-
-                    MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.MsgFrameImported, Strings.DlgImportComplete);
                 }
-                finally
+                catch
                 {
-                    if (Directory.Exists(tempDir)) Directory.Delete(tempDir, true);
+                    frames.Remove(importedFrame);
+                    foreach (string file in createdFiles)
+                    {
+                        try { File.Delete(file); }
+                        catch (IOException) { }
+                        catch (UnauthorizedAccessException) { }
+                    }
+                    throw;
                 }
+
+                Framemanager.CreateFrame(importedFrame, new TargetChecker(1000));
+                MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.MsgFrameImported, Strings.DlgImportComplete);
             }
             catch (Exception ex)
             {
@@ -675,76 +615,38 @@ namespace Desktop_Frames
                 Application.Current?.Dispatcher.Invoke(() => Mouse.OverrideCursor = null);
             }
         }
-        public static void RestoreFromBackup(string backupFolder)
+        internal static bool RestoreFromBackup(string backupFolder, string profileDirectory)
         {
             Application.Current?.Dispatcher.Invoke(() => Mouse.OverrideCursor = Cursors.Wait);
             try
             {
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.ImportExport, $"Starting restore from backup: {backupFolder}");
 
-                // Check for new frames.json, fallback to legacy fences.json if it's an old backup
-                string backupFramesPath = Path.Combine(backupFolder, "frames.json");
-                if (!File.Exists(backupFramesPath))
+                bool restartRequired = File.Exists(Path.Combine(backupFolder, "options.json")) &&
+                    MessageBoxesManager.ShowCustomYesNoMessageBox(Strings.MsgConfirmRestoreSettings, Strings.DlgRestoreSettings);
+                if (!string.Equals(profileDirectory, ProfileManager.CurrentProfileDir, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException(Strings.Get("MsgRestoreProfileChanged"));
+
+                var previousFrames = FrameDataManager.CaptureLoadedFrames();
+                bool reloading = false;
+                try
                 {
-                    backupFramesPath = Path.Combine(backupFolder, "fences.json");
-                }
-                string backupShortcutsPath = Path.Combine(backupFolder, "Shortcuts");
-
-                if (!File.Exists(backupFramesPath) || !Directory.Exists(backupShortcutsPath))
-                {
-                    string errorMsg = "Invalid backup folder - missing required files.";
-                    MessageBoxesManager.ShowOKOnlyMessageBoxForm(errorMsg, "Restore Error");
-                    return;
-                }
-
-                bool restartRequired = false;
-
-                // 2. Handle options.json
-                string backupOptionsPath = Path.Combine(backupFolder, "options.json");
-                if (File.Exists(backupOptionsPath))
-                {
-                    bool restoreSettings = MessageBoxesManager.ShowCustomYesNoMessageBox(
-                        Strings.MsgConfirmRestoreSettings,
-                        Strings.DlgRestoreSettings);
-
-                    if (restoreSettings)
+                    ProfileBackupRestore.Restore(backupFolder, profileDirectory, restartRequired, prepared =>
                     {
-                        try
-                        {
-                            string currentOptionsPath = ProfileManager.GetProfileFilePath("options.json");
-                            File.Copy(backupOptionsPath, currentOptionsPath, true);
-                            LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.ImportExport, "Restored options.json");
-                            restartRequired = true;
-                        }
-                        catch (Exception ex)
-                        {
-                            LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.ImportExport, $"Failed to restore options.json: {ex.Message}");
-                        }
-                    }
+                        reloading = true;
+                        if (!Framemanager.TryReloadFrames(prepared, showLoadError: false))
+                            throw new IOException(Strings.Get("MsgRestoreReloadFailed"));
+                    });
                 }
-
-                // 3. Clear & Copy Data
-                string currentFramesPath = ProfileManager.GetProfileFilePath("frames.json");
-                string currentShortcutsPath = ProfileManager.GetProfileFilePath("Shortcuts");
-
-                var FrameData = Framemanager.GetFrameData();
-                FrameData?.Clear();
-
-                // KISS SCRUBBER: Read backup, sanitize legacy keys, and write to new format
-                string backupContent = File.ReadAllText(backupFramesPath);
-                backupContent = backupContent.Replace("\"FenceBorderColor\"", "\"FrameBorderColor\"");
-                backupContent = backupContent.Replace("\"frameBorderColor\"", "\"FrameBorderColor\"");
-                backupContent = backupContent.Replace("\"FenceBorderThickness\"", "\"FrameBorderThickness\"");
-                backupContent = backupContent.Replace("\"frameBorderThickness\"", "\"FrameBorderThickness\"");
-
-                File.WriteAllText(currentFramesPath, backupContent);
-
-                if (Directory.Exists(currentShortcutsPath))
+                catch
                 {
-                    Directory.Delete(currentShortcutsPath, true);
+                    if (reloading)
+                    {
+                        FrameDataManager.UsePreparedFrames(previousFrames);
+                        Framemanager.TryReloadFrames(previousFrames, showLoadError: false);
+                    }
+                    throw;
                 }
-                Directory.CreateDirectory(currentShortcutsPath);
-                BackupManager.CopyDirectory(backupShortcutsPath, currentShortcutsPath);
 
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.ImportExport, "Files restored successfully.");
 
@@ -760,7 +662,7 @@ namespace Desktop_Frames
                     // UseShellExecute = false explicitly prevents the child cmd.exe from inheriting the Single-Instance Mutex.
                     Process.Start(new ProcessStartInfo
                     {
-                        FileName = "cmd.exe",
+                        FileName = Path.Combine(Environment.SystemDirectory, "cmd.exe"),
                         Arguments = $"/c ping 127.0.0.1 -n 3 > nul & start \"\" \"{appPath}\"",
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
@@ -775,11 +677,13 @@ namespace Desktop_Frames
                 {
                     MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.MsgRestoreDone, Strings.DlgRestore);
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.ImportExport, $"Restore failed: {ex.Message}");
                 MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgRestoreFailed", ex.Message), Strings.DlgError);
+                return false;
             }
             finally
             {

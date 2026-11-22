@@ -62,7 +62,7 @@ namespace Desktop_Frames
 
                 // Match against rules
                 var rule = ProfileManager.AutomationRules.FirstOrDefault(r =>
-                    currentProc.Equals(r.ProcessName, StringComparison.OrdinalIgnoreCase));
+                    r != null && currentProc.Equals(r.ProcessName, StringComparison.OrdinalIgnoreCase));
 
                 if (rule != null)
                 {
@@ -78,14 +78,14 @@ namespace Desktop_Frames
                     if ((DateTime.Now - _matchStartTime).TotalSeconds >= rule.DelaySeconds)
                     {
                         // Check if we are already on the correct profile
-                        if (ProfileManager.CurrentProfileName != rule.TargetProfile)
+                    if (!string.Equals(ProfileManager.CurrentProfileName, rule.TargetProfile, StringComparison.OrdinalIgnoreCase))
                         {
                             // "Manual Override" Check:
                             // Only switch if we are currently on the "Home" profile OR the "Automated" profile.
                             // If user manually switched to a 3rd profile, don't interrupt them.
                             bool isSafeToSwitch = (ProfileManager.CurrentProfileName == ProfileManager.ManualBaseProfile) || _isCurrentlyAutomated;
 
-                            if (isSafeToSwitch)
+                            if (isSafeToSwitch && PerformProfileSwitch(rule.TargetProfile))
                             {
                                 if (rule.IsPersisted)
                                 {
@@ -97,8 +97,6 @@ namespace Desktop_Frames
                                 {
                                     _isCurrentlyAutomated = true;
                                 }
-
-                                PerformProfileSwitch(rule.TargetProfile);
                             }
                         }
                     }
@@ -106,12 +104,13 @@ namespace Desktop_Frames
                 else if (_isCurrentlyAutomated)
                 {
                     // REVERT LOGIC: Process closed/lost focus, and we were in automated mode
-                    _isCurrentlyAutomated = false;
-                    _lastDetectedProcess = "";
-
                     // Only revert if we are still on the profile we automated TO (don't revert if user moved away)
                     // Actually, revert anyway to be safe and restore order
-                    PerformProfileSwitch(ProfileManager.ManualBaseProfile);
+                    if (PerformProfileSwitch(ProfileManager.ManualBaseProfile))
+                    {
+                        _isCurrentlyAutomated = false;
+                        _lastDetectedProcess = "";
+                    }
                 }
                 else
                 {
@@ -126,11 +125,11 @@ namespace Desktop_Frames
             }
         }
 
-        private static void PerformProfileSwitch(string profileName)
+        private static bool PerformProfileSwitch(string profileName)
         {
             try
             {
-                ProfileManager.SwitchToProfile(profileName);
+                if (!ProfileManager.TrySwitchToProfile(profileName, showLoadError: false)) return false;
 
                 // Update UI safely
                 if (System.Windows.Application.Current != null)
@@ -145,8 +144,10 @@ namespace Desktop_Frames
                         catch { }
                     });
                 }
+
+                return true;
             }
-            catch { }
+            catch { return false; }
         }
 
         private static string GetActiveProcessName()

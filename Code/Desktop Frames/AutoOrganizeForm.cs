@@ -29,6 +29,7 @@ namespace Desktop_Frames
 
         private OrganizeRule _selectedRule;
         private List<OrganizeRule> _localRules;
+        private readonly string _profileDirectory = ProfileManager.CurrentProfileDir;
         private bool _isLoadingRule = false; // Prevents dropdowns from overwriting data during load
 
         /// <summary>The preset that lets the user type an extension list by hand.</summary>
@@ -45,21 +46,9 @@ namespace Desktop_Frames
 
         public AutoOrganizeForm()
         {
-            AutoOrganizeManager.Pause(); // Pause while editing rules!
-                                         // Clone rules for safe editing
-            _localRules = AutoOrganizeManager.Rules.Select(r => new OrganizeRule
-            {
-                Id = r.Id,
-                Name = r.Name,
-                Extensions = r.Extensions,
-                NameContains = r.NameContains,
-                TargetFolderPath = r.TargetFolderPath,
-                ConflictAction = r.ConflictAction,
-                AutoCreateFrame = r.AutoCreateFrame,
-                IsEnabled = r.IsEnabled,
-                Priority = r.Priority,
-                LastRun = r.LastRun // <--- FIX: Actually copy the timestamp!
-            }).OrderBy(r => r.Priority).ToList();
+            AutoOrganizeManager.Pause();
+            _localRules = AutoOrganizeManager.Rules
+                .Where(rule => rule != null).Select(rule => rule.Copy()).OrderBy(rule => rule.Priority).ToList();
 
             InitializeModernComponent();
             RefreshList();
@@ -413,6 +402,21 @@ namespace Desktop_Frames
             };
             saveButton.Click += Save_Click;
 
+            Button previewButton = CreateModernSecondaryButton(Strings.Get("AutoOrgPreviewTitle"));
+            previewButton.Padding = new Thickness(12, 0, 12, 0);
+            previewButton.Margin = new Thickness(0, 0, 10, 0);
+            previewButton.Click += (s, e) =>
+            {
+                var rules = _localRules.Select((rule, index) =>
+                {
+                    var copy = rule.Copy();
+                    copy.Priority = index;
+                    return copy;
+                });
+                new AutoOrganizePreviewWindow(this, rules).ShowDialog();
+            };
+
+            buttonPanel.Children.Add(previewButton);
             buttonPanel.Children.Add(closeButton);
             buttonPanel.Children.Add(saveButton);
             footerBorder.Child = buttonPanel;
@@ -667,8 +671,15 @@ namespace Desktop_Frames
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < _localRules.Count; i++) _localRules[i].Priority = i;
-            AutoOrganizeManager.Rules = _localRules;
-            AutoOrganizeManager.SaveRules();
+            try
+            {
+                AutoOrganizeManager.SaveRules(_localRules, _profileDirectory);
+            }
+            catch (Exception ex)
+            {
+                MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgSaveSettingsFailed", ex.Message), Strings.DlgSaveError);
+                return;
+            }
 
             // FIX: We removed Stop() and Start() here. 
             // We want the engine to remain paused until you actually close the window.

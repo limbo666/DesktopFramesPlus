@@ -1,4 +1,5 @@
 ﻿using Desktop_Frames.Localization;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1157,7 +1158,7 @@ namespace Desktop_Frames
             StackPanel statsPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(15, 15, 0, 15) };
             TextBlock txtTotalRules = new TextBlock { Text = Strings.Get("LblTotalRules", AutoOrganizeManager.Rules.Count), FontFamily = new FontFamily("Segoe UI"), FontSize = 13, FontWeight = FontWeights.Medium };
             TextBlock txtSeparator = new TextBlock { Text = "   -   ", FontFamily = new FontFamily("Segoe UI"), FontSize = 13, FontWeight = FontWeights.Medium, Foreground = Brushes.Gray };
-            TextBlock txtEnabledRules = new TextBlock { Text = Strings.Get("LblEnabledRules", AutoOrganizeManager.Rules.Count(r => r.IsEnabled)), FontFamily = new FontFamily("Segoe UI"), FontSize = 13, FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Color.FromRgb(34, 139, 34)) };
+            TextBlock txtEnabledRules = new TextBlock { Text = Strings.Get("LblEnabledRules", AutoOrganizeManager.Rules.Count(r => r?.IsEnabled == true)), FontFamily = new FontFamily("Segoe UI"), FontSize = 13, FontWeight = FontWeights.Bold, Foreground = new SolidColorBrush(Color.FromRgb(34, 139, 34)) };
             statsPanel.Children.Add(txtTotalRules);
             statsPanel.Children.Add(txtSeparator);
             statsPanel.Children.Add(txtEnabledRules);
@@ -1174,9 +1175,17 @@ namespace Desktop_Frames
                 new AutoOrganizeForm().ShowDialog();
                 // Refresh statistics when the editor closes
                 txtTotalRules.Text = Strings.Get("LblTotalRules", AutoOrganizeManager.Rules.Count);
-                txtEnabledRules.Text = Strings.Get("LblEnabledRules", AutoOrganizeManager.Rules.Count(r => r.IsEnabled));
+                txtEnabledRules.Text = Strings.Get("LblEnabledRules", AutoOrganizeManager.Rules.Count(r => r?.IsEnabled == true));
             };
             c.Children.Add(btnManageRules);
+
+            Button btnPreview = CreateStyledButton(Strings.Get("AutoOrgPreviewTitle"), ColorSmartDesktop);
+            btnPreview.Width = 255;
+            btnPreview.Height = 45;
+            btnPreview.Margin = new Thickness(15, 0, 0, 15);
+            btnPreview.HorizontalAlignment = HorizontalAlignment.Left;
+            btnPreview.Click += (s, e) => new AutoOrganizePreviewWindow(_optionsWindow, AutoOrganizeManager.Rules).ShowDialog();
+            c.Children.Add(btnPreview);
 
             // Dark Red - Organize Desktop Now Button
             Button btnOrganizeNow = CreateStyledButton(Strings.BtnOrganizeNow, Color.FromRgb(139, 0, 0));
@@ -1361,11 +1370,16 @@ namespace Desktop_Frames
         // --- SAVING ---
         private static void SaveOptions()
         {
+            JObject? previousOptions = null;
+            bool settingsSaved = false;
+            bool previousLanguageChanged = _languageChanged;
             try
             {
-                bool tempPortalImageState = SettingsManager.ShowBackgroundImageOnPortalFrames;
-                bool newPortalWatermarkState = false;
-                bool newShowInTrayState = false;
+                previousOptions = SettingsManager.CaptureSettings();
+                bool previousPortalImageState = SettingsManager.ShowBackgroundImageOnPortalFrames;
+                bool previousContextMenuState = SettingsManager.EnableContextMenu;
+                bool previousAutoOrganizeState = SettingsManager.EnableAutoOrganize;
+                bool? startWithWindows = null;
 
                 // 1. General (Tab 0)
                 var generalContent = (StackPanel)((ScrollViewer)((TabItem)_tabControl.Items[0]).Content).Content;
@@ -1373,7 +1387,8 @@ namespace Desktop_Frames
                 {
                     if (child is CheckBox cb)
                     {
-                        if (cb.Name == "StartWithWindows" && cb.IsChecked != TrayManager.IsStartWithWindows) TrayManager.Instance?.ToggleStartWithWindows(cb.IsChecked == true);
+                        if (cb.Name == "StartWithWindows" && cb.IsChecked != TrayManager.IsStartWithWindows)
+                            startWithWindows = cb.IsChecked == true;
                         if (cb.Name == "SingleClickToLaunch") SettingsManager.SingleClickToLaunch = cb.IsChecked == true;
                         if (cb.Name == "EnableSnapNearFrames") SettingsManager.IsSnapEnabled = cb.IsChecked == true;
                         if (cb.Name == "EnableDimensionSnap") SettingsManager.EnableDimensionSnap = cb.IsChecked == true;
@@ -1387,25 +1402,12 @@ namespace Desktop_Frames
                 {
                     if (child is CheckBox cb)
                     {
-                        if (cb.Name == "EnableTrayIcon")
-                        {
-                            newShowInTrayState = cb.IsChecked == true;
-                            SettingsManager.ShowInTray = newShowInTrayState;
-                            if (TrayManager.Instance != null) TrayManager.Instance.GetType().GetField("Showintray", BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(TrayManager.Instance, newShowInTrayState);
-                        }
-                        if (cb.Name == "EnableContextMenu")
-                        {
-                            bool newState = cb.IsChecked == true;
-                            if (SettingsManager.EnableContextMenu != newState)
-                            {
-                                SettingsManager.EnableContextMenu = newState;
-                                RegistryHelper.ToggleContextMenu(newState);
-                            }
-                        }
-                        if (cb.Name == "EnablePortalWatermark") { newPortalWatermarkState = cb.IsChecked == true; SettingsManager.ShowBackgroundImageOnPortalFrames = newPortalWatermarkState; }
+                        if (cb.Name == "EnableTrayIcon") SettingsManager.ShowInTray = cb.IsChecked == true;
+                        if (cb.Name == "EnableContextMenu") SettingsManager.EnableContextMenu = cb.IsChecked == true;
+                        if (cb.Name == "EnablePortalWatermark") SettingsManager.ShowBackgroundImageOnPortalFrames = cb.IsChecked == true;
                         if (cb.Name == "DisableFrameScrollbars") SettingsManager.DisableFrameScrollbars = cb.IsChecked == true;
                         if (cb.Name == "EnableSounds") SettingsManager.EnableSounds = cb.IsChecked == true;
-                        if (cb.Name == "HideDesktopElementsOnStart") { SettingsManager.HideDesktopElementsOnStart = cb.IsChecked == true; DesktopIconManager.SetDesktopIconsVisible(!SettingsManager.HideDesktopElementsOnStart); }
+                        if (cb.Name == "HideDesktopElementsOnStart") SettingsManager.HideDesktopElementsOnStart = cb.IsChecked == true;
                         if (cb.Name == "HideDesktopElementsOnAllFramesHide") SettingsManager.HideDesktopElementsOnAllFramesHide = cb.IsChecked == true;
                     }
                     else if (child is Grid intGrid)
@@ -1434,7 +1436,7 @@ namespace Desktop_Frames
 
                 if ((_languageCombo?.SelectedItem as ComboBoxItem)?.Tag is string languageTag)
                 {
-                    _languageChanged = !string.Equals(SettingsManager.Language, languageTag, StringComparison.OrdinalIgnoreCase);
+                    _languageChanged |= !string.Equals(SettingsManager.Language, languageTag, StringComparison.OrdinalIgnoreCase);
                     SettingsManager.Language = languageTag;
                 }
 
@@ -1473,12 +1475,12 @@ namespace Desktop_Frames
                 {
                     if (child is CheckBox cb)
                     {
-                        if (cb.Name == "AutoHideFrames") { SettingsManager.AutoHideFrames = cb.IsChecked == true; Framemanager.ResetAutoHideTimer(); }
+                        if (cb.Name == "AutoHideFrames") SettingsManager.AutoHideFrames = cb.IsChecked == true;
                         if (cb.Name == "FramesFadeOutFx") SettingsManager.FramesFadeOutFx = cb.IsChecked == true;
                     }
                     else if (child is Grid g)
                     {
-                        var autoHideTime = g.Children.OfType<Slider>().FirstOrDefault(s => s.Name == "AutoHideTimeSlider"); if (autoHideTime != null) { SettingsManager.AutoHideTime = (int)autoHideTime.Value; Framemanager.ResetAutoHideTimer(); }
+                        var autoHideTime = g.Children.OfType<Slider>().FirstOrDefault(s => s.Name == "AutoHideTimeSlider"); if (autoHideTime != null) SettingsManager.AutoHideTime = (int)autoHideTime.Value;
                         var fadeOutTime = g.Children.OfType<Slider>().FirstOrDefault(s => s.Name == "FadeOutTimeSlider"); if (fadeOutTime != null) SettingsManager.FadeOutTime = (int)fadeOutTime.Value;
                         var fadeOutAlpha = g.Children.OfType<Slider>().FirstOrDefault(s => s.Name == "FadeOutAlphaSlider"); if (fadeOutAlpha != null) SettingsManager.FadeOutFxTargetAlpha = fadeOutAlpha.Value / 100.0;
                         var autoRollTime = g.Children.OfType<Slider>().FirstOrDefault(s => s.Name == "AutoRollTimeSlider"); if (autoRollTime != null) SettingsManager.AutoRollTime = (int)autoRollTime.Value;
@@ -1537,24 +1539,12 @@ namespace Desktop_Frames
                     }
                 }
 
-                if (hotkeysChanged)
-                {
-                    SettingsManager.BroadcastHotkeysToAllProfiles();
-                    MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.MsgHotkeysSavedRestartNeeded, Strings.DlgRestartRequired);
-                }
-
                 // 8. Smart Desktop (Tab 7)
                 var smartDesktopContent = (StackPanel)((ScrollViewer)((TabItem)_tabControl.Items[7]).Content).Content;
                 foreach (var child in smartDesktopContent.Children)
                 {
                     if (child is CheckBox cb && cb.Name == "EnableAutoOrganize")
-                    {
-                        bool wasEnabled = SettingsManager.EnableAutoOrganize;
                         SettingsManager.EnableAutoOrganize = cb.IsChecked == true;
-                        TrayManager.Instance?.UpdateAutoOrganizeMenuCheck(SettingsManager.EnableAutoOrganize);
-                        if (!wasEnabled && SettingsManager.EnableAutoOrganize) AutoOrganizeManager.Start();
-                        else if (wasEnabled && !SettingsManager.EnableAutoOrganize) AutoOrganizeManager.Stop();
-                    }
                     if (child is CheckBox cbn && cbn.Name == "EnableAutoOrganizeNotifications") SettingsManager.EnableAutoOrganizeNotifications = cbn.IsChecked == true;
                 }
 
@@ -1567,7 +1557,7 @@ namespace Desktop_Frames
                     else if (child is Grid g)
                     {
                         var lvl = g.Children.OfType<ComboBox>().FirstOrDefault(c => c.Name == "LogLevelComboBox");
-                        if (lvl?.SelectedItem != null && Enum.TryParse<LogManager.LogLevel>(lvl.SelectedItem.ToString(), out var ll)) SettingsManager.SetMinLogLevel(ll);
+                        if (lvl?.SelectedItem != null && Enum.TryParse<LogManager.LogLevel>(lvl.SelectedItem.ToString(), out var ll)) SettingsManager.MinLogLevel = ll;
 
                         if (g.Name == "LogCategoryGrid")
                         {
@@ -1591,10 +1581,36 @@ namespace Desktop_Frames
                 if (!newEnabledCategories.Contains(LogManager.LogCategory.BackgroundValidation))
                     SettingsManager.EnableBackgroundValidationLogging = false;
 
-                SettingsManager.SetEnabledLogCategories(newEnabledCategories);
+                SettingsManager.EnabledLogCategories = newEnabledCategories;
+                SettingsManager.SaveSettingsOrThrow();
+                settingsSaved = true;
+
+                if (hotkeysChanged)
+                {
+                    SettingsManager.BroadcastHotkeysToAllProfiles();
+                    MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.MsgHotkeysSavedRestartNeeded, Strings.DlgRestartRequired);
+                }
+
+                if (startWithWindows.HasValue) TrayManager.Instance?.ToggleStartWithWindows(startWithWindows.Value);
+                if (previousContextMenuState != SettingsManager.EnableContextMenu)
+                    RegistryHelper.ToggleContextMenu(SettingsManager.EnableContextMenu);
+
+                if (TrayManager.Instance is TrayManager tray)
+                {
+                    tray.GetType().GetField("Showintray", BindingFlags.NonPublic | BindingFlags.Instance)?.SetValue(tray, SettingsManager.ShowInTray);
+                    tray.UpdateAutoOrganizeMenuCheck(SettingsManager.EnableAutoOrganize);
+                }
+                if (previousAutoOrganizeState != SettingsManager.EnableAutoOrganize)
+                {
+                    if (SettingsManager.EnableAutoOrganize) AutoOrganizeManager.Start();
+                    else AutoOrganizeManager.Stop();
+                }
+
+                DesktopIconManager.SetDesktopIconsVisible(!SettingsManager.HideDesktopElementsOnStart);
+                Framemanager.ResetAutoHideTimer();
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.Settings, "Options saved successfully");
 
-                if (tempPortalImageState != newPortalWatermarkState) TrayManager.reloadallFrames();
+                if (previousPortalImageState != SettingsManager.ShowBackgroundImageOnPortalFrames) TrayManager.reloadallFrames();
                 TrayManager.Instance?.UpdateTrayIcon();
                 Utility.UpdateFrameVisuals();
 
@@ -1622,8 +1638,15 @@ namespace Desktop_Frames
             }
             catch (Exception ex)
             {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.Settings, $"Error saving options: {ex.Message}");
-                MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgGenericError", ex.Message), Strings.DlgSaveError);
+                if (!settingsSaved && previousOptions != null)
+                {
+                    SettingsManager.ApplyJsonToProperties(previousOptions);
+                    _languageChanged = previousLanguageChanged;
+                }
+
+                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.Settings, $"Error updating options: {ex.Message}");
+                string messageKey = settingsSaved ? "MsgGenericError" : "MsgSaveSettingsFailed";
+                MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get(messageKey, ex.Message), Strings.DlgSaveError);
             }
         }
 
@@ -1659,15 +1682,15 @@ namespace Desktop_Frames
             {
                 using (var d = new System.Windows.Forms.FolderBrowserDialog())
                 {
+                    string profileDirectory = ProfileManager.CurrentProfileDir;
                     // FIX: Use the Profile-Aware path helper
                     d.SelectedPath = BackupManager.GetBackupsFolderPath();
                     d.Description = "Select a backup folder to restore from";
 
-                    if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+                        BackupManager.RestoreFromBackup(d.SelectedPath, profileDirectory))
                     {
-                        BackupManager.RestoreFromBackup(d.SelectedPath);
                         _optionsWindow.Close();
-                        TrayManager.reloadallFrames();
                     }
                 }
             }

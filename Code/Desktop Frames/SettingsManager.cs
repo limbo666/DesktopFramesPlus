@@ -131,70 +131,46 @@ namespace Desktop_Frames
             LogManager.LogCategory.Settings
         };
 
-        private static string _activeOptionsPath;
+        private static readonly object OptionsLock = new();
+        private static readonly JsonSerializerSettings OptionsReadSettings = new() { DateParseHandling = DateParseHandling.None };
+        private static readonly JObject DefaultOptions;
+        private static string? _activeOptionsPath;
+
+        static SettingsManager()
+        {
+            DefaultOptions = CaptureSettings();
+        }
+
+        private static string SelectOptionsPath()
+        {
+            string masterPath = Path.Combine(AppContext.BaseDirectory, "MasterOptions.json");
+            return File.Exists(masterPath) ? masterPath : ProfileManager.GetProfileFilePath("options.json");
+        }
 
         public static void LoadSettings()
         {
-            // 1. DETERMINE SOURCE
-            string appRoot = AppDomain.CurrentDomain.BaseDirectory;
-            string masterPath = Path.Combine(appRoot, "MasterOptions.json");
-            string localPath = ProfileManager.GetProfileFilePath("options.json");
-
-            if (File.Exists(masterPath))
+            lock (OptionsLock)
             {
-                _activeOptionsPath = masterPath;
-                LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.Settings, "MasterOptions.json found. Switched to Global Configuration Mode.");
-            }
-            else
-            {
-                _activeOptionsPath = localPath;
-            }
-
-            // 2. READ DATA
-            try
-            {
-                if (File.Exists(_activeOptionsPath))
+                string path = SelectOptionsPath();
+                _activeOptionsPath = path;
+                ApplyJsonToProperties(DefaultOptions);
+                try
                 {
-                    string jsonContent = File.ReadAllText(_activeOptionsPath);
-                    if (!string.IsNullOrWhiteSpace(jsonContent))
-                    {
-                        try
-                        {
-                            var optionsData = JsonConvert.DeserializeObject<dynamic>(jsonContent);
-                            if (optionsData != null) ApplyJsonToProperties(optionsData);
-                        }
-                        catch { /* Corrupt file, defaults will apply */ }
-                    }
+                    var options = ReadOptions(path);
+                    if (options != null) ApplyJsonToProperties(options);
                 }
-
-                // --- FIX: Universal File Hydration ---
-                // By unconditionally saving after loading the properties into memory, we guarantee:
-                // 1. 0-byte profile files are instantly populated with default JSON.
-                // 2. MasterOptions.json / options.json files from older app versions 
-                //    automatically get newly added settings injected into them.
-                SaveSettings();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading settings: {ex.Message}");
-                if (string.IsNullOrEmpty(_activeOptionsPath)) _activeOptionsPath = localPath;
-                SaveSettings();
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException)
+                {
+                    LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.Settings, $"Could not load settings from {path}: {ex.Message}");
+                }
             }
         }
 
         public static void SaveSettings()
         {
-            if (string.IsNullOrEmpty(_activeOptionsPath))
-            {
-                _activeOptionsPath = ProfileManager.GetProfileFilePath("options.json");
-            }
-
             try
             {
-                // 3. WRITE TO THE ACTIVE SOURCE (Includes AllowAutoReposition now)
-                var optionsData = GetCurrentPropertiesAsObject();
-                string formattedJson = JsonConvert.SerializeObject(optionsData, Formatting.Indented);
-                File.WriteAllText(_activeOptionsPath, formattedJson);
+                SaveSettingsOrThrow();
             }
             catch (Exception ex)
             {
@@ -202,11 +178,43 @@ namespace Desktop_Frames
             }
         }
 
+        internal static void SaveSettingsOrThrow()
+        {
+            lock (OptionsLock)
+            {
+                string path = _activeOptionsPath ??= SelectOptionsPath();
+                var options = ReadOptions(path) ?? new JObject();
+                foreach (var property in CaptureSettings().Properties())
+                    options[property.Name] = property.Value;
+
+                AtomicFile.WriteUtf8(path, options.ToString(Formatting.Indented));
+            }
+        }
+
+        internal static JObject? ReadOptions(string path)
+        {
+            string content;
+            try
+            {
+                content = File.ReadAllText(path);
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(content)) return null;
+
+            // Keep JSON string values such as ISO dates in unrecognized settings.
+            return JsonConvert.DeserializeObject<JObject>(content, OptionsReadSettings)
+                ?? throw new JsonSerializationException($"Expected a JSON object in {path}.");
+        }
+
         // --- Helpers ---
 
-        private static object GetCurrentPropertiesAsObject()
+        internal static JObject CaptureSettings()
         {
-            return new
+            return JObject.FromObject(new
             {
                 IsSnapEnabled,
                 ShowBackgroundImageOnPortalFrames,
@@ -287,11 +295,12 @@ namespace Desktop_Frames
                 ProfileNextKey,
                 FocusFrameModifier,
                 FocusFrameKey
-            };
+            });
         }
 
-        private static void ApplyJsonToProperties(dynamic data)
+        internal static void ApplyJsonToProperties(JObject options)
         {
+            dynamic data = options;
             try { EnableAutoBackup = data.EnableAutoBackup ?? false; } catch { EnableAutoBackup = false; }
             try { LastAutoBackupDate = data.LastAutoBackupDate ?? DateTime.MinValue; } catch { LastAutoBackupDate = DateTime.MinValue; }
             try { IsSnapEnabled = data.IsSnapEnabled ?? true; } catch { IsSnapEnabled = true; }
@@ -457,18 +466,6 @@ namespace Desktop_Frames
             return keyName switch { "~" => 192, "tilde" => 192, "space" => 32, "q" => 81, "f1" => 112, _ => 192 };
         }
 
-        public static void SetMinLogLevel(LogManager.LogLevel level)
-        {
-            MinLogLevel = level;
-            SaveSettings();
-        }
-
-        public static void SetEnabledLogCategories(List<LogManager.LogCategory> categories)
-        {
-            EnabledLogCategories = categories;
-            SaveSettings();
-        }
-
         #region Global Hotkey Configurations
         public static string ProfileSwitchModifier { get; set; } = "Control, Alt";
         public static int[] ProfileSwitchKeys { get; set; } = new int[] { 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 }; // Defaults to standard 0-9
@@ -511,23 +508,20 @@ namespace Desktop_Frames
         {
             try
             {
-                string appRoot = AppDomain.CurrentDomain.BaseDirectory;
-                string profilesDir = Path.Combine(appRoot, "Profiles");
-
-                if (!Directory.Exists(profilesDir)) return;
-
-                foreach (string dir in Directory.GetDirectories(profilesDir))
+                lock (OptionsLock)
                 {
-                    string optionsFile = Path.Combine(dir, "options.json");
-                    if (File.Exists(optionsFile))
+                    string profilesDir = Path.Combine(AppContext.BaseDirectory, "Profiles");
+                    if (!Directory.Exists(profilesDir)) return;
+
+                    int profilesUpdated = 0;
+                    foreach (string dir in Directory.GetDirectories(profilesDir))
                     {
+                        string optionsFile = Path.Combine(dir, "options.json");
                         try
                         {
-                            string jsonContent = File.ReadAllText(optionsFile);
-                            JObject data = JsonConvert.DeserializeObject<JObject>(jsonContent);
+                            var data = ReadOptions(optionsFile);
                             if (data == null) continue;
 
-                            // Overwrite strictly the hotkey values
                             data["ProfileSwitchModifier"] = ProfileSwitchModifier;
                             data["ProfileSwitchKeys"] = JArray.FromObject(ProfileSwitchKeys ?? new int[] { 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39 });
                             data["ProfilePrevModifier"] = ProfilePrevModifier;
@@ -539,22 +533,24 @@ namespace Desktop_Frames
                             data["SpotSearchModifier"] = SpotSearchModifier;
                             data["SpotSearchKey"] = SpotSearchKey;
                             data["EnableProfileHotkeys"] = EnableProfileHotkeys;
-                            data["AltGrWarningShown"] = AltGrWarningShown; // --- NEW ---
+                            data["AltGrWarningShown"] = AltGrWarningShown;
                             data["EnableFocusFrameHotkey"] = EnableFocusFrameHotkey;
                             data["EnableSpotSearchHotkey"] = EnableSpotSearchHotkey;
                             data["FramesFadeOutFx"] = FramesFadeOutFx;
                             data["FadeOutFxTargetAlpha"] = FadeOutFxTargetAlpha;
                             data["FadeOutTime"] = FadeOutTime;
 
-                            File.WriteAllText(optionsFile, JsonConvert.SerializeObject(data, Formatting.Indented));
+                            AtomicFile.WriteUtf8(optionsFile, data.ToString(Formatting.Indented));
+                            profilesUpdated++;
                         }
                         catch (Exception ex)
                         {
                             LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.Settings, $"Failed to broadcast hotkeys to {optionsFile}: {ex.Message}");
                         }
                     }
+
+                    LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.Settings, $"Updated hotkeys in {profilesUpdated} profile settings files.");
                 }
-                LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.Settings, "Global hotkeys successfully broadcasted to all individual profiles.");
             }
             catch (Exception ex)
             {

@@ -406,16 +406,24 @@ namespace Desktop_Frames
             }
         }
 
-        public static void ReloadFrames()
+        public static void ReloadFrames() => TryReloadFrames();
+
+        internal static bool IsReloadingFrames { get; private set; }
+
+        internal static bool TryReloadFrames(FrameDataManager.PreparedFrames? prepared = null,
+            bool showLoadError = true, Action? activateProfile = null)
         {
+            if (IsReloadingFrames) return false;
+            IsReloadingFrames = true;
+            Window? lifeSupport = null;
             try
             {
+                prepared ??= FrameDataManager.PrepareProfileFrames(ProfileManager.CurrentProfileDir);
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, "Reloading all frames...");
 
                 // 1. Life Support
-                Window lifeSupport = MessageBoxesManager.CreateWaitWindow("Desktop Frames +", "Refreshing configuration...");
+                lifeSupport = MessageBoxesManager.CreateWaitWindow("Desktop Frames +", "Refreshing configuration...");
                 lifeSupport.Show();
-                System.Windows.Forms.Application.DoEvents();
 
                 // 2. Clean up Old State
                 if (TrayManager.Instance != null)
@@ -433,7 +441,6 @@ namespace Desktop_Frames
                 _heartTextBlocks.Clear();
                 foreach (var portal in _portalFrames.Values) try { portal.Dispose(); } catch { }
                 _portalFrames.Clear();
-                FrameDataManager.FrameData?.Clear();
                 _currentTargetChecker?.Stop();
 
                 // Clear Auto Roll tracking to prevent memory leaks
@@ -442,11 +449,9 @@ namespace Desktop_Frames
                 _autoRolledFrames.Clear();
 
                 // 3. Re-Load
+                activateProfile?.Invoke();
                 _currentTargetChecker = new TargetChecker(1000);
-                LoadAndCreateFrames(_currentTargetChecker);
-
-                // Allow a brief moment for WPF to register the new windows
-                System.Windows.Forms.Application.DoEvents();
+                LoadAndCreateFrames(_currentTargetChecker, prepared);
 
                 // ==================== DEBUG FIX START ====================
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, "Starting Hidden Frame Registration...");
@@ -497,13 +502,20 @@ namespace Desktop_Frames
                 }
                 // ==================== DEBUG FIX END ====================
 
-                lifeSupport.Close();
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, "Frames reloaded successfully.");
+                return true;
             }
             catch (Exception ex)
             {
                 LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.Error, $"Error reloading frames: {ex.Message}");
-                MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgReloadingFramesFailed", ex.Message), Strings.DlgError);
+                if (showLoadError)
+                    MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgReloadingFramesFailed", ex.Message), Strings.DlgError);
+                return false;
+            }
+            finally
+            {
+                IsReloadingFrames = false;
+                lifeSupport?.Close();
             }
         }
   
@@ -516,7 +528,7 @@ namespace Desktop_Frames
         /// Helper to detect UNC Roots (e.g. \\Server or \\192.168.1.10).
         /// These technically aren't "Directories" in .NET, but act as Folders in Windows.
         /// </summary>
-        private static bool IsUncRoot(string path)
+        internal static bool IsUncRoot(string path)
         {
             if (string.IsNullOrWhiteSpace(path)) return false;
 
@@ -561,7 +573,7 @@ namespace Desktop_Frames
                 var portalEntry = _portalFrames.FirstOrDefault(kvp => kvp.Key?.Id?.ToString() == frameId);
                 if (portalEntry.Value != null)
                 {
-                    portalEntry.Value.NavigateTo(normNew);
+                    portalEntry.Value.NavigateTo(newPath);
                 }
 
                 // Update UI (Show/Hide Bar)
@@ -3063,8 +3075,7 @@ namespace Desktop_Frames
                     // --- 2. PORTAL frame MIGRATION ---
                     if (frame.ItemsType?.ToString() == "Portal")
                     {
-                        string portalPath = frame.Items?.ToString();
-                        if (!string.IsNullOrEmpty(portalPath) && !System.IO.Directory.Exists(portalPath))
+                        if (!frameDict.ContainsKey("IsFolder"))
                         {
                             frameDict["IsFolder"] = true;
                             jsonModified = true;
@@ -3208,7 +3219,9 @@ namespace Desktop_Frames
         }
 
 
-        public static void LoadAndCreateFrames(TargetChecker targetChecker)
+        public static void LoadAndCreateFrames(TargetChecker targetChecker) => LoadAndCreateFrames(targetChecker, null);
+
+        private static void LoadAndCreateFrames(TargetChecker targetChecker, FrameDataManager.PreparedFrames? prepared)
         {
             Layouts.LayoutManager.BeginLoad();
             // Get current program version from assembly
@@ -3220,7 +3233,7 @@ namespace Desktop_Frames
             RegistryHelper.SetProgramManagementValues(currentVersion);
 
             // CRITICAL FIX: Load settings EARLY so the single instance check knows the user's preference
-            FrameDataManager.Initialize();
+            if (prepared == null) FrameDataManager.Initialize();
             SettingsManager.LoadSettings();
 
 
@@ -3377,6 +3390,18 @@ namespace Desktop_Frames
             }
 
 
+            try
+            {
+                if (prepared != null)
+                    FrameDataManager.UsePreparedFrames(prepared);
+                else
+                    FrameDataManager.LoadFrameDataFromDisk();
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException)
+            {
+                throw new IOException(Strings.Get("MsgFrameFileLoadFailed", ex.Message), ex);
+            }
+
             BackupManager.CleanLastDeletedFolder();
             InterCore.Initialize();
 
@@ -3397,50 +3422,10 @@ namespace Desktop_Frames
                 CheckNetworkPaths = false 
             };
 
-            bool jsonLoadSuccessful = false;
-
-            if (System.IO.File.Exists(FrameDataManager.JsonFilePath))
-            {
-                jsonLoadSuccessful = LoadFrameDataFromJson();
-            }
-
-            // If JSON loading failed or file doesn't exist, initialize with defaults
-            if (!jsonLoadSuccessful || FrameDataManager.FrameData == null || FrameDataManager.FrameData.Count == 0)
-            {
+            if (FrameDataManager.FrameData.Count == 0)
                 InitializeDefaultFrame();
-            }
             else
-            {
-                // Only migrate if we successfully loaded existing data
                 MigrateLegacyJson();
-            }
-
-            // Sanitize Portal Frames with missing target folders
-            var invalidFrames = new List<dynamic>();
-            foreach (dynamic frame in FrameDataManager.FrameData.ToList()) // Use ToList to avoid collection modification issues
-            {
-                if (frame.ItemsType?.ToString() == "Portal")
-                {
-                    string targetPath = frame.Path?.ToString();
-                    if (string.IsNullOrEmpty(targetPath) || !System.IO.Directory.Exists(targetPath))
-                    {
-                        invalidFrames.Add(frame);
-                        LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.FrameCreation, $"Marked Portal Frame '{frame.Title}' for removal due to missing target folder: {targetPath ?? "null"}");
-                    }
-                }
-            }
-
-            // Remove invalid frames and save
-            if (invalidFrames.Any())
-            {
-                foreach (var frame in invalidFrames)
-                {
-                    FrameDataManager.FrameData.Remove(frame);
-                    LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation, $"Removed Portal Frame '{frame.Title}' from FrameDataManager.FrameData");
-                }
-                FrameDataManager.SaveFrameData();
-                LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation, $"Saved updated frames.json after removing {invalidFrames.Count} invalid Portal Frames");
-            }
 
             // Clear any stuck transition states from previous session
             ClearAllTransitionStates();
@@ -3559,96 +3544,6 @@ namespace Desktop_Frames
 
 
 
-        private static bool LoadFrameDataFromJson()
-        {
-            try
-            {
-                string jsonContent = System.IO.File.ReadAllText(FrameDataManager.JsonFilePath);
-
-                // Check if the file is empty or contains only whitespace
-                if (string.IsNullOrWhiteSpace(jsonContent))
-                {
-                    LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.FrameCreation,
-                        "JSON file is empty or contains only whitespace. Using default frame configuration.");
-                    return false;
-                }
-
-                // First, try to parse as a list of frames
-                try
-                {
-                    FrameDataManager.FrameData = JsonConvert.DeserializeObject<List<dynamic>>(jsonContent);
-                    LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation,
-                        $"Successfully loaded {FrameDataManager.FrameData?.Count ?? 0} frame from JSON array.");
-                    return FrameDataManager.FrameData != null;
-                }
-                catch (JsonSerializationException)
-                {
-                    // If that fails, try to parse as a single frame object
-                    try
-                    {
-                        var singleFrame = JsonConvert.DeserializeObject<dynamic>(jsonContent);
-                        if (singleFrame != null)
-                        {
-                            FrameDataManager.FrameData = new List<dynamic> { singleFrame };
-                            LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.FrameCreation,
-                                "Successfully loaded single frame from JSON object.");
-                            return true;
-                        }
-                    }
-                    catch (JsonSerializationException innerEx)
-                    {
-                        LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                            $"Failed to parse JSON as single frame object: {innerEx.Message}");
-                    }
-                }
-            }
-            catch (System.IO.IOException ioEx)
-            {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"IO error reading frames.json: {ioEx.Message}");
-            }
-            catch (UnauthorizedAccessException accessEx)
-            {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"Access denied reading frames.json: {accessEx.Message}");
-            }
-            catch (JsonReaderException jsonEx)
-            {
-                // Handle malformed JSON (syntax errors, invalid characters, etc.)
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"Malformed JSON detected in frames.json: {jsonEx.Message}");
-
-                // Optionally, create a backup of the corrupted file
-                CreateCorruptedFileBackup();
-            }
-            catch (Exception ex)
-            {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"Unexpected error loading frames.json: {ex.Message}");
-            }
-
-            return false;
-        }
-
-        private static void CreateCorruptedFileBackup()
-        {
-            try
-            {
-                string backupPath = FrameDataManager.JsonFilePath + ".corrupted." + DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                System.IO.File.Copy(FrameDataManager.JsonFilePath, backupPath, true);
-                LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.FrameCreation,
-                    $"Created backup of corrupted JSON file: {backupPath}");
-            }
-            catch (Exception backupEx)
-            {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
-                    $"Failed to create backup of corrupted JSON file: {backupEx.Message}");
-            }
-        }
-
-
-
-
         private static void InitializeDefaultFrame()
         {
             try
@@ -3734,10 +3629,8 @@ namespace Desktop_Frames
                 var frames = new List<object> { dataFrame, noteFrame };
                 string defaultJson = JsonConvert.SerializeObject(frames, Formatting.Indented);
 
-                System.IO.File.WriteAllText(FrameDataManager.JsonFilePath, defaultJson);
-
-                // Load into memory
-                FrameDataManager.FrameData = JsonConvert.DeserializeObject<List<dynamic>>(defaultJson);
+                FrameDataManager.FrameData = JsonConvert.DeserializeObject<List<dynamic>>(defaultJson)!;
+                FrameDataManager.SaveFrameData();
 
                 LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.FrameCreation,
                     "Initialized default configuration with Data Frame and Startup Tips");
@@ -3747,8 +3640,8 @@ namespace Desktop_Frames
                 LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation,
                     $"Error initializing default frames: {ex.Message}");
 
-                // Fallback to empty list if something explodes
                 FrameDataManager.FrameData = new List<dynamic>();
+                throw;
             }
         }
 
@@ -3770,18 +3663,6 @@ namespace Desktop_Frames
             Action CommitRename = null;
             // ---------------------------------------------------
 
-            // Check for valid Portal Frame target folder
-            if (frame.ItemsType?.ToString() == "Portal")
-            {
-                string targetPath = frame.Path?.ToString();
-                if (string.IsNullOrEmpty(targetPath) || !System.IO.Directory.Exists(targetPath))
-                {
-                    LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.FrameCreation, $"Skipping creation of Portal Frame '{frame.Title}' due to missing target folder: {targetPath ?? "null"}");
-                    FrameDataManager.FrameData.Remove(frame);
-                    FrameDataManager.SaveFrameData();
-                    return;
-                }
-            }
             DockPanel dp = new DockPanel();
             // Get frame border color and thickness from frame data
             System.Windows.Media.Brush borderBrush = null;
@@ -6183,6 +6064,11 @@ namespace Desktop_Frames
                     {
                         var portalManager = new PortalFramemanager(frame, wpcont);
                         _portalFrames[frame] = portalManager;
+                        win.Closed += (s, e) =>
+                        {
+                            if (_portalFrames.Remove((object)frame, out var manager))
+                                manager.Dispose();
+                        };
 
                         // --- BULLETPROOF FIX: Decoupled Sort Cycle on CTRL + Click ---
                         // We use the Window's PreviewMouseDown to fire BEFORE any UI is destroyed.
@@ -6232,10 +6118,8 @@ namespace Desktop_Frames
                     }
                     catch (Exception ex)
                     {
+                        LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.FrameCreation, $"Portal initialization failed: {ex.Message}");
                         MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgPortalInitFailed", ex.Message), Strings.DlgError);
-                        FrameDataManager.FrameData.Remove(frame);
-                        FrameDataManager.SaveFrameData();
-                        win.Close();
                     }
                 }
             }

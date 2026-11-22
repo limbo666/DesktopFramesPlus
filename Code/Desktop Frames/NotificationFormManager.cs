@@ -141,7 +141,7 @@ namespace Desktop_Frames
             StackPanel footer = new StackPanel { Orientation = Orientation.Vertical, Margin = new Thickness(15, 10, 15, 15) };
 
             // Link Button
-            if (!string.IsNullOrEmpty(_msg.Link))
+            if (RemoteInfoManager.GetHttpsUri(_msg.Link) is Uri link)
             {
                 Button btnLink = new Button
                 {
@@ -151,7 +151,7 @@ namespace Desktop_Frames
                     Margin = new Thickness(0, 0, 0, 10),
                     Cursor = System.Windows.Input.Cursors.Hand
                 };
-                btnLink.Click += (s, e) => { try { Process.Start(new ProcessStartInfo(_msg.Link) { UseShellExecute = true }); } catch { } };
+                btnLink.Click += (s, e) => { try { Process.Start(new ProcessStartInfo(link.AbsoluteUri) { UseShellExecute = true }); } catch { } };
                 footer.Children.Add(btnLink);
             }
 

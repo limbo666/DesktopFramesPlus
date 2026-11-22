@@ -59,9 +59,7 @@ namespace Desktop_Frames
         {
             get
             {
-                string path = Path.Combine(_profilesRootDir, _currentProfileName);
-                if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-                return path;
+                return ProfileDirectory.GetRegisteredPath(_profilesRootDir, _currentProfileName);
             }
         }
 
@@ -119,13 +117,18 @@ namespace Desktop_Frames
             else saveNeeded = true;
 
             // 2. Get Physical Folders
+            if (!ProfileDirectory.IsLocalDirectory(_profilesRootDir))
+                throw new IOException("Profiles must be a physical directory.");
             var actualFolders = Directory.GetDirectories(_profilesRootDir)
+                .Where(ProfileDirectory.IsLocalDirectory)
                 .Select(Path.GetFileName)
                 .Where(n => !string.IsNullOrEmpty(n))
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
             if (actualFolders.Count == 0)
             {
-                Directory.CreateDirectory(Path.Combine(_profilesRootDir, "Default"));
+                string defaultPath = Path.Combine(_profilesRootDir, "Default");
+                Directory.CreateDirectory(defaultPath);
+                ProfileDirectory.GetRegisteredPath(_profilesRootDir, "Default");
                 actualFolders.Add("Default");
                 File.WriteAllText(Path.Combine(_profilesRootDir, "Default", "frames.json"), "[]");
                 File.WriteAllText(Path.Combine(_profilesRootDir, "Default", "options.json"), "{}");
@@ -138,6 +141,7 @@ namespace Desktop_Frames
 
             foreach (var token in jsonProfiles)
             {
+                if (token is not JObject) { saveNeeded = true; continue; }
                 string name = token["Name"]?.ToString();
                 int id = token["Id"]?.Value<int>() ?? -1;
 
@@ -181,7 +185,7 @@ namespace Desktop_Frames
 
             if (config["AutomationRules"] != null)
             {
-                try { _automationRules = config["AutomationRules"].ToObject<List<AutomationRule>>(); }
+                try { _automationRules = config["AutomationRules"].ToObject<List<AutomationRule>>() ?? new List<AutomationRule>(); }
                 catch { _automationRules = new List<AutomationRule>(); }
             }
             _manualBaseProfile = _currentProfileName;
@@ -202,34 +206,27 @@ namespace Desktop_Frames
 
         public static void SaveConfigInternal()
         {
-            try
-            {
-                JObject config = new JObject();
-                config["ActiveProfile"] = _currentProfileName;
-                config["LastModified"] = DateTime.Now.ToString("o");
-                config["DisplayProfileNameOnSwitch"] = DisplayProfileNameOnSwitch; // Save the option
-
-                JArray profilesArr = new JArray();
-                foreach (var p in _profileCache.OrderBy(x => x.Id))
-                {
-                    JObject pObj = new JObject();
-                    pObj["Name"] = p.Name;
-                    pObj["Id"] = p.Id;
-                    profilesArr.Add(pObj);
-                }
-                config["Profiles"] = profilesArr;
-
-                if (_automationRules != null && _automationRules.Count > 0)
-                {
-                    config["AutomationRules"] = JArray.FromObject(_automationRules);
-                }
-
-                File.WriteAllText(Path.Combine(_appBaseDir, PROFILE_CONFIG_FILE), config.ToString(Formatting.Indented));
-            }
+            try { SaveConfigOrThrow(); }
             catch (Exception ex)
             {
                 LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.General, $"Failed to save ProfileOptions: {ex.Message}");
             }
+        }
+
+        private static void SaveConfigOrThrow()
+        {
+            var config = new JObject
+            {
+                ["ActiveProfile"] = _currentProfileName,
+                ["LastModified"] = DateTime.Now.ToString("o"),
+                ["DisplayProfileNameOnSwitch"] = DisplayProfileNameOnSwitch,
+                ["Profiles"] = JArray.FromObject(_profileCache.OrderBy(profile => profile.Id))
+            };
+
+            if (_automationRules.Count > 0)
+                config["AutomationRules"] = JArray.FromObject(_automationRules);
+
+            AtomicFile.WriteUtf8(Path.Combine(_appBaseDir, PROFILE_CONFIG_FILE), config.ToString(Formatting.Indented));
         }
 
         // --- PUBLIC API ---
@@ -362,111 +359,110 @@ namespace Desktop_Frames
             }
         }
 
-        public static void SwitchToProfile(string profileName)
+        public static void SwitchToProfile(string profileName) => TrySwitchToProfile(profileName, showLoadError: true);
+
+        private static bool _isSwitchingProfile;
+
+        internal static bool TrySwitchToProfile(string profileName, bool showLoadError)
         {
-            if (string.Equals(_currentProfileName, profileName, StringComparison.OrdinalIgnoreCase)) return;
+            if (!Application.Current.Dispatcher.CheckAccess())
+                return Application.Current.Dispatcher.Invoke(() => TrySwitchToProfile(profileName, showLoadError));
+            if (_isSwitchingProfile || Framemanager.IsReloadingFrames) return false;
 
-            string targetDir = Path.Combine(_profilesRootDir, profileName);
-            if (!Directory.Exists(targetDir)) return;
+            var profile = _profileCache.FirstOrDefault(p => string.Equals(p.Name, profileName, StringComparison.OrdinalIgnoreCase));
+            if (profile == null) return false;
+            if (string.Equals(_currentProfileName, profile.Name, StringComparison.OrdinalIgnoreCase)) return true;
 
-            LogManager.Log(LogManager.LogLevel.Info, LogManager.LogCategory.General, $"SWITCHING PROFILE: {_currentProfileName} -> {profileName}");
-
-            // --- CRITICAL FIX: Close Ghost Windows ---
-            // Close auxiliary windows to prevent them from persisting data from the previous profile
+            _isSwitchingProfile = true;
             try
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                string targetDir = ProfileDirectory.GetRegisteredPath(_profilesRootDir, profile.Name);
+                var prepared = FrameDataManager.PrepareProfileFrames(targetDir);
+                string previousName = _currentProfileName;
+                string previousDirectory = Directory.GetCurrentDirectory();
+
+                CloseProfileWindows();
+                var previousFrames = FrameDataManager.CaptureLoadedFrames();
+                AutoOrganizeManager.Stop();
+                try
                 {
-                    // List of window types to close
-                    var ghostWindows = new HashSet<string>
+                    if (!Framemanager.TryReloadFrames(prepared, showLoadError: false, activateProfile: () =>
                     {
-                        "TextFormatFormManager",
-                        "SearchFormManager",
-                        "IconPickerDialog",
-                        "EditShortcutWindow",
-                        "CustomizeFrameFormManager"
-                    };
+                        Directory.SetCurrentDirectory(targetDir);
+                        _currentProfileName = profile.Name;
+                    }))
+                        throw new IOException(Strings.Get("MsgProfileReloadFailed"));
 
-                    // Get all windows as a list to avoid enumeration errors during close
-                    var openWindows = Application.Current.Windows.OfType<Window>().ToList();
+                    SaveConfigOrThrow();
+                }
+                catch
+                {
+                    _currentProfileName = previousName;
+                    Directory.SetCurrentDirectory(previousDirectory);
+                    FrameDataManager.UsePreparedFrames(previousFrames);
+                    Framemanager.TryReloadFrames(previousFrames, showLoadError: false);
+                    throw;
+                }
+                finally
+                {
+                    AutoOrganizeManager.Initialize();
+                }
 
-                    foreach (var win in openWindows)
+                try
+                {
+                    TrayManager.Instance?.UpdateTrayIcon();
+                    TrayManager.Instance?.UpdateProfilesMenu();
+                }
+                catch (Exception ex)
+                {
+                    LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.General, $"Profile tray update failed: {ex.Message}");
+                }
+
+                try
+                {
+                    string hookScript = Path.Combine(targetDir, "on_enter.bat");
+                    if (File.Exists(hookScript) && (File.GetAttributes(hookScript) & FileAttributes.ReparsePoint) == 0)
                     {
-                        if (ghostWindows.Contains(win.GetType().Name))
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                         {
-                            try
-                            {
-                                win.Close();
-                                LogManager.Log(LogManager.LogLevel.Debug, LogManager.LogCategory.UI, $"Closed ghost window: {win.GetType().Name}");
-                            }
-                            catch { }
-                        }
+                            FileName = hookScript,
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
+                        });
                     }
-                });
+                }
+                catch (Exception ex)
+                {
+                    LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.General, $"Profile hook failed: {ex.Message}");
+                }
+
+                if (DisplayProfileNameOnSwitch) ShowProfileSwitchOSD(profile.Name);
+                return true;
             }
             catch (Exception ex)
             {
-                LogManager.Log(LogManager.LogLevel.Error, LogManager.LogCategory.UI, $"Error cleaning ghost windows: {ex.Message}");
+                LogManager.Log(LogManager.LogLevel.Warn, LogManager.LogCategory.General, $"Could not switch to profile {profileName}: {ex.Message}");
+                if (showLoadError)
+                    MessageBoxesManager.ShowOKOnlyMessageBoxForm(Strings.Get("MsgFrameFileLoadFailed", ex.Message), Strings.DlgError);
+                return false;
             }
-            // ----------------------------------------
-
-            _currentProfileName = profileName;
-            SaveConfigInternal();
-
-            System.IO.Directory.SetCurrentDirectory(CurrentProfileDir);
-            FrameDataManager.Initialize();
-            SettingsManager.LoadSettings();
-
-            // --- CRITICAL FIX: CLEAR BEFORE RELOAD ---
-            // 1. Clear the old profile's hidden fences FIRST
-            if (TrayManager.Instance != null)
+            finally
             {
-                TrayManager.Instance.ClearHiddenFrames();
-            }
-
-
-
-            // 2. NOW load the new fences (which will re-populate the list correctly)
-            Framemanager.ReloadFrames();
-            // -----------------------------------------
-
-            if (TrayManager.Instance != null)
-            {
-                // --- THE FIX IS HERE ---
-                // Kill the zombies BEFORE updating the UI
-               // TrayManager.Instance.ClearHiddenFrames();
-                // -----------------------
-
-                TrayManager.Instance.UpdateTrayIcon();
-                TrayManager.Instance.UpdateProfilesMenu();
-            }
-
-            // --- Hook Trigger ---
-            try
-            {
-                string hookScript = Path.Combine(targetDir, "on_enter.bat");
-                if (File.Exists(hookScript))
-                {
-                    var psi = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = hookScript,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
-                    };
-                    System.Diagnostics.Process.Start(psi);
-                }
-            }
-            catch { }
-
-            // --- NEW: OSD Popup ---
-            if (DisplayProfileNameOnSwitch)
-            {
-                ShowProfileSwitchOSD(profileName);
-
-
+                _isSwitchingProfile = false;
             }
         }
+
+        private static void CloseProfileWindows()
+        {
+            foreach (var window in Application.Current.Windows.OfType<Window>().ToList())
+            {
+                if (window.GetType().Name is "TextFormatFormManager" or "SearchFormManager" or "IconPickerDialog"
+                    or "EditShortcutWindow" or "CustomizeFrameFormManager")
+                    window.Close();
+            }
+        }
+
         private static void ShowProfileSwitchOSD(string profileName)
         {
             Application.Current.Dispatcher.Invoke(() =>

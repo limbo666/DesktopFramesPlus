@@ -435,14 +435,6 @@ namespace Desktop_Frames
 
                     await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
                     {
-                        // 1. Close all windows
-                        var windows = System.Windows.Application.Current.Windows.OfType<NonActivatingWindow>().ToList();
-                        foreach (var frame in windows)
-                        {
-                            frame.Close();
-                        }
-
-                        // 2. Reload Logic (This calls Framemanager)
                         Framemanager.ReloadFrames();
 
                         // FIX 2: Force Garbage Collection
@@ -558,7 +550,7 @@ namespace Desktop_Frames
                 {
                     item.Click += (s, e) =>
                     {
-                        ProfileManager.SwitchToProfile(profile.Name);
+                        if (!ProfileManager.TrySwitchToProfile(profile.Name, showLoadError: true)) return;
                         // Update the 'Home' profile so automation reverts to this manual choice later
                         ProfileManager.SetManualBaseProfile(profile.Name);
                         _trayIcon.Text = $"Desktop Frames ({profile.Name})";

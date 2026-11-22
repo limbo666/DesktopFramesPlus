@@ -191,9 +191,10 @@ namespace Desktop_Frames
                 {
                     card.MouseLeftButtonUp += (s, e) =>
                     {
+                        if (!ProfileManager.TrySwitchToProfile(p.Name, showLoadError: true)) return;
+
                         // Sync automation home to this manual choice
                         ProfileManager.SetManualBaseProfile(p.Name);
-                        ProfileManager.SwitchToProfile(p.Name);
 
                         // Refresh UI elements
                         RefreshList();
